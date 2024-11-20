@@ -1,21 +1,20 @@
-import http from "http";
+import express from "express";
 
+const app = express();
 const PORT = process.env.PORT || 4001;
 
-http
-  .createServer((req, res) => {
-    if (req.url === "/") {
-      res.writeHead(200, { "Content-Type": "text/plain" });
-      res.end("Hello World");
-    } else if (req.url === "/health") {
-      res.writeHead(200, { "Content-Type": "text/plain" });
-      res.end("OK");
-    } else {
-      res.writeHead(404, { "Content-Type": "text/plain" });
-      res.end("Not Found");
-    }
-  })
-  .listen(PORT)
-  .on("listening", () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
+app.get("/", (req, res) => {
+  res.status(200).send("Hello World");
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
+app.use((req, res) => {
+  res.status(404).send("Not Found");
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
