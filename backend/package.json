@@ -1,10 +1,10 @@
 {
   "name": "wbd-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node --loader ts-node/esm index.ts"
   },
   "author": "WBD",
   "license": "ISC",
@@ -12,5 +12,12 @@
   "dependencies": {
     "express": "^4.21.1",
     "ioredis": "^5.4.1"
+  },
+  "devDependencies": {
+    "@esbuild-kit/esm-loader": "^2.6.5",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
   }
 }
