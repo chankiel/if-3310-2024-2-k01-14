@@ -27,4 +27,8 @@ app.use((req: Request, res: Response) => {
   res.status(404).send("Not Found");
 });
 
+app.listen(3000, "0.0.0.0", () => {
+  console.log("Server is running on port 3000");
+});
+
 export default app;
