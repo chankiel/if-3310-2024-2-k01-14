@@ -14,12 +14,12 @@ datasource db {
 }
 
 model User {
-  id                   BigInt                 @id @default(autoincrement())
+  id                   Int                    @id @default(autoincrement())
   username             String                 @unique
   email                String                 @unique
-  password_hash        String
+  password             String
   created_at           DateTime               @default(now())
-  updated_at           DateTime
+  updated_at           DateTime               @updatedAt
   feeds                Feed[]                 @relation("UserFeeds")
   chatsFrom            Chat[]                 @relation("UserChatsFrom")
   chatsTo              Chat[]                 @relation("UserChatsTo")
@@ -28,57 +28,71 @@ model User {
   connectionRequestsFrom ConnectionRequest[]  @relation("ConnectionRequestFrom")
   connectionRequestsTo ConnectionRequest[]    @relation("ConnectionRequestTo")
   pushSubscriptions    PushSubscription[]
+  photo_profile        String?
+  description          String?
+
+  @@map("users")
 }
 
 model Feed {
-  id         BigInt   @id @default(autoincrement())
+  id         Int   @id @default(autoincrement())
   content    String
   created_at DateTime @default(now())
   updated_at DateTime
-  user_id    BigInt
+  user_id    Int
   user       User     @relation("UserFeeds", fields: [user_id], references: [id])
 
   @@index([user_id])
+
+  @@map("feeds")
 }
 
 model Chat {
-  id        BigInt   @id @default(autoincrement())
+  id        Int   @id @default(autoincrement())
   timestamp DateTime @default(now())
-  from_id   BigInt
-  to_id     BigInt
+  from_id   Int
+  to_id     Int
   message   String
   from      User     @relation("UserChatsFrom", fields: [from_id], references: [id])
   to        User     @relation("UserChatsTo", fields: [to_id], references: [id])
 
   @@index([from_id, to_id])
+
+  @@map("chats")
 }
 
 model ConnectionRequest {
-  from_id   BigInt
-  to_id     BigInt
+  from_id   Int
+  to_id     Int
   created_at DateTime
   from      User     @relation("ConnectionRequestFrom", fields: [from_id], references: [id])
   to        User     @relation("ConnectionRequestTo", fields: [to_id], references: [id])
 
   @@id([from_id, to_id])
+
+  @@map("connectionrequests")
 }
 
 model Connection {
-  from_id   BigInt
-  to_id     BigInt
+  from_id   Int
+  to_id     Int
   created_at DateTime
   from      User     @relation("UserConnectionsFrom", fields: [from_id], references: [id])
   to        User     @relation("UserConnectionsTo", fields: [to_id], references: [id])
 
   @@id([from_id, to_id])
+
+  @@map("connection")
 }
 
 model PushSubscription {
   endpoint   String   @id
-  user_id    BigInt?  @db.BigInt
+  user_id    Int?
   keys       Json
   created_at DateTime @default(now())
   user       User?    @relation(fields: [user_id], references: [id])
 
   @@index([user_id])
+
+  @@map("pushsubscriptions")
 }
