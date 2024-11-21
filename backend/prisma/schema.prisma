@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   BigInt                 @id @default(autoincrement())
+  username             String                 @unique
+  email                String                 @unique
+  password_hash        String
+  created_at           DateTime               @default(now())
+  updated_at           DateTime
+  feeds                Feed[]                 @relation("UserFeeds")
+  chatsFrom            Chat[]                 @relation("UserChatsFrom")
+  chatsTo              Chat[]                 @relation("UserChatsTo")
+  connectionsFrom      Connection[]           @relation("UserConnectionsFrom")
+  connectionsTo        Connection[]           @relation("UserConnectionsTo")
+  connectionRequestsFrom ConnectionRequest[]  @relation("ConnectionRequestFrom")
+  connectionRequestsTo ConnectionRequest[]    @relation("ConnectionRequestTo")
+  pushSubscriptions    PushSubscription[]
+}
+
+model Feed {
+  id         BigInt   @id @default(autoincrement())
+  content    String
+  created_at DateTime @default(now())
+  updated_at DateTime
+  user_id    BigInt
+  user       User     @relation("UserFeeds", fields: [user_id], references: [id])
+
+  @@index([user_id])
+}
+
+model Chat {
+  id        BigInt   @id @default(autoincrement())
+  timestamp DateTime @default(now())
+  from_id   BigInt
+  to_id     BigInt
+  message   String
+  from      User     @relation("UserChatsFrom", fields: [from_id], references: [id])
+  to        User     @relation("UserChatsTo", fields: [to_id], references: [id])
+
+  @@index([from_id, to_id])
+}
+
+model ConnectionRequest {
+  from_id   BigInt
+  to_id     BigInt
+  created_at DateTime
+  from      User     @relation("ConnectionRequestFrom", fields: [from_id], references: [id])
+  to        User     @relation("ConnectionRequestTo", fields: [to_id], references: [id])
+
+  @@id([from_id, to_id])
+}
+
+model Connection {
+  from_id   BigInt
+  to_id     BigInt
+  created_at DateTime
+  from      User     @relation("UserConnectionsFrom", fields: [from_id], references: [id])
+  to        User     @relation("UserConnectionsTo", fields: [to_id], references: [id])
+
+  @@id([from_id, to_id])
+}
+
+model PushSubscription {
+  endpoint   String   @id
+  user_id    BigInt?  @db.BigInt
+  keys       Json
+  created_at DateTime @default(now())
+  user       User?    @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
+}
