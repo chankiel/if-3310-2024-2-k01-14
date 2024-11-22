@@ -24,6 +24,12 @@ export type LoginUserRequest = {
     password: string;
 }
 
+export type UpdateUserRequest = {
+    username?: string;
+    description?: string;
+    photo_profile?: string;
+}
+
 export function toUserResponse(message: string, token?: string): UserResponse{
     return {
         success: true,
@@ -44,5 +50,12 @@ export function toGetUserProfileResponse(message: string, username: string, desc
             photo_profile: photo_profile,
             relevant_posts: relevantPosts
         }
+    }
+}
+
+export function toGetUserUpdateProfileResponse(message: string): UserResponse{
+    return {
+        success: true,
+        message: message
     }
 }

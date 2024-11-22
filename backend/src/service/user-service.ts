@@ -1,10 +1,11 @@
 import { prismaClient } from "../application/database";
 import { ResponseError } from "../error/response-error";
-import { CreateUserRequest, LoginUserRequest, toUserResponse, toGetUserProfileResponse, UserResponse } from "../model/user-model";
+import { CreateUserRequest, LoginUserRequest, toUserResponse, toGetUserProfileResponse, toGetUserUpdateProfileResponse, UserResponse, UpdateUserRequest } from "../model/user-model";
 import { UserValidation } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
 import { Response } from "express";
 import bcrypt from "bcrypt";
+import { User } from "@prisma/client";
 const jwt = require("jsonwebtoken");
 
 export class UserService {
@@ -97,6 +98,16 @@ export class UserService {
         }));
 
         return toGetUserProfileResponse("User profile retrieved successfully", user.username, user.description!, user.photo_profile!, relevantPosts);
+    }
+
+    static async update(id: number, request: UpdateUserRequest): Promise<UserResponse> {
+        const updateRequest = Validation.validate(UserValidation.UPDATE, request);
+        
+        if(updateRequest.username) {
+            
+        }
+
+        return toGetUserUpdateProfileResponse("User profile updated successfully");
     }
 
 }
