@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "./src/index.ts",
   "scripts": {
-    "start": "tsx ./src/main.ts"
+    "start": "tsx watch ./src/main.ts"
   },
   "author": "WBD",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.9.1",
     "prisma": "^5.22.0",
