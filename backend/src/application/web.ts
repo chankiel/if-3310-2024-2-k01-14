@@ -1,16 +1,18 @@
 import express from "express";
-import { publicRouter } from "../route/public-api";
+import publicRouter from "../route/public-api";
+import apiRouter from "../route/api";
 import { errorMiddleware } from "../middleware/error-middleware";
 import Redis from "ioredis";
-const cors = require("cors");
+import cors from "cors";
 
 export const web = express();
 
 web.use(cors());
-
 web.use(express.json());
-web.use(publicRouter);
+
 web.use(errorMiddleware);
+web.use('/api',apiRouter);
+web.use('/api',publicRouter);
 
 const redis = new Redis({
     host: "redis",
