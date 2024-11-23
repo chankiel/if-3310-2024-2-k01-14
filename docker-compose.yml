@@ -13,7 +13,8 @@ services:
       - DB_USER=${POSTGRES_USER}
       - DB_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - ./backend:/app
+      - ./backend:/home/node/app
+      - /home/node/app/node_modules
     depends_on:
       - db
     networks:
@@ -23,6 +24,9 @@ services:
     build: ./frontend
     ports:
       - "5173:5173"
+    volumes:
+      - ./frontend:/home/node/app
+      - /home/node/app/node_modules
     depends_on:
       - backend
     networks:
