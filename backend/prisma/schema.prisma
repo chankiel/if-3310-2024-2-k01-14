@@ -31,7 +31,6 @@ model User {
   photo_profile        String?
   description          String?
 
-  @@map("users")
 }
 
 model Feed {
@@ -44,7 +43,6 @@ model Feed {
 
   @@index([user_id])
 
-  @@map("feeds")
 }
 
 model Chat {
@@ -58,7 +56,6 @@ model Chat {
 
   @@index([from_id, to_id])
 
-  @@map("chats")
 }
 
 model ConnectionRequest {
@@ -69,8 +66,6 @@ model ConnectionRequest {
   to        User     @relation("ConnectionRequestTo", fields: [to_id], references: [id])
 
   @@id([from_id, to_id])
-
-  @@map("connectionrequests")
 }
 
 model Connection {
@@ -81,8 +76,6 @@ model Connection {
   to        User     @relation("UserConnectionsTo", fields: [to_id], references: [id])
 
   @@id([from_id, to_id])
-
-  @@map("connection")
 }
 
 model PushSubscription {
@@ -94,5 +87,4 @@ model PushSubscription {
 
   @@index([user_id])
 
-  @@map("pushsubscriptions")
 }
