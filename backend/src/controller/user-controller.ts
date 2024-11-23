@@ -9,14 +9,12 @@ export class UserController {
             const request: CreateUserRequest = req.body as CreateUserRequest;
             const response = await UserService.register(request);
             
-            res.cookie("token", response.body?.token, {
-                httpOnly: true,
-                sameSite: "strict",
-                maxAge: 3600000
-            })
-            
             res.status(200).json({
-                response
+                success: response.success,
+                message: response.message,
+                body: {
+                    token: response.body?.token
+                }
             })
         } catch(e) {
             next(e);
@@ -28,14 +26,12 @@ export class UserController {
             const request: LoginUserRequest = req.body as LoginUserRequest;
             const response = await UserService.login(request);
             
-            res.cookie("token", response.body?.token, {
-                httpOnly: true,
-                sameSite: "strict",
-                maxAge: 3600000
-            })
-            
             res.status(200).json({
-                response
+                success: response.success,
+                message: response.message,
+                body: {
+                    token: response.body?.token
+                }
             })
         } catch(e) {
             next(e);

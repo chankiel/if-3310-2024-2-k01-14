@@ -1,8 +1,8 @@
-export default function Home() {
+export default function Feed() {
     return (
         <>
             <div className = "text-green-800 text-3xl">
-                Home Page
+                Feed Page
             </div>
         </>
     )

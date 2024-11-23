@@ -4,7 +4,7 @@ import { CreateUserRequest, LoginUserRequest, toUserResponse, toGetUserProfileRe
 import { UserValidation } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
 import { Response } from "express";
-import bcrypt from "bcrypt";
+const bcrypt = require("bcrypt");
 import { User } from "@prisma/client";
 const jwt = require("jsonwebtoken");
 
