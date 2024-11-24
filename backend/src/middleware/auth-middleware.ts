@@ -1,5 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 
-export const authMiddleware = async(req: Request, res: Response, next: NextFunction) => {
-    
+export interface authRequest extends Request {
+    user?: string;
+}
+
+export const authMiddleware = async(req: authRequest, res: Response, next: NextFunction) => {
+    req.user = "KIEL"
+    next()
 }
