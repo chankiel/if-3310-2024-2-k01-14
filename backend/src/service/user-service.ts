@@ -5,20 +5,18 @@ import {
   LoginUserRequest,
   UpdateUserRequest,
   UserFormat,
+  UserPrismaFormat,
 } from "../model/user-model";
 import { UserValidation } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
-import { Response } from "express";
 const bcrypt = require("bcrypt");
-import { User } from "@prisma/client";
-import { formatResponse } from "../utils/ResponseFormatter";
-import { ApiResponse } from "../model/custom";
 const jwt = require("jsonwebtoken");
 
 const prismaUserFormat = {
-  username: true,
-  description: true,
-  photo_profile: true,
+  full_name: true,
+  work_history: true,
+  skills: true,
+  profile_photo_path: true,
   feeds: {
     select: {
       id: true,
@@ -30,6 +28,21 @@ const prismaUserFormat = {
 };
 
 export class UserService {
+  static formatUserResponse(user: UserPrismaFormat){
+    const formattedUser = {
+      ...user,
+      relevant_posts: user.feeds,
+      profile_photo: user.profile_photo_path,
+      name: user.full_name,
+
+      feeds: undefined,
+      profile_photo_path: undefined,
+      full_name: undefined,
+    };
+
+    return formattedUser
+  };
+
   static async register(request: CreateUserRequest): Promise<string> {
     const registerRequest = Validation.validate(
       UserValidation.REGISTER,
@@ -113,11 +126,7 @@ export class UserService {
       select: prismaUserFormat,
     });
 
-    const formattedUsers = users.map((user)=>({
-      ...user,
-      relevant_posts: user.feeds,
-      feeds: undefined
-    }))
+    const formattedUsers = users.map((user) => (this.formatUserResponse(user)));
 
     return formattedUsers;
   }
@@ -127,26 +136,19 @@ export class UserService {
       where: {
         id: id,
       },
-      select: prismaUserFormat
+      select: prismaUserFormat,
     });
 
     if (!user) {
       throw new ResponseError(404, "User not found");
     }
 
-    const formattedUser = {
-      ...user,
-      relevant_posts: user.feeds,
-      feeds: undefined
-    }
+    const formattedUser = this.formatUserResponse(user);
 
-    return formattedUser
+    return formattedUser;
   }
 
-  static async update(
-    id: number,
-    request: UpdateUserRequest
-  ) {
+  static async update(id: number, request: UpdateUserRequest) {
     const updateRequest = Validation.validate(UserValidation.UPDATE, request);
 
     if (updateRequest.username) {

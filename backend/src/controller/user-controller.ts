@@ -1,12 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import { authRequest } from "../middleware/auth-middleware";
+import { AuthRequest } from "../middleware/auth-middleware";
 import { CreateUserRequest, LoginUserRequest, UpdateUserRequest, UserFormat } from "../model/user-model";
 import { UserService } from "../service/user-service";
-import { User } from "@prisma/client";
 import { formatResponse } from "../utils/ResponseFormatter";
 
 export class UserController {
-    static async register(req: Request, res: Response, next: NextFunction) {
+    static async store(req: Request, res: Response, next: NextFunction) {
         try {
             const request: CreateUserRequest = req.body as CreateUserRequest;
             const token = await UserService.register(request);
@@ -35,7 +34,7 @@ export class UserController {
         }
     }
 
-    static async getAll(req: authRequest, res: Response, next: NextFunction) {
+    static async index(req: AuthRequest, res: Response, next: NextFunction) {
         try{
             const users = await UserService.getAll(req.params.query)
             const response = formatResponse<UserFormat[]>(true,users,"Users retrieved successfully")
@@ -46,7 +45,7 @@ export class UserController {
         }
     }
 
-    static async get(req: authRequest, res: Response, next: NextFunction) {
+    static async show(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const userId = Number(req.params.user_id);
             const response = await UserService.get(userId);
