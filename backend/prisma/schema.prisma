@@ -14,27 +14,28 @@ datasource db {
 }
 
 model User {
-  id                   Int                    @id @default(autoincrement())
-  username             String                 @unique
-  email                String                 @unique
-  password             String
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
-  feeds                Feed[]                 @relation("UserFeeds")
-  chatsFrom            Chat[]                 @relation("UserChatsFrom")
-  chatsTo              Chat[]                 @relation("UserChatsTo")
-  connectionsFrom      Connection[]           @relation("UserConnectionsFrom")
-  connectionsTo        Connection[]           @relation("UserConnectionsTo")
-  connectionRequestsFrom ConnectionRequest[]  @relation("ConnectionRequestFrom")
-  connectionRequestsTo ConnectionRequest[]    @relation("ConnectionRequestTo")
-  pushSubscriptions    PushSubscription[]
-  photo_profile        String?
-  description          String?
-
+  id                     Int                 @id @default(autoincrement())
+  username               String              @unique
+  full_name              String?
+  email                  String              @unique
+  password          String
+  created_at             DateTime            @default(now())
+  updated_at             DateTime            @updatedAt
+  profile_photo_path     String?
+  work_history           String?
+  skills                 String?
+  feeds                  Feed[]              @relation("UserFeeds")
+  chatsFrom              Chat[]              @relation("UserChatsFrom")
+  chatsTo                Chat[]              @relation("UserChatsTo")
+  connectionsFrom        Connection[]        @relation("UserConnectionsFrom")
+  connectionsTo          Connection[]        @relation("UserConnectionsTo")
+  connectionRequestsFrom ConnectionRequest[] @relation("ConnectionRequestFrom")
+  connectionRequestsTo   ConnectionRequest[] @relation("ConnectionRequestTo")
+  pushSubscriptions      PushSubscription[]
 }
 
 model Feed {
-  id         Int   @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   content    String
   created_at DateTime @default(now())
   updated_at DateTime
@@ -42,11 +43,10 @@ model Feed {
   user       User     @relation("UserFeeds", fields: [user_id], references: [id])
 
   @@index([user_id])
-
 }
 
 model Chat {
-  id        Int   @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   timestamp DateTime @default(now())
   from_id   Int
   to_id     Int
@@ -55,25 +55,24 @@ model Chat {
   to        User     @relation("UserChatsTo", fields: [to_id], references: [id])
 
   @@index([from_id, to_id])
-
 }
 
 model ConnectionRequest {
-  from_id   Int
-  to_id     Int
-  created_at DateTime
-  from      User     @relation("ConnectionRequestFrom", fields: [from_id], references: [id])
-  to        User     @relation("ConnectionRequestTo", fields: [to_id], references: [id])
+  from_id    Int
+  to_id      Int
+  created_at DateTime @default(now())
+  from       User     @relation("ConnectionRequestFrom", fields: [from_id], references: [id])
+  to         User     @relation("ConnectionRequestTo", fields: [to_id], references: [id])
 
   @@id([from_id, to_id])
 }
 
 model Connection {
-  from_id   Int
-  to_id     Int
-  created_at DateTime
-  from      User     @relation("UserConnectionsFrom", fields: [from_id], references: [id])
-  to        User     @relation("UserConnectionsTo", fields: [to_id], references: [id])
+  from_id    Int
+  to_id      Int
+  created_at DateTime @default(now())
+  from       User     @relation("UserConnectionsFrom", fields: [from_id], references: [id])
+  to         User     @relation("UserConnectionsTo", fields: [to_id], references: [id])
 
   @@id([from_id, to_id])
 }
@@ -86,5 +85,4 @@ model PushSubscription {
   user       User?    @relation(fields: [user_id], references: [id])
 
   @@index([user_id])
-
 }
