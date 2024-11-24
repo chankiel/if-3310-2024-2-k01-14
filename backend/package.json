@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "./src/main.ts",
   "scripts": {
-    "start": "tsx watch ./src/main.ts"
+    "start": "tsx watch ./src/main.ts",
+    "seed": "tsx ./src/seeds/seeder.ts"
   },
   "author": "WBD",
   "license": "ISC",
@@ -15,12 +16,14 @@
     "express": "^4.21.1",
     "ioredis": "^5.4.1",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
     "tsx": "^4.19.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/multer": "^1.4.12",
     "@types/node": "^22.9.1",
     "nodemon": "^3.1.7",
     "prisma": "^5.22.0",
