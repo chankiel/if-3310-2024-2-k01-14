@@ -1,6 +1,6 @@
-export type FeedResponse = {
+export type FeedFormat = {
     id: number;
     content: string;
-    createdAt: Date;
-    updatedAt: Date;
+    created_at: Date;
+    updated_at: Date;
 }
