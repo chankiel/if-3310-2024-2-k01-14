@@ -64,11 +64,10 @@ export class UserController {
     static async show(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const userId = Number(req.params.user_id);
-            const response = await UserService.get(userId);
+            const user = await UserService.get(userId);
+            const response = formatResponse(true,user,"User retrieved successfully!")
             
-            res.status(200).json({
-                response
-            })
+            res.status(200).json(response)
         } catch(e) {
             next(e);
         }
@@ -88,4 +87,6 @@ export class UserController {
         }
     }
 
+
+    // static async self(req: AuthRequest,)
 }
