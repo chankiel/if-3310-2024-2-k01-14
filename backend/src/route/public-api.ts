@@ -9,6 +9,8 @@ const upload = multer()
 publicRouter.post("/register", upload.none(), UserController.store);
 publicRouter.post("/login", upload.none(), UserController.login);
 
-publicRouter.get("/users/:query?",UserController.index)
+publicRouter.get("/users/",UserController.index)
+publicRouter.get("/users/:user_id(\\d+)",UserController.show)
+
 publicRouter.get("/connections/:user_id(\\d+)",ConnectionController.indexConnection)
 export default publicRouter
