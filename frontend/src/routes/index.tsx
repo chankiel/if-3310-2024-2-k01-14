@@ -14,7 +14,7 @@
 
 import { Outlet, RouteObject, createBrowserRouter } from "react-router-dom";
 import { Login, NotFound, Register } from "../pages";
-import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
+import ProtectedRoute from "../components/ProtectedRoute";
 import { AuthProvider } from "../contexts/AuthContext";
 import { Footer, Header } from "../components";
 
