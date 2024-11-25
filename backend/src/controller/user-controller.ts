@@ -9,10 +9,10 @@ export class UserController {
         try {
             const request: CreateUserRequest = req.body as CreateUserRequest;
             const token = await UserService.register(request);
-            
+
             res.cookie("token", token, {
-                httpOnly: true,
-                secure: true,
+                httpOnly: false,
+                secure: false,
                 maxAge: 3600000,
                 path: "/",
             });
