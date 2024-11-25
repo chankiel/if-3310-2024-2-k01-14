@@ -6,6 +6,7 @@ export type UserFormat = {
   skills: string | null;
   profile_photo: string | null;
   relevant_posts: FeedFormat[];
+  connection_count?: number;
 };
 
 export type UserPrismaFormat = {
@@ -35,6 +36,8 @@ export type LoginUserRequest = {
 
 export type UpdateUserRequest = {
   username?: string;
-  description?: string;
   photo_profile?: string;
+  name?: string;
+  work_history?: string;
+  skills?: string;
 };

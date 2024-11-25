@@ -18,8 +18,10 @@ export class UserValidation {
 
     static readonly UPDATE : ZodType = z.object({
         username: z.string().min(1),
-        description: z.string().min(6).max(100),
-        photo_profile: z.string().min(1).max(100)
+        photo_profile: z.string().min(1).max(100),
+        name: z.string().min(1).max(100),
+        work_history: z.string().min(1),
+        skills: z.string().min(1)
     });
 }
 
