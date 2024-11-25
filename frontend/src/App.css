@@ -1,94 +1,28 @@
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    background-color: #f4f2ee;
-    color: #333; 
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: #f4f2ee;
+  color: #333;
 }
 
-header {
-    text-align: center;
+main {
+  min-height: calc(100vh - 200px);
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
-.header-subtitle {
-    font-size: 33px;
-    padding: 24px 16px;
-}
-
-.form-register-login {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
-}
-
-.register-login-container {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-    max-width: 400px;
-    width: 100%;
-}
-
-.register-login-subtitle {
-    margin-bottom: 10px; 
-    text-align: center;
-}
-
-label {
-    display: block; 
-    margin-bottom: 1px; 
-}
-
-input,
-select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1em;
-}
-
-input:focus,
-select:focus {
-    border-color: #0A66C2;
-    box-shadow: 0 0 5px rgba(0, 119, 204, 0.5);
-}
-
-button {
-    background: #0A66C2; 
-    color: #fff;
-    border: none;
-    border-radius: 24px;
-    padding: 15px;
-    font-size: 1em;
-    cursor: pointer;
-    width: 100%;
-    transition: background 0.3s;
-    font-weight: bold;
-}
-
-button:hover {
-    background: #0A66C2;
-}
-
-.redirect-register-login {
-    text-align: center;
-    margin-top: 15px;
-}
-
-.redirect-register-login a {
-    color: #0A66C2;
-    text-decoration: none;
-}
-
-.redirect-register-login a:hover {
-    text-decoration: underline;
+section {
+  width: 100%;
+  max-width: 900px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
