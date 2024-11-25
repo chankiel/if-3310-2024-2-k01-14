@@ -20,13 +20,15 @@ apiRouter.post(
   ConnectionController.storeConnectionRequest
 );
 
-apiRouter.post(
-  "/connection-requests/pending",
+apiRouter.get(
+  "/connection-request/pending",
+  upload.none(),
   ConnectionController.indexPendingConnectionRequest
 );
 
 apiRouter.put(
-  "/connection-requests/respond",
+  "/connection-request/respond",
+  upload.none(),
   ConnectionController.respondConnectionRequest
 );
 
