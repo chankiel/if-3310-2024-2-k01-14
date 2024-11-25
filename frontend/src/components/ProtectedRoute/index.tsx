@@ -7,22 +7,21 @@ const ProtectedRoute = ({children}: {children: React.ReactNode}) => {
   const isAuthenticated = UseAuth();
   const navigate = useNavigate();
 
-  const checkAuth = async () => {
-    try {
-      if (!isAuthenticated) {
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        if (!isAuthenticated) {
+          navigate("/login");
+          return;
+        }
+      } catch (error) {
+        console.log(error);
         navigate("/login");
         return;
       }
-    } catch (error) {
-      console.log(error);
-      navigate("/login");
-      return;
-    }
-  };
-
-  useEffect(() => {
+    };
     checkAuth();
-  }, []);
+  }, [isAuthenticated,navigate]);
 
   return children;
 };
