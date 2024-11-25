@@ -51,7 +51,8 @@ export class UserController {
 
     static async index(req: AuthRequest, res: Response, next: NextFunction) {
         try{
-            const users = await UserService.getAll(req.params.query)
+            const query = typeof req.query.q === 'string' ? req.query.q : "";
+            const users = await UserService.getAll(query)
             const response = formatResponse<UserFormat[]>(true,users,"Users retrieved successfully")
 
             res.status(200).json(response)
