@@ -35,8 +35,8 @@ export class ConnectionController {
         true
       );
 
-      await validateUserExists(storeRequest.from_id,false)
-      await validateUserExists(storeRequest.to_id,false)
+      await validateUserExists(storeRequest.from_id, false);
+      await validateUserExists(storeRequest.to_id, false);
 
       if (req.userId != storeRequest.from_id) {
         throw new ResponseError(
@@ -79,7 +79,7 @@ export class ConnectionController {
         );
       }
 
-      await validateUserExists(user_id,false)
+      await validateUserExists(user_id, false);
 
       const pending_requests = await ConnectionService.indexPending(user_id);
 
@@ -103,7 +103,7 @@ export class ConnectionController {
     try {
       const user_id: number = Number(req.params.user_id);
 
-      await validateUserExists(user_id,false)
+      await validateUserExists(user_id, false);
 
       const connections_list = await ConnectionService.indexConnection(user_id);
 
@@ -125,25 +125,24 @@ export class ConnectionController {
     next: NextFunction
   ) {
     try {
-        console.log(req.body)
-      const respond_req: RespondReq = Validation.validate(
-        ConnectionValidation.RESPONDREQ,
-        req.body
-      );
+      const respond_req: RespondReq = {
+        from_id: req.body.from_id,
+        to_id: req.body.to_id,
+        accept: req.params.action === "accept" ? true : false,
+      } 
 
-      if (req.userId != respond_req.from_id) {
+      if (req.userId != respond_req.to_id) {
         throw new ResponseError(
           403,
-          `User is unauthorized to respond Connection Request from User with Id ${respond_req.from_id}!`
+          `User is unauthorized to respond Connection Request from User with Id ${respond_req.to_id}!`
         );
       }
 
-      await validateConnectionRequestExists(respond_req.from_id,respond_req.to_id,false)
-      await validateConnectionExists(respond_req.from_id,respond_req.to_id,true)
+      await validateConnectionRequestExists(respond_req.from_id, respond_req.to_id, false);
 
-      const respond_result = await ConnectionService.respondRequest(
-        respond_req
-      );
+      await validateConnectionExists(respond_req.from_id, respond_req.to_id, true);
+
+      const respond_result = await ConnectionService.respondRequest(respond_req);
 
       const response = formatResponse(
         true,
@@ -154,7 +153,44 @@ export class ConnectionController {
       );
 
       res.status(201).json(response);
-      
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  static async unconnect(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const unconnect_req: ConnectionReq = Validation.validate(
+        ConnectionValidation.STOREREQUEST,
+        req.body
+      );
+
+      if (
+        req.userId != unconnect_req.from_id &&
+        req.userId != unconnect_req.to_id
+      ) {
+        throw new ResponseError(
+          403,
+          `User is unauthorized to perform unconnect operation!`
+        );
+      }
+
+      await validateConnectionExists(
+        unconnect_req.from_id,
+        unconnect_req.to_id,
+        false
+      );
+
+      const connection = await ConnectionService.deleteConnection(
+        unconnect_req
+      );
+
+      const response = formatResponse(
+        true,
+        connection,
+        `User Id ${unconnect_req.from_id} and User Id ${unconnect_req.to_id}'s Connection disconnected successfully!`
+      );
+      res.status(200).json(response);
     } catch (e) {
       next(e);
     }

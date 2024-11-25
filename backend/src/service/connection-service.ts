@@ -90,4 +90,17 @@ export class ConnectionService{
 
         return flattenedConnections
     }
+
+    static async deleteConnection(request: ConnectionReq){
+        const connection = await prismaClient.connection.delete({
+            where:{
+                from_id_to_id:{
+                    from_id: request.from_id,
+                    to_id: request.to_id,
+                }
+            }
+        })
+
+        return connection
+    }
 }
