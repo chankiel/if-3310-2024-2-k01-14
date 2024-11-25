@@ -8,8 +8,8 @@ export const formatResponse = <T>(
 ): ApiResponse<T> => {
   return {
     success,
-    data,
     message,
+    data,
     error,
   };
 };

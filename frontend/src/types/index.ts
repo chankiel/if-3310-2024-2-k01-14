@@ -61,7 +61,7 @@ export type PushSubscription = {
 };
 
 export type AuthRequest = {
-  username: string;
+  identifier: string;
   password: string;
 };
 
@@ -89,15 +89,27 @@ export type UserRequest = {
   email: string;
   username: string;
   password: string;
-  full_name: string;
+  name: string;
 }
 
 export type UserResponse = {
-  id: number;
   username: string;
-  full_name: string|null;
+  name: string | null;
   work_history: string | null;
   skills: string | null;
   profile_photo: string | null;
-  relevant_posts: Feed[];
+  connection_count: number;
+  relevant_posts?: Feed[];
+};
+
+export type UserResponseWithId = UserResponse & {
+  id: string
+}
+
+export type UpdateUserRequest = {
+  username?: string;
+  profile_photo?: File;
+  name?: string;
+  work_history?: string;
+  skills?: string;
 };
