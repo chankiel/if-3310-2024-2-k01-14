@@ -1,4 +1,6 @@
 import { z, ZodType } from "zod";
+import { prismaClient } from "../application/database";
+import { ResponseError } from "../error/response-error";
 
 export class UserValidation {
 
@@ -18,4 +20,17 @@ export class UserValidation {
         description: z.string().min(6).max(100),
         photo_profile: z.string().min(1).max(100)
     });
+}
+
+export async function validateUserExists(user_id: number, isStore: boolean) {
+    const user = await prismaClient.user.findUnique({
+        where: { id: user_id }
+    });
+    if (!user && !isStore) {
+        throw new ResponseError(404,`User with id ${user_id} not found`);
+    }
+
+    if (user && isStore) {
+        throw new ResponseError(409,`User with id ${user_id} already exists!`);
+    }
 }

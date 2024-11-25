@@ -9,8 +9,13 @@ import { formatResponse } from "../utils/ResponseFormatter";
 import { ConnectionRequest } from "@prisma/client";
 import { AuthRequest } from "../middleware/auth-middleware";
 import { Validation } from "../validation/validation";
-import { ConnectionValidation } from "../validation/connection-validation";
+import {
+  ConnectionValidation,
+  validateConnectionExists,
+  validateConnectionRequestExists,
+} from "../validation/connection-validation";
 import { ResponseError } from "../error/response-error";
+import { validateUserExists } from "../validation/user-validation";
 
 export class ConnectionController {
   static async storeConnectionRequest(
@@ -23,6 +28,15 @@ export class ConnectionController {
         ConnectionValidation.STOREREQUEST,
         req.body
       );
+
+      await validateConnectionRequestExists(
+        storeRequest.from_id,
+        storeRequest.to_id,
+        true
+      );
+
+      await validateUserExists(storeRequest.from_id,false)
+      await validateUserExists(storeRequest.to_id,false)
 
       if (req.userId != storeRequest.from_id) {
         throw new ResponseError(
@@ -41,9 +55,7 @@ export class ConnectionController {
         "Connection Request created successfully!"
       );
 
-      res.status(201).json({
-        response,
-      });
+      res.status(201).json(response);
     } catch (e) {
       next(e);
     }
@@ -58,7 +70,7 @@ export class ConnectionController {
       const user_id: number = Validation.validate(
         ConnectionValidation.INDEXREQUEST,
         req.body
-      );
+      ).user_id;
 
       if (req.userId != user_id) {
         throw new ResponseError(
@@ -67,13 +79,16 @@ export class ConnectionController {
         );
       }
 
+      await validateUserExists(user_id,false)
+
       const pending_requests = await ConnectionService.indexPending(user_id);
 
-      const response = formatResponse<ConnectionReqResponse>(
+      const response = formatResponse<ConnectionReqResponse[]>(
         true,
         pending_requests,
         "Pending Requests retrieved successfully!"
       );
+
       res.status(200).json(response);
     } catch (e) {
       next(e);
@@ -86,20 +101,19 @@ export class ConnectionController {
     next: NextFunction
   ) {
     try {
-      const user_id: number = Validation.validate(
-        ConnectionValidation.INDEXREQUEST,
-        req.body
-      );
+      const user_id: number = Number(req.params.user_id);
+
+      await validateUserExists(user_id,false)
 
       const connections_list = await ConnectionService.indexConnection(user_id);
 
-      const response = formatResponse<ConnectionReqResponse>(
+      const response = formatResponse<ConnectionReqResponse[]>(
         true,
         connections_list,
         "Connections list retrieved successfully!"
       );
-      res.status(200).json(response);
 
+      res.status(200).json(response);
     } catch (e) {
       next(e);
     }
@@ -111,6 +125,7 @@ export class ConnectionController {
     next: NextFunction
   ) {
     try {
+        console.log(req.body)
       const respond_req: RespondReq = Validation.validate(
         ConnectionValidation.RESPONDREQ,
         req.body
@@ -119,9 +134,12 @@ export class ConnectionController {
       if (req.userId != respond_req.from_id) {
         throw new ResponseError(
           403,
-          `User is unauthorized to respond Connection from User with Id ${respond_req.from_id}!`
+          `User is unauthorized to respond Connection Request from User with Id ${respond_req.from_id}!`
         );
       }
+
+      await validateConnectionRequestExists(respond_req.from_id,respond_req.to_id,false)
+      await validateConnectionExists(respond_req.from_id,respond_req.to_id,true)
 
       const respond_result = await ConnectionService.respondRequest(
         respond_req
@@ -135,7 +153,8 @@ export class ConnectionController {
         } successfully!`
       );
 
-      res.status(200).json(response)
+      res.status(201).json(response);
+      
     } catch (e) {
       next(e);
     }
