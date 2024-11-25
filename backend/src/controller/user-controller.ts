@@ -17,8 +17,6 @@ export class UserController {
                 path: "/",
             });
             
-            console.log("Cookies: ", req.cookies);
-            
             const response = formatResponse<string>(true,token,"User Registered Successfully")
 
             res.status(200).json({
@@ -35,10 +33,10 @@ export class UserController {
             const token = await UserService.login(request);
 
             res.cookie("token", token, {
-                httpOnly: true, // Mencegah akses melalui JavaScript (keamanan tambahan)
-                secure: true, // Hanya digunakan untuk HTTPS
-                maxAge: 3600 * 1000, // Masa berlaku cookie: 1 jam
-                path: "/", // Cookie berlaku di semua rute
+                httpOnly: false, 
+                secure: false,
+                maxAge: 3600 * 1000, 
+                path: "/", 
             });
 
             const response = formatResponse<string>(true,token,"User logged in successfully")

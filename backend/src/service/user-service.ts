@@ -61,12 +61,11 @@ export class UserService {
     }
 
     registerRequest.password = await bcrypt.hash(registerRequest.password, 10);
-
-    console.log("Regitser: ", registerRequest)
     
     const user = await prismaClient.user.create({
       data: registerRequest,
     });
+
 
     const payload = {
         userId: user.id,
@@ -76,8 +75,11 @@ export class UserService {
         exp: Math.floor(Date.now() / 1000) + 3600, // TTL 1 jam
     };
 
+
     // Buat JWT
     const token = createJwt(payload);
+
+    console.log(token);
 
     return token;
   }
