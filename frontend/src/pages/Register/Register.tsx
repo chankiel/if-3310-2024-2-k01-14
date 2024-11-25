@@ -40,6 +40,7 @@ export default function Register() {
                 console.log(formData)
                 const response = await fetch(`http://localhost:3000/api/register`, {
                     method: "POST",
+                    credentials: "include", 
                     headers: {
                         "Content-Type": "application/json",
                     },

@@ -18,6 +18,7 @@ const prismaUserFormat = {
   work_history: true,
   skills: true,
   profile_photo_path: true,
+  connection_count: true,
   feeds: {
     select: {
       id: true,
@@ -39,6 +40,9 @@ export class UserService {
       feeds: undefined,
       profile_photo_path: undefined,
       full_name: undefined,
+      work_history: user.work_history,
+      skills: user.skills,
+      connection_count: 0
     };
 
     return formattedUser
@@ -134,7 +138,7 @@ export class UserService {
     return formattedUsers;
   }
 
-  static async get(id: number): Promise<UserFormat> {
+  static async get(id: number, currentUserId?: number): Promise<UserFormat> {
     const user = await prismaClient.user.findUnique({
       where: {
         id: id,
@@ -146,7 +150,42 @@ export class UserService {
       throw new ResponseError(404, "User not found");
     }
 
+    const connectionCount = await prismaClient.connection.count({
+      where: {
+        OR: [
+          {
+            from_id: id
+          },
+          {
+            to_id: id
+          }
+        ],
+      }
+    });
+
+    const isOwner = currentUserId === id;
+    const isConnected = await prismaClient.connection.findFirst({
+      where: {
+        OR: [
+          { 
+            from_id: currentUserId, 
+            to_id: id 
+          },
+          { 
+            from_id: id, 
+            to_id: currentUserId 
+          },
+        ],
+      },
+    });
+
     const formattedUser = this.formatUserResponse(user);
+
+    formattedUser.connection_count = connectionCount;
+
+    if(isOwner || isConnected) {
+      formattedUser.relevant_posts = user.feeds;
+    }
 
     return formattedUser;
   }
@@ -154,8 +193,18 @@ export class UserService {
   static async update(id: number, request: UpdateUserRequest) {
     const updateRequest = Validation.validate(UserValidation.UPDATE, request);
 
-    if (updateRequest.username) {
-    }
+    await prismaClient.user.update({
+      where: {
+        id: id
+      },
+      data: {
+        username: updateRequest.username,
+        full_name: updateRequest.name,
+        work_history: updateRequest.work_history,
+        skills: updateRequest.skills,
+        profile_photo_path: updateRequest.photo_profile,
+      }
+    });
 
     return "User updated successfully";
   }

@@ -16,6 +16,7 @@ ALTER TABLE "chats" DROP CONSTRAINT "chats_from_id_fkey";
 ALTER TABLE "chats" DROP CONSTRAINT "chats_to_id_fkey";
 
 -- DropForeignKey
+
 ALTER TABLE "connection" DROP CONSTRAINT "connection_from_id_fkey";
 
 -- DropForeignKey
