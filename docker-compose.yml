@@ -12,6 +12,7 @@ services:
       - DB_NAME=${POSTGRES_DB}
       - DB_USER=${POSTGRES_USER}
       - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - CHOKIDAR_USEPOLLING=true
     volumes:
       - ./backend:/home/node/app
