@@ -10,6 +10,13 @@ export class UserController {
             const request: CreateUserRequest = req.body as CreateUserRequest;
             const token = await UserService.register(request);
             
+            res.cookie("token", token, {
+                httpOnly: true, // Mencegah akses melalui JavaScript (keamanan tambahan)
+                secure: true, // Hanya digunakan untuk HTTPS
+                maxAge: 3600 * 1000, // Masa berlaku cookie: 1 jam
+                path: "/", // Cookie berlaku di semua rute
+            });
+            
             const response = formatResponse<string>(true,token,"User Registered Successfully")
 
             res.status(200).json({
@@ -24,6 +31,14 @@ export class UserController {
         try {
             const request: LoginUserRequest = req.body as LoginUserRequest;
             const token = await UserService.login(request);
+
+            res.cookie("token", token, {
+                httpOnly: true, // Mencegah akses melalui JavaScript (keamanan tambahan)
+                secure: true, // Hanya digunakan untuk HTTPS
+                maxAge: 3600 * 1000, // Masa berlaku cookie: 1 jam
+                path: "/", // Cookie berlaku di semua rute
+            });
+
             const response = formatResponse<string>(true,token,"User logged in successfully")
 
             res.status(200).json({

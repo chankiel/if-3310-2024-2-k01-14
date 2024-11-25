@@ -24,6 +24,7 @@ export type UserPrismaFormat = {
 export type CreateUserRequest = {
   username: string;
   email: string;
+  name:string;
   password: string;
 };
 
