@@ -13,21 +13,12 @@ const prismaFromFormat = {
     } 
 }
 
+function flattenFrom(data: { from: ConnectionReqResponse }) {
+    return { ...data.from };
+  }
+
 export class ConnectionService{
     static async storeRequest(request: ConnectionReq) {
-        const conn_request = await prismaClient.connectionRequest.findUnique({
-            where:{
-                from_id_to_id:{
-                    from_id: request.from_id,
-                    to_id: request.to_id
-                }
-            }
-        })
-
-        if(conn_request){
-            throw new ResponseError(4)
-        }
-        
         const connection_request_result = await prismaClient.connectionRequest.create({
             data: {
                 from_id: request.from_id,
@@ -38,7 +29,7 @@ export class ConnectionService{
         return connection_request_result
     }
 
-    static async indexPending(user_id: number): Promise<ConnectionReqResponse>{
+    static async indexPending(user_id: number): Promise<ConnectionReqResponse[]>{
         const pendingRequests = await prismaClient.connectionRequest.findMany({
             select:prismaFromFormat,
             where:{
@@ -46,7 +37,9 @@ export class ConnectionService{
             }
         })
 
-        return pendingRequests
+        const flattenedPendingRequests = pendingRequests.map((req)=>flattenFrom(req))
+
+        return flattenedPendingRequests
     }
 
     static async respondRequest(request: RespondReq){
@@ -93,6 +86,8 @@ export class ConnectionService{
             }
         })
 
-        return connections
+        const flattenedConnections = connections.map((con)=>flattenFrom(con))
+
+        return flattenedConnections
     }
 }
