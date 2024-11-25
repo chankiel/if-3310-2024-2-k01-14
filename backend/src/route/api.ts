@@ -13,23 +13,23 @@ apiRouter
   .get(UserController.show)
   .put(UserController.update);
 
-
 apiRouter.post(
-  "/connection-request",
+  "/connection-requests",
   upload.none(),
   ConnectionController.storeConnectionRequest
 );
 
 apiRouter.get(
-  "/connection-request/pending",
+  "/connection-requests/:user_id(\\d+)/pending",
   upload.none(),
   ConnectionController.indexPendingConnectionRequest
 );
 
 apiRouter.put(
-  "/connection-request/respond",
+  "/connection-requests/:from_id(\\d+)/:to_id(\\d+)/:action",
   upload.none(),
   ConnectionController.respondConnectionRequest
 );
+
 
 export default apiRouter;
