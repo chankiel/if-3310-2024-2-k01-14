@@ -37,6 +37,7 @@ export default function Register() {
 
         if (validate()) {
             try {
+                console.log(formData)
                 const response = await fetch(`http://localhost:3000/api/register`, {
                     method: "POST",
                     headers: {

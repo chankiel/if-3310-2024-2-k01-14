@@ -7,6 +7,7 @@ import {
   UserFormat,
   UserPrismaFormat,
 } from "../model/user-model";
+import { createJwt } from "../utils/jwt";
 import { UserValidation } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
 const bcrypt = require("bcrypt");
@@ -61,20 +62,22 @@ export class UserService {
 
     registerRequest.password = await bcrypt.hash(registerRequest.password, 10);
 
+    console.log("Regitser: ", registerRequest)
+    
     const user = await prismaClient.user.create({
       data: registerRequest,
     });
 
-    const token = jwt.sign(
-      {
-        id: user.id,
-        username: user.username,
-      },
-      process.env.JWT_SECRET_KEY,
-      {
-        expiresIn: "1h",
-      }
-    );
+    const payload = {
+        userId: user.id,
+        email: user.email,
+        role: "jobseeker",
+        iat: Math.floor(Date.now() / 1000),
+        exp: Math.floor(Date.now() / 1000) + 3600, // TTL 1 jam
+    };
+
+    // Buat JWT
+    const token = createJwt(payload);
 
     return token;
   }
@@ -101,19 +104,19 @@ export class UserService {
       throw new ResponseError(401, "Username or password is wrong");
     }
 
-    const token = jwt.sign(
-      {
-        id: user.id,
-        username: user.username,
-      },
-      process.env.JWT_SECRET_KEY,
-      {
-        expiresIn: "1h",
-      }
-    );
+    const payload = {
+        userId: user.id,
+        email: user.email,
+        role: "jobseeker",
+        iat: Math.floor(Date.now() / 1000),
+        exp: Math.floor(Date.now() / 1000) + 3600, // TTL 1 jam
+    };
 
-    return token;
-  }
+    // Buat JWT
+    const token = createJwt(payload);
+
+      return token;
+    }
 
   static async getAll(query: string = ""): Promise<UserFormat[]> {
     const users = await prismaClient.user.findMany({

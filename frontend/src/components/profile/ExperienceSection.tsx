@@ -1,0 +1,43 @@
+import { useNavigate } from "react-router-dom";
+import ExperienceSectionDetails from "./ExperienceSectionDetails";
+
+export interface Experience {
+    id: number;
+    jobTitle: string;
+    company: string;
+    location: string;
+    duration: string;
+    description: string;
+}
+
+interface ExperienceSectionProps {
+    experiences: Experience[]
+}
+
+export default function ExperienceSection({ experiences }: ExperienceSectionProps) {
+
+    const navigate = useNavigate();
+
+    return(
+        <>
+            <section className="bg-white mt-2 p-4 pl-8">
+                <span className="text-xl font-semibold">Experience</span>
+                <ul className="pt-1">
+                    {experiences.slice(0, 3).map((experience) => (
+                        <li key={experience.id} className="border-b border-gray-300 py-2">
+                            <ExperienceSectionDetails experience={experience}/>
+                        </li>
+                    ))}
+                </ul>
+                {experiences.length > 3 && (
+                    <div className="mt-2 cursor-pointer flex items-center justify-center" onClick={() => navigate("./details/experiences")}>
+                        <span className="mr-2">Show all {experiences.length} experiences</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+                            <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/>
+                        </svg>
+                    </div>
+                )}
+            </section>
+        </>
+    );
+}
