@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+// import "../App.css"; // Import file CSS modul
 
 export default function Login() {
 
@@ -67,10 +68,10 @@ export default function Login() {
 
     return (
         <>
-            <div className="bg-custom-bg-color min-h-screen">
-                <div className="">Make the most of your professional life</div>
-                <form onSubmit={handleSubmit} className="">
-                    <h2 className="">Login</h2>
+            <div className="form-register-login bg-custom-bg-color min-h-screen">
+                <div className="header-subtitle">Make the most of your professional life</div>
+                <form onSubmit={handleSubmit} className="register-login-container">
+                    <h2 className="register-login-subtitle">Login</h2>
                     {responseMessage && !isSuccess && (
                         <div className="">
                             {responseMessage}

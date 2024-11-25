@@ -33,10 +33,10 @@ export default function Register() {
         return isValid;
     };
 
-    const setCookie = (name: string, value: string, hours: number) => {
-        const expires = new Date(Date.now() + hours * 3600 * 1000).toUTCString();
-        document.cookie = `${name}=${value}; expires=${expires}; path=/`;
-    }
+    // const setCookie = (name: string, value: string, hours: number) => {
+    //     const expires = new Date(Date.now() + hours * 3600 * 1000).toUTCString();
+    //     document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+    // }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -61,7 +61,7 @@ export default function Register() {
                 if(response.ok) {
                     setIsSuccess(true);
                     setResponseMessage(data.message);
-                    setCookie("token", data.body.token, 1);
+                    // setCookie("token", data.body.token, 1);
                     navigate("/feed");
                 } else {
                     setIsSuccess(false);
@@ -77,10 +77,10 @@ export default function Register() {
 
     return (
         <>
-            <div className="bg-custom-bg-color min-h-screen">
-                <div className="">Make the most of your professional life</div>
-                <form onSubmit={handleSubmit} className="">
-                    <h2 className="">Sign Up</h2>
+            <div className="form-register-login bg-custom-bg-color min-h-screen" >
+                <div className="header-subtitle">Make the most of your professional life</div>
+                <form onSubmit={handleSubmit} className="register-login-container">
+                    <h2 className="register-login-subtitle">Sign Up</h2>
                     {responseMessage && !isSuccess && (
                         <div className="">
                             {responseMessage}
