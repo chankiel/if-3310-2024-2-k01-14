@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Cookies from 'js-cookie';
 import { jwtDecode } from "jwt-decode";
-import UserRecommendations from "../components/UserRecommendations";
-import ProfileSection from "../components/profile/ProfileSection";
-import RecommendationSection from "../components/profile/RecommendationSection";
-import ExperienceSection from "../components/profile/ExperienceSection";
-import ActivitySection from "../components/profile/ActivitySection";
-import SkillsSection from "../components/profile/SkillsSection";
+import UserRecommendations from "../../components/UserRecommendations";
+import ProfileSection from "../../components/profile/ProfileSection";
+import RecommendationSection from "../../components/profile/RecommendationSection";
+import ExperienceSection from "../../components/profile/ExperienceSection";
+import ActivitySection from "../../components/profile/ActivitySection";
+import SkillsSection from "../../components/profile/SkillsSection";
 
 export interface User {
     name: string;

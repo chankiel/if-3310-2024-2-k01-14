@@ -29,7 +29,7 @@ export type CreateUserRequest = {
 };
 
 export type LoginUserRequest = {
-  email: string;
+  identifier: string;
   password: string;
 };
 
