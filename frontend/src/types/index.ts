@@ -60,6 +60,12 @@ export type PushSubscription = {
   user?: User | null;
 };
 
+export type APIResponse = {
+  status: boolean;
+  message: string;
+  body: unknown;
+}
+
 export type AuthRequest = {
   identifier: string;
   password: string;
@@ -74,36 +80,27 @@ export type ConnectionReqRequest = {
   to_id: number;
 };
 
-export type RespondRequest = ConnectionRequest & {
+export type RespondRequest = ConnectionReqRequest & {
   accept: boolean;
 };
 
-export type ConnectionResponse = {
+export type ConnectionFormat = {
+  id: string;
+  username: string;
   full_name: string | null;
   profile_photo_path: string | null;
-  work_history: string | null;
-  skills: string | null;
+  created_at: Date;
 };
+
+export type ConnectionResponse = APIResponse & {
+  body: ConnectionFormat[]
+}
 
 export type UserRequest = {
   email: string;
   username: string;
   password: string;
   name: string;
-}
-
-export type UserResponse = {
-  username: string;
-  name: string | null;
-  work_history: string | null;
-  skills: string | null;
-  profile_photo: string | null;
-  connection_count: number;
-  relevant_posts?: Feed[];
-};
-
-export type UserResponseWithId = UserResponse & {
-  id: string
 }
 
 export type UpdateUserRequest = {
@@ -113,3 +110,15 @@ export type UpdateUserRequest = {
   work_history?: string;
   skills?: string;
 };
+
+export type UserFormat = {
+  id?: string;
+  username: string;
+  name: string | null;
+  work_history: string | null;
+  skills: string | null;
+  profile_photo: string | null;
+  connection_count: number;
+  relevant_posts?: Feed[];
+};
+

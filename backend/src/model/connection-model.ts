@@ -1,15 +1,16 @@
-export type ConnectionReqResponse = {
+export type ConnectionFormat = {
+    id: number;
+    username: string;
     full_name: string | null;
     profile_photo_path: string | null;
-    work_history: string | null;
-    skills: string | null;
+    created_at: Date;
 };
 
-export type ConnectionReq = {
+export type ConnectionReqRequest = {
   from_id: number;
   to_id: number;
 };
 
-export type RespondReq = ConnectionReq & {
+export type RespondRequest = ConnectionReqRequest & {
     accept: boolean
 }
