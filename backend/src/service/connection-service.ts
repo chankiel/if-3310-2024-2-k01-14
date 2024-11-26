@@ -1,24 +1,25 @@
 import { prismaClient } from "../application/database";
 import { ResponseError } from "../error/response-error";
-import { ConnectionReqResponse, ConnectionReq, RespondReq } from "../model/connection-model";
+import { ConnectionFormat, ConnectionReqRequest, RespondRequest } from "../model/connection-model";
 
 const prismaFromFormat = {
     from:{
         select:{
+            id: true,
+            username: true,
             full_name: true,
-            work_history: true,
-            skills: true,
-            profile_photo_path: true
+            profile_photo_path: true,
+            created_at: true,
         }
     } 
 }
 
-function flattenFrom(data: { from: ConnectionReqResponse }) {
+function flattenFrom(data: { from: ConnectionFormat }) {
     return { ...data.from };
   }
 
 export class ConnectionService{
-    static async storeRequest(request: ConnectionReq) {
+    static async storeRequest(request: ConnectionReqRequest) {
         const connection_request_result = await prismaClient.connectionRequest.create({
             data: {
                 from_id: request.from_id,
@@ -29,7 +30,7 @@ export class ConnectionService{
         return connection_request_result
     }
 
-    static async indexPending(user_id: number): Promise<ConnectionReqResponse[]>{
+    static async indexPending(user_id: number): Promise<ConnectionFormat[]>{
         const pendingRequests = await prismaClient.connectionRequest.findMany({
             select:prismaFromFormat,
             where:{
@@ -42,7 +43,7 @@ export class ConnectionService{
         return flattenedPendingRequests
     }
 
-    static async respondRequest(request: RespondReq){
+    static async respondRequest(request: RespondRequest){
         const operations = [
             prismaClient.connectionRequest.delete({
                 where:{
@@ -91,13 +92,19 @@ export class ConnectionService{
         return flattenedConnections
     }
 
-    static async deleteConnection(request: ConnectionReq){
-        const connection = await prismaClient.connection.delete({
+    static async deleteConnection(request: ConnectionReqRequest){
+        const connection = await prismaClient.connection.deleteMany({
             where:{
-                from_id_to_id:{
-                    from_id: request.from_id,
-                    to_id: request.to_id,
-                }
+                AND: [
+                    {
+                        from_id: request.from_id,
+                        to_id: request.to_id,
+                    },
+                    {
+                        from_id: request.to_id,
+                        to_id: request.from_id
+                    }
+                ]
             }
         })
 
