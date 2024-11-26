@@ -11,8 +11,8 @@ export class UserController {
             const token = await UserService.register(request);
 
             res.cookie("token", token, {
-                httpOnly: false,
-                secure: false,
+                httpOnly: true,
+                secure: true,
                 maxAge: 3600000,
                 path: "/",
             });
@@ -33,9 +33,9 @@ export class UserController {
             const token = await UserService.login(request);
 
             res.cookie("token", token, {
-                httpOnly: false, 
-                secure: false,
-                maxAge: 3600 * 1000, 
+                httpOnly: true, 
+                secure: true,
+                maxAge: 3600000, 
                 path: "/", 
             });
 

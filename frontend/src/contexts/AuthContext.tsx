@@ -67,11 +67,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (payload: AuthRequest) => {
       const auth = await UserApi.login(payload);
-
+      const expireInOneHour = new Date();
+      expireInOneHour.setHours(expireInOneHour.getHours() + 1); 
       if (auth) {
         setIsAuthenticated(true);
-
-        Cookies.set("token", auth.token);
+        Cookies.set("token", auth.token, {expires: expireInOneHour , path:"/"});
         setToken(auth.token);
       }
     }
