@@ -60,6 +60,10 @@ const routes: RouteObject[] = [
         element: <Users />
       },
       {
+        path: "/profile/:user_id",
+        element: <Profile />
+      },
+      {
         path: "*",
         element: <NotFound />,
       },

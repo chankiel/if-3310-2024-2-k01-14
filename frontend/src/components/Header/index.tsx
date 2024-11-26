@@ -10,9 +10,37 @@ import {
 import { MagnifyingGlassIcon, ClockIcon } from "@heroicons/react/24/solid";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
   const { isAuthenticated, login, logout, username, name } = UseAuth();
+
+  const navigate = useNavigate();
+
+  const handleSubmitLogout = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+        try {
+            const response = await fetch(`http://localhost:3000/api/logout`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("Data: ",data.message)
+                navigate("/feed");
+            } else{
+              console.log("Data: ",data.message)
+            }
+        } catch (err) {
+            console.log("Error: ", err);
+        }
+    
+};
 
   const paths = [
     {
@@ -99,8 +127,7 @@ const Header: React.FC = () => {
                         View Profile
                       </Link>
                       <form
-                        action="/logout"
-                        method="POST"
+                        onSubmit={handleSubmitLogout}
                         className="text-gray-600"
                       >
                         <button

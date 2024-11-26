@@ -1,17 +1,15 @@
 import { useState } from "react";
 import EditProfileModal from "./EditProfileModal";
-import { Experience } from "./ExperienceSection";
 
 interface ProfileSectionProps {
     profileData: {
         name: string;
         description: string;
         connections: number;
-        profileImage: string;
-        backgroundImage: string;
+        profile_photo: string;
     };
-    skills: string[];
-    experiences: Experience[];
+    skills: string;
+    experiences: string;
 }
 
 export default function ProfileSection({ profileData, skills, experiences }: ProfileSectionProps) {
@@ -32,12 +30,12 @@ export default function ProfileSection({ profileData, skills, experiences }: Pro
                 style={{ boxShadow: '0 0 0 1px rgba(140, 140, 140, 0.2)' }}>
                 <div>
                     <img 
-                        src={profileData.backgroundImage}
+                        src="./public/bg-image-profile.png"
                         alt="Profile Background" 
                         className="w-full h-48 object-cover sticky"
                     />
                     <img 
-                        src={profileData.profileImage}
+                        src={profileData.profile_photo}
                         alt="Profile" 
                         className="w-40 h-40 rounded-full border-4 border-white relative left-8"
                         style={{ marginTop: '-110px' }}
@@ -81,7 +79,7 @@ export default function ProfileSection({ profileData, skills, experiences }: Pro
                 initialData={{
                     name: profileData.name,
                     description: profileData.description,
-                    profileImage: profileData.profileImage,
+                    profileImage: profileData.profile_photo,
                     skills: skills,
                     experiences: experiences,
                 }}
