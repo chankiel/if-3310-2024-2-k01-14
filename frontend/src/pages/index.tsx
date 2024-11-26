@@ -3,13 +3,19 @@ import Login from "./Login";
 import NotFound from "./NotFound";
 import Profile from "./Profile";
 import Register from "./Register/Register";
+import Connection from "./Connection";
+import Requests from "./Request";
+import Users from "./Users";
 
 export{
+    Users,
     Feed,
     Login,
     NotFound,
     Profile,
     Register,
+    Connection,
+    Requests
 };
 
 
