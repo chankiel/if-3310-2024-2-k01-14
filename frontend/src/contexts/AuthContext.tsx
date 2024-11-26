@@ -8,7 +8,7 @@ type AuthContext = {
   token: string | null;
   username: string;
   name: string | null;
-  userId: number;
+  currentId: number;
   login: (payload: AuthRequest) => void;
   logout: () => void;
   update: boolean;
@@ -22,7 +22,7 @@ const AuthContext = createContext<AuthContext>({
   logout: () => {},
   name: "",
   username: "",
-  userId: 0,
+  currentId: 0,
   update: false,
   setUpdate: () => {}
 });
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const [username, setUsername] = useState("user");
-  const [userId, setUserId] = useState(0);
+  const [currentId, setCurrentId] = useState(0);
   const [update, setUpdate] = useState(false);
   const [name, setName] = useState("");
 
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setIsAuthenticated(true);
 
             setUsername(user.username);
-            setUserId(Number(user.id));
+            setCurrentId(Number(user.id));
             setName(user.name ?? "")
 
             setToken(token);
@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, token, login, logout, username, name, userId, update, setUpdate }}
+      value={{ isAuthenticated, token, login, logout, username, name, currentId, update, setUpdate }}
     >
       {children}
     </AuthContext.Provider>
