@@ -87,6 +87,23 @@ export class UserController {
         }
     }
 
+    static async logout(req: Request, res: Response, next: NextFunction){
+        try {    
+            res.clearCookie("token", {
+                httpOnly: true, 
+                secure: true,
+                path: "/", 
+            });
+            const response = formatResponse<string>(true,"","User logged out successfully")
+
+            res.status(200).json({
+                response
+            })
+        } catch(e) {
+            next(e);
+        }
+    }
+
 
     // static async self(req: AuthRequest,)
 }
