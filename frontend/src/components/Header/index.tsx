@@ -53,15 +53,15 @@ const Header: React.FC = () => {
         <a className="md:w-full h-full" href="/">
           <LinkedInIcon color="#0a66c2" size={50} />
         </a>
-        <nav className="w-2/3">
-          <ul className="flex justify-around gap-2 text-sm text-gray-500">
+        <nav className="w-full">
+          <ul className="flex justify-around gap-2 text-sm text-gray-500 ">
             {!isAuthenticated ? (
               <>
                 {paths.map((path) => (
-                  <li className="relative hover:text-black flex items-center justify-center md:min-w-14">
+                  <li className="relative hover:text-black flex items-center justify-center min-w-14">
                     <Link to={path.path} className="flex flex-col items-center">
                       {path.icon}
-                      <p className="hidden md:block">{path.name}</p>
+                      <p className="hidden md:block text-nowrap">{path.name}</p>
                     </Link>
                   </li>
                 ))}
@@ -82,11 +82,10 @@ const Header: React.FC = () => {
                     </PopoverTrigger>
                     <PopoverContent align="end" sideOffset={15}>
                       <div className="flex gap-2 mb-4">
-                        <img
-                          src="/public/images/perry-casino.webp"
-                          alt="profile-pic"
-                          className="h-20 w-20 object-cover rounded-full"
-                        />
+                        <Avatar className="h-20 w-20">
+                          <AvatarImage src="/images/perry-casino.webp" />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
                         <div className="text-left">
                           <h1 className="font-medium text-lg">
                             Ignatius Jhon Hezkiel Chan
