@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
@@ -15,30 +16,12 @@ export default {
         "linkin-hoverblue": "#EBF4FD",
       },
       backgroundColor: {},
-      fontFamily: {
-        "custom-font": [
-          "-apple-system",
-          "system-ui",
-          "BlinkMacSystemFont",
-          '"Segoe UI"',
-          "Roboto",
-          '"Helvetica Neue"',
-          '"Fira Sans"',
-          "Ubuntu",
-          "Oxygen",
-          '"Oxygen Sans"',
-          "Cantarell",
-          '"Droid Sans"',
-          '"Apple Color Emoji"',
-          '"Segoe UI Emoji"',
-          '"Segoe UI Symbol"',
-          '"Lucida Grande"',
-          "Helvetica",
-          "Arial",
-          "sans-serif",
-        ],
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 };

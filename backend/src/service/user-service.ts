@@ -61,12 +61,22 @@ export class UserService {
 
     const totalUserSameUsername = await prismaClient.user.count({
       where: {
-        email: registerRequest.email,
+        username: registerRequest.username,
       },
     });
 
     if (totalUserSameUsername != 0) {
-      throw new ResponseError(400, "Username already exist");
+      throw new ResponseError(400, "Username is already taken");
+    }
+
+    const totalUserSameEmail = await prismaClient.user.count({
+      where: {
+        email: registerRequest.email,
+      },
+    });
+
+    if (totalUserSameEmail != 0) {
+      throw new ResponseError(400, "Email is already registered");
     }
 
     registerRequest.password = await bcrypt.hash(registerRequest.password, 10);
@@ -94,9 +104,12 @@ export class UserService {
   static async login(request: LoginUserRequest): Promise<string> {
     const loginRequest = Validation.validate(UserValidation.LOGIN, request);
 
-    let user = await prismaClient.user.findUnique({
+    let user = await prismaClient.user.findFirst({
       where: {
-        email: loginRequest.email,
+        OR: [
+          { email: loginRequest.identifier },
+          { username: loginRequest.identifier },
+        ],
       },
     });
 
