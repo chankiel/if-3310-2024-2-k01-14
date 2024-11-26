@@ -6,7 +6,7 @@ export default function Login() {
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
     const [responseMessage, setResponseMessage] = useState<string>("");
     const [formData, setFormData] = useState({
-        email: "",
+        identifier: "",
         password: "",
     });
 
@@ -22,11 +22,6 @@ export default function Login() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const setCookie = (name: string, value: string, hours: number) => {
-        const expires = new Date(Date.now() + hours * 3600 * 1000).toUTCString();
-        document.cookie = `${name}=${value}; expires=${expires}; path=/`;
-    };
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -34,11 +29,12 @@ export default function Login() {
             try {
                 const response = await fetch(`http://localhost:3000/api/login`, {
                     method: "POST",
+                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        email: formData.email,
+                        identifier: formData.identifier,
                         password: formData.password,
                     }),
                 });
@@ -48,7 +44,6 @@ export default function Login() {
                 if (response.ok) {
                     setIsSuccess(true);
                     setResponseMessage(data.message);
-                    setCookie("token", data.body.token, 1);
                     navigate("/feed");
                 } else {
                     setIsSuccess(false);
@@ -75,14 +70,14 @@ export default function Login() {
                         <div className="text-red-500 text-sm mb-4">{responseMessage}</div>
                     )}
                     <div className="mb-4">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                            Email
+                        <label htmlFor="identifier" className="block text-sm font-medium text-gray-700">
+                            Username/Email
                         </label>
                         <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
+                            type="identifier"
+                            id="identifier"
+                            name="identifier"
+                            value={formData.identifier}
                             onChange={handleChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         />
