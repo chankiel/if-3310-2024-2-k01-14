@@ -2,7 +2,7 @@ import { Outlet, RouteObject, createBrowserRouter } from "react-router-dom";
 // import ProtectedRoute from "../components/ProtectedRoute";
 import { AuthProvider } from "../contexts/AuthContext";
 import { Footer, Header } from "../components";
-import {Connection, Requests, Login, NotFound, Register, Users} from "../pages";
+import {Connection, Requests, Login, NotFound, Register, Users, Profile} from "../pages";
 
 const AuthProviderLayout = () => {
   return (

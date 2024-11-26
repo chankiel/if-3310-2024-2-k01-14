@@ -1,4 +1,4 @@
-import UserRecommendations from "../UserRecommendations";
+import UserRecommendations from "./UserRecommendations";
 
 export interface UserRecommendation {
     id: number;
