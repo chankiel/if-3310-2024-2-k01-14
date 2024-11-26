@@ -10,7 +10,9 @@ export async function seedUser(){
             email: `user${i}@gmail.com`,
             password: await bcrypt.hash("TubesWBD123", 10),
             work_history: 'Saya sudah bekerja selama '+i+" tahun",
-            skills: "Tidur"
+            skills: "Tidur",
+            profile_photo: "./public/perry-casino.webp",
+            connection_count: 0
         })
     }
 
