@@ -2,6 +2,9 @@ import { z, ZodType } from "zod";
 import { prismaClient } from "../application/database";
 import { ResponseError } from "../error/response-error";
 
+const MAX_FILE_SIZE = 5000000;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
 export class UserValidation {
 
     static readonly REGISTER : ZodType = z.object({
@@ -18,7 +21,13 @@ export class UserValidation {
 
     static readonly UPDATE : ZodType = z.object({
         username: z.string().min(1),
-        photo_profile: z.string().min(1).max(100),
+        photo_profile: z
+                .instanceof(File)
+                .refine((files) => files.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+                .refine(
+                    (files) => ACCEPTED_IMAGE_TYPES.includes(files.type),
+                    "Only .jpg, .jpeg, .png and .webp formats are supported."
+                ),
         name: z.string().min(1).max(100),
         work_history: z.string().min(1),
         skills: z.string().min(1)

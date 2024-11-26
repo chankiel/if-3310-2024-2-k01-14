@@ -1,3 +1,4 @@
+import path from "path";
 import { prismaClient } from "../application/database";
 import { ResponseError } from "../error/response-error";
 import {
@@ -172,21 +173,34 @@ export class UserService {
   }
 
   static async update(id: number, request: UpdateUserRequest) {
-    // const updateRequest = Validation.validate(UserValidation.UPDATE, request);
+    const updateRequest = Validation.validate(UserValidation.UPDATE, request);
+    
+    let url_profile_photo = null;
 
-    // await prismaClient.user.update({
-    //   where: {
-    //     id: id
-    //   },
-    //   data: {
-    //     username: updateRequest.username,
-    //     full_name: updateRequest.name,
-    //     work_history: updateRequest.work_history,
-    //     skills: updateRequest.skills,
-    //     profile_photo_path: updateRequest.photo_profile,
-    //   },
-    //   select: prismaUserFormat
-    // });
+    if(updateRequest.profile_photo) {
+      const file = updateRequest.profile_photo;
+
+      const uploadPath = path.join(__dirname, `./public/image/profile_${id}`);
+
+      // download the image to local
+      
+
+      url_profile_photo = uploadPath;
+    }
+
+    await prismaClient.user.update({
+      where: {
+        id: id
+      },
+      data: {
+        username: updateRequest.username,
+        full_name: updateRequest.name,
+        work_history: updateRequest.work_history,
+        skills: updateRequest.skills,
+        profile_photo_path: url_profile_photo,
+      },
+      select: prismaUserFormat
+    });
 
     return "User updated successfully";
   }

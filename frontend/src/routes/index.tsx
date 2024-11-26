@@ -13,7 +13,7 @@
 //       </Router>
 
 import { Outlet, RouteObject, createBrowserRouter } from "react-router-dom";
-import { Login, NotFound, Register } from "../pages";
+import { Login, NotFound, Profile, Register } from "../pages";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { AuthProvider } from "../contexts/AuthContext";
 import { Footer, Header } from "../components";
@@ -48,6 +48,10 @@ const routes: RouteObject[] = [
       {
         path: "/register",
         element: <Register />,
+      },
+      {
+        path: "/profile/:user_id",
+        element: <Profile />
       },
       {
         path: "*",
