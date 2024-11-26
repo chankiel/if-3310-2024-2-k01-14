@@ -1,8 +1,8 @@
 import { ConnectionService } from "../service/connection-service";
 import {
-  ConnectionReq,
-  ConnectionReqResponse,
-  RespondReq,
+  ConnectionFormat,
+  ConnectionReqRequest,
+  RespondRequest,
 } from "../model/connection-model";
 import { Response, NextFunction } from "express";
 import { formatResponse } from "../utils/ResponseFormatter";
@@ -24,7 +24,7 @@ export class ConnectionController {
     next: NextFunction
   ) {
     try {
-      const storeRequest: ConnectionReq = Validation.validate(
+      const storeRequest: ConnectionReqRequest = Validation.validate(
         ConnectionValidation.STOREREQUEST,
         req.body
       );
@@ -83,7 +83,7 @@ export class ConnectionController {
 
       const pending_requests = await ConnectionService.indexPending(user_id);
 
-      const response = formatResponse<ConnectionReqResponse[]>(
+      const response = formatResponse<ConnectionFormat[]>(
         true,
         pending_requests,
         "Pending Requests retrieved successfully!"
@@ -107,7 +107,7 @@ export class ConnectionController {
 
       const connections_list = await ConnectionService.indexConnection(user_id);
 
-      const response = formatResponse<ConnectionReqResponse[]>(
+      const response = formatResponse<ConnectionFormat[]>(
         true,
         connections_list,
         "Connections list retrieved successfully!"
@@ -125,7 +125,7 @@ export class ConnectionController {
     next: NextFunction
   ) {
     try {
-      const respond_req: RespondReq = {
+      const respond_req: RespondRequest = {
         from_id: req.body.from_id,
         to_id: req.body.to_id,
         accept: req.params.action === "accept" ? true : false,
@@ -158,12 +158,12 @@ export class ConnectionController {
     }
   }
 
-  static async unconnect(req: AuthRequest, res: Response, next: NextFunction) {
+  static async deleteConnection(req: AuthRequest, res: Response, next: NextFunction) {
     try {
-      const unconnect_req: ConnectionReq = Validation.validate(
-        ConnectionValidation.STOREREQUEST,
-        req.body
-      );
+      const unconnect_req: ConnectionReqRequest = {
+        from_id: req.body.from_id,
+        to_id: req.body.to_id
+      };
 
       if (
         req.userId != unconnect_req.from_id &&
@@ -187,9 +187,10 @@ export class ConnectionController {
 
       const response = formatResponse(
         true,
-        connection,
+        null,
         `User Id ${unconnect_req.from_id} and User Id ${unconnect_req.to_id}'s Connection disconnected successfully!`
       );
+
       res.status(200).json(response);
     } catch (e) {
       next(e);

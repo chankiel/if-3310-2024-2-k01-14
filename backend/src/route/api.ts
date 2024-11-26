@@ -30,5 +30,11 @@ apiRouter.put(
   ConnectionController.respondConnectionRequest
 );
 
+apiRouter.delete(
+  "/connections/:from_id(\\d+)/:to_id(\\d+)",
+  upload.none(),
+  ConnectionController.deleteConnection
+)
+
 
 export default apiRouter;
