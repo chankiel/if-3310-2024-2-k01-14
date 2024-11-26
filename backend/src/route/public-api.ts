@@ -10,7 +10,7 @@ publicRouter.post("/register", upload.none(), UserController.store);
 publicRouter.post("/login", upload.none(), UserController.login);
 
 publicRouter.get("/profile/",UserController.index)
-publicRouter.get("/profile/me",UserController.s)
+// publicRouter.get("/profile/me",UserController.s)
 publicRouter.get("/connections/:user_id(\\d+)",ConnectionController.indexConnection)
 
 publicRouter.get("/profile/:user_id(\\d+)",UserController.show)
