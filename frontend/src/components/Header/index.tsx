@@ -58,7 +58,7 @@ const Header: React.FC = () => {
             {!isAuthenticated ? (
               <>
                 {paths.map((path) => (
-                  <li className="relative hover:text-black flex items-center justify-center md:min-w-14">
+                  <li key={path.path} className="relative hover:text-black flex items-center justify-center md:min-w-14">
                     <Link to={path.path} className="flex flex-col items-center">
                       {path.icon}
                       <p className="hidden md:block">{path.name}</p>
