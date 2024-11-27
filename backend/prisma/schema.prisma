@@ -26,6 +26,8 @@ model User {
   connectionRequestsTo   ConnectionRequest[] @relation("ConnectionRequestTo")
   feeds                  Feed[]              @relation("UserFeeds")
   pushSubscriptions      PushSubscription[]
+
+  @@map("users")
 }
 
 model Feed {
@@ -37,6 +39,8 @@ model Feed {
   user       User     @relation("UserFeeds", fields: [user_id], references: [id])
 
   @@index([user_id])
+
+  @@map("feeds")
 }
 
 model Chat {
@@ -49,6 +53,8 @@ model Chat {
   to        User     @relation("UserChatsTo", fields: [to_id], references: [id])
 
   @@index([from_id, to_id])
+
+  @@map("chats")
 }
 
 model ConnectionRequest {
@@ -59,6 +65,8 @@ model ConnectionRequest {
   to         User     @relation("ConnectionRequestTo", fields: [to_id], references: [id])
 
   @@id([from_id, to_id])
+
+  @@map("connectionrequests")
 }
 
 model Connection {
@@ -69,6 +77,8 @@ model Connection {
   to         User     @relation("UserConnectionsTo", fields: [to_id], references: [id])
 
   @@id([from_id, to_id])
+
+  @@map("connections")
 }
 
 model PushSubscription {
@@ -79,4 +89,6 @@ model PushSubscription {
   user       User?    @relation(fields: [user_id], references: [id])
 
   @@index([user_id])
+
+  @@map("pushsubscriptions")
 }
