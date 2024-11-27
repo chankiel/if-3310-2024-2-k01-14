@@ -1,23 +1,17 @@
 import React, { useState } from "react";
+import { ProfileData } from "../../pages/Profile";
 
 interface EditModalProps {
     isOpen: boolean;
     onClose: () => void;
-    initialData: {
-        name: string;
-        description: string;
-        profileImage: string;
-        skills: string;
-        experiences: string;
-    };
+    initialData: ProfileData;
 }
 
 export default function EditProfileModal({ isOpen, onClose, initialData }: EditModalProps) {
     const [profileImage, setProfileImage] = useState<File | null>(null);
-    const [name, setName] = useState<string>(initialData.name);
-    const [description, setDescription] = useState<string>(initialData.description);
-    const [skills, setSkills] = useState<string>(initialData.skills);
-    const [experiences, setExperiences] = useState<string>(initialData.experiences);
+    const [name, setName] = useState(initialData.name);
+    const [skills, setSkills] = useState(initialData.skills);
+    const [experiences, setExperiences] = useState(initialData.work_history);
 
     if (!isOpen) return null;
 
@@ -37,7 +31,7 @@ export default function EditProfileModal({ isOpen, onClose, initialData }: EditM
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Profile updated:", { name, description, profileImage, skills, experiences });
+        console.log("Profile updated:", { name, profileImage, skills, experiences });
         onClose();
     }
 
@@ -78,21 +72,11 @@ export default function EditProfileModal({ isOpen, onClose, initialData }: EditM
                             />
                         </div>
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700">Description</label>
-                            <input 
-                                type="text" 
-                                value={description} 
-                                onChange={(e) => setDescription(e.target.value)} 
-                                className="mt-1 block w-full border border-gray-300 rounded-md p-2" 
-                                placeholder="Your Description" 
-                            />
-                        </div>
-                        <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-700">Skills</label>
                             <div className="relative mb-4">
                                 <input 
                                     type="text" 
-                                    value={skills} 
+                                    value={skills ? skills : ""} 
                                     onChange={(e) => handleSkillChange(e.target.value)} 
                                     className="block w-full border border-gray-300 rounded-md p-2 pr-10"
                                     placeholder="Your skills" 
@@ -103,7 +87,7 @@ export default function EditProfileModal({ isOpen, onClose, initialData }: EditM
                             <label className="block text-sm font-medium text-gray-700">Experiences</label>
                             <div className="relative mb-4">
                                 <textarea 
-                                    value={experiences} 
+                                    value={experiences ? experiences : ""} 
                                     onChange={(e) => handleExperienceChange(e.target.value)} 
                                     className="mt-1 block w-full border border-gray-300 rounded-md p-2" 
                                     placeholder="Description" 

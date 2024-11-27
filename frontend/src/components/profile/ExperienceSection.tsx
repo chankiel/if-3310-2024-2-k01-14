@@ -15,9 +15,6 @@ interface ExperienceSectionProps {
 }
 
 export default function ExperienceSection({ experiences }: ExperienceSectionProps) {
-
-    const navigate = useNavigate();
-
     return(
         <>
             <section className="bg-white mt-2 p-4 pl-8">

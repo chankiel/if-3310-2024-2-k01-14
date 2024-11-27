@@ -1,18 +1,12 @@
 import { useState } from "react";
 import EditProfileModal from "./EditProfileModal";
+import { ProfileData } from "../../pages/Profile";
 
-interface ProfileSectionProps {
-    profileData: {
-        name: string;
-        description: string;
-        connections: number;
-        profile_photo: string;
-    };
-    skills: string;
-    experiences: string;
+interface ProfileDataProps{
+    data: ProfileData;
 }
 
-export default function ProfileSection({ profileData, skills, experiences }: ProfileSectionProps) {
+export default function ProfileSection({ data }: ProfileDataProps) {
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -30,12 +24,12 @@ export default function ProfileSection({ profileData, skills, experiences }: Pro
                 style={{ boxShadow: '0 0 0 1px rgba(140, 140, 140, 0.2)' }}>
                 <div>
                     <img 
-                        src="./public/bg-image-profile.png"
+                        src="/bg-image-profile.png"
                         alt="Profile Background" 
                         className="w-full h-48 object-cover sticky"
                     />
-                    <img 
-                        src={profileData.profile_photo}
+                    <img
+                        src={data.profile_photo ? data.profile_photo : "/perry-casino.webp"}
                         alt="Profile" 
                         className="w-40 h-40 rounded-full border-4 border-white relative left-8"
                         style={{ marginTop: '-110px' }}
@@ -46,9 +40,8 @@ export default function ProfileSection({ profileData, skills, experiences }: Pro
                     </svg>
                 </div>
                 <div className="ml-4 p-4">
-                    <h1 className="text-2xl font-bold">{profileData.name}</h1>
-                    <p className="text-black">{profileData.description}</p>
-                    <p className="text-gray-500">{profileData.connections} connections</p>
+                    <h1 className="text-2xl font-bold">{data.name}</h1>
+                    <p className="text-gray-500">{data.connection_count} connections</p>
                 </div>
                 <div className="ml-4 h-12 pt-2 text-base pl-4">
                     {/* <button className="rounded-2xl py-1 px-3 font-semibold"
@@ -76,13 +69,7 @@ export default function ProfileSection({ profileData, skills, experiences }: Pro
             <EditProfileModal 
                 isOpen={isModalOpen} 
                 onClose={handleCloseModal} 
-                initialData={{
-                    name: profileData.name,
-                    description: profileData.description,
-                    profileImage: profileData.profile_photo,
-                    skills: skills,
-                    experiences: experiences,
-                }}
+                initialData={data}
             />
         </>
     );

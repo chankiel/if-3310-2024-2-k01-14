@@ -178,8 +178,21 @@ export class UserService {
 
     const formattedUser = this.formatUserResponse(user);
 
+    const latestPost = await prismaClient.feed.findFirst({
+      where: {
+        user_id: id,
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
+
+    console.log(latestPost);
+
     if (!(isOwner && isConnected)) {
       formattedUser.relevant_posts = undefined;
+    } else {
+      formattedUser.relevant_posts = latestPost ? [latestPost] : [];
     }
 
     return formattedUser;
@@ -187,16 +200,16 @@ export class UserService {
 
   static async update(id: number, request: UpdateUserRequest) {
     const updateRequest = Validation.validate(UserValidation.UPDATE, request);
-    
+
     let url_profile_photo = null;
 
-    if(updateRequest.profile_photo) {
+    if (updateRequest.profile_photo) {
       const file = updateRequest.profile_photo;
 
       const uploadPath = path.join(__dirname, `./public/image/profile_${id}`);
 
       // download the image to local
-      
+
 
       url_profile_photo = uploadPath;
     }

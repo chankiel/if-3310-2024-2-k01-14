@@ -1,10 +1,8 @@
 import UserRecommendations from "../UserRecommendations";
 
 export interface UserRecommendation {
-    id: number;
     name: string;
-    description: string;
-    imageUrl: string;
+    profile_photo: string;
 }
 
 interface RecommendationSectionProps {
@@ -17,8 +15,8 @@ export default function RecommendationSection({ recommendations }: Recommendatio
             <section className="bg-white rounded-lg pt-2" style={{ boxShadow: '0 0 0 1px rgba(140, 140, 140, 0.2)' }}>
                     <h1 className="font-semibold px-6 pt-3">More profiles for you</h1>
                     <ul>
-                        {recommendations.map((user) => (
-                            <UserRecommendations key={user.id} user={user} />
+                        {recommendations && recommendations.map((user, index) => (
+                            <UserRecommendations key={index} user={user} />
                         ))}
                     </ul>
             </section>

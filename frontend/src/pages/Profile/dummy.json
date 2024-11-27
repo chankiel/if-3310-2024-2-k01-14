@@ -1,0 +1,186 @@
+
+  // const profileData: ProfileData = {
+  //   user: {
+  //     name: "Francesco Michael Kusuma",
+  //     description: "Undergraduate Informatics Engineering Student",
+  //     connections: 156,
+  //     profileImage: "/perry-casino.webp",
+  //     backgroundImage: "/bg-image-profile.png",
+  //   },
+  //   activities: [
+  //     {
+  //       name: "Francesco Michael Kusuma",
+  //       time: "3w",
+  //       description:
+  //         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id eum quod reiciendis quos magni tempora qui laborum, natus perferendis maxime corporis molestiae nam ut, temporibus illo velit mollitia error consequuntur!",
+  //     },
+  //     {
+  //       name: "John Doe",
+  //       time: "1w",
+  //       description:
+  //         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id eum quod reiciendis quos magni tempora qui laborum, natus perferendis maxime corporis molestiae nam ut, temporibus illo velit mollitia error consequuntur!",
+  //     },
+  //     {
+  //       name: "Jane Smith",
+  //       time: "2w",
+  //       description:
+  //         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id eum quod reiciendis quos magni tempora qui laborum, natus perferendis maxime corporis molestiae nam ut, temporibus illo velit mollitia error consequuntur!",
+  //     },
+  //     {
+  //       name: "Francesco Michael Kusuma",
+  //       time: "3w",
+  //       description:
+  //         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id eum quod reiciendis quos magni tempora qui laborum, natus perferendis maxime corporis molestiae nam ut, temporibus illo velit mollitia error consequuntur!",
+  //     },
+  //     {
+  //       name: "John Doe",
+  //       time: "1w",
+  //       description:
+  //         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id eum quod reiciendis quos magni tempora qui laborum, natus perferendis maxime corporis molestiae nam ut, temporibus illo velit mollitia error consequuntur!",
+  //     },
+  //     {
+  //       name: "Jane Smith",
+  //       time: "2w",
+  //       description:
+  //         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id eum quod reiciendis quos magni tempora qui laborum, natus perferendis maxime corporis molestiae nam ut, temporibus illo velit mollitia error consequuntur!",
+  //     },
+  //     {
+  //       name: "Francesco Michael Kusuma",
+  //       time: "3w",
+  //       description:
+  //         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id eum quod reiciendis quos magni tempora qui laborum, natus perferendis maxime corporis molestiae nam ut, temporibus illo velit mollitia error consequuntur!",
+  //     },
+  //     {
+  //       name: "John Doe",
+  //       time: "1w",
+  //       description:
+  //         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id eum quod reiciendis quos magni tempora qui laborum, natus perferendis maxime corporis molestiae nam ut, temporibus illo velit mollitia error consequuntur!",
+  //     },
+  //     {
+  //       name: "Jane Smith",
+  //       time: "2w",
+  //       description:
+  //         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id eum quod reiciendis quos magni tempora qui laborum, natus perferendis maxime corporis molestiae nam ut, temporibus illo velit mollitia error consequuntur!",
+  //     },
+  //     {
+  //       name: "Francesco Michael Kusuma",
+  //       time: "3w",
+  //       description:
+  //         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id eum quod reiciendis quos magni tempora qui laborum, natus perferendis maxime corporis molestiae nam ut, temporibus illo velit mollitia error consequuntur!",
+  //     },
+  //     {
+  //       name: "John Doe",
+  //       time: "1w",
+  //       description:
+  //         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id eum quod reiciendis quos magni tempora qui laborum, natus perferendis maxime corporis molestiae nam ut, temporibus illo velit mollitia error consequuntur!",
+  //     },
+  //     {
+  //       name: "Jane Smith",
+  //       time: "2w",
+  //       description:
+  //         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id eum quod reiciendis quos magni tempora qui laborum, natus perferendis maxime corporis molestiae nam ut, temporibus illo velit mollitia error consequuntur!",
+  //     },
+  //   ],
+  //   experiences: "Developing and maintaining web applications using React and Node.js.",
+  //   // experiences: [
+  //   //   {
+  //   //     id: 1,
+  //   //     jobTitle: "Software Engineer",
+  //   //     company: "Tech Company",
+  //   //     location: "New York, NY",
+  //   //     duration: "Jan 2021 - Present",
+  //   //     description:
+  //   //       "Developing and maintaining web applications using React and Node.js.",
+  //   //   },
+  //   //   {
+  //   //     id: 2,
+  //   //     jobTitle: "Intern",
+  //   //     company: "Another Tech Company",
+  //   //     location: "San Francisco, CA",
+  //   //     duration: "Jun 2020 - Dec 2020",
+  //   //     description:
+  //   //       "Assisted in the development of internal tools and participated in code reviews.",
+  //   //   },
+  //   //   {
+  //   //     id: 3,
+  //   //     jobTitle: "Junior Developer",
+  //   //     company: "Startup Inc.",
+  //   //     location: "Remote",
+  //   //     duration: "Jan 2020 - May 2020",
+  //   //     description:
+  //   //       "Worked on various projects, focusing on front-end development and user experience.",
+  //   //   },
+  //   //   {
+  //   //     id: 4,
+  //   //     jobTitle: "Software Engineer",
+  //   //     company: "Tech Company",
+  //   //     location: "New York, NY",
+  //   //     duration: "Jan 2021 - Present",
+  //   //     description:
+  //   //       "Developing and maintaining web applications using React and Node.js.",
+  //   //   },
+  //   //   {
+  //   //     id: 5,
+  //   //     jobTitle: "Intern",
+  //   //     company: "Another Tech Company",
+  //   //     location: "San Francisco, CA",
+  //   //     duration: "Jun 2020 - Dec 2020",
+  //   //     description:
+  //   //       "Assisted in the development of internal tools and participated in code reviews.",
+  //   //   },
+  //   //   {
+  //   //     id: 6,
+  //   //     jobTitle: "Junior Developer",
+  //   //     company: "Startup Inc.",
+  //   //     location: "Remote",
+  //   //     duration: "Jan 2020 - May 2020",
+  //   //     description:
+  //   //       "Worked on various projects, focusing on front-end development and user experience.",
+  //   //   },
+  //   // ],
+  //   // skills: [
+  //   //   "Communication",
+  //   //   "Teamwork",
+  //   //   "Problem Solving",
+  //   //   "Adaptability",
+  //   //   "Creativity",
+  //   //   "Communication",
+  //   //   "Teamwork",
+  //   //   "Problem Solving",
+  //   //   "Adaptability",
+  //   //   "Creativity",
+  //   // ],
+  //   skills: "Tidur",
+  //   recommendations: [
+  //     {
+  //       id: 1,
+  //       name: "Francesco Michael Kusuma",
+  //       description: "Undergraduate Informatics Engineering Student",
+  //       imageUrl: "/perry-casino.webp",
+  //     },
+  //     {
+  //       id: 2,
+  //       name: "John Doe",
+  //       description: "Software Engineer",
+  //       imageUrl: "/perry-casino.webp",
+  //     },
+  //     {
+  //       id: 3,
+  //       name: "Jane Smith",
+  //       description: "Data Scientist",
+  //       imageUrl: "/perry-casino.webp",
+  //     },
+  //     {
+  //       id: 4,
+  //       name: "Alice Johnson",
+  //       description: "Product Manager",
+  //       imageUrl: "/perry-casino.webp",
+  //     },
+  //     {
+  //       id: 5,
+  //       name: "Bob Brown",
+  //       description: "UX Designer",
+  //       imageUrl: "/perry-casino.webp",
+  //     },
+  //   ],
+  // };
