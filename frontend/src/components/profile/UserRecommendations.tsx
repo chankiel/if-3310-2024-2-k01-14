@@ -1,5 +1,5 @@
-import ConnectButton from "./profile/ConnectButton";
-import { UserRecommendation } from "./profile/RecommendationSection";
+import ConnectButton from "./ConnectButton";
+import { UserRecommendation } from "./RecommendationSection";
 
 interface UserRecommendationsProps {
     user: UserRecommendation;

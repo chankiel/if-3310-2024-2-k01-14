@@ -10,9 +10,37 @@ import {
 import { MagnifyingGlassIcon, ClockIcon } from "@heroicons/react/24/solid";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
   const { isAuthenticated, login, logout, username, name } = UseAuth();
+
+  const navigate = useNavigate();
+
+  const handleSubmitLogout = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+        try {
+            const response = await fetch(`http://localhost:3000/api/logout`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("Data: ",data.message)
+                navigate("/feed");
+            } else{
+              console.log("Data: ",data.message)
+            }
+        } catch (err) {
+            console.log("Error: ", err);
+        }
+    
+};
 
   const paths = [
     {
@@ -53,15 +81,15 @@ const Header: React.FC = () => {
         <a className="md:w-full h-full" href="/">
           <LinkedInIcon color="#0a66c2" size={50} />
         </a>
-        <nav className="w-2/3">
-          <ul className="flex justify-around gap-2 text-sm text-gray-500">
+        <nav className="w-full">
+          <ul className="flex justify-around gap-2 text-sm text-gray-500 ">
             {!isAuthenticated ? (
               <>
                 {paths.map((path) => (
-                  <li key={path.path} className="relative hover:text-black flex items-center justify-center md:min-w-14">
+                  <li className="relative hover:text-black flex items-center justify-center min-w-14">
                     <Link to={path.path} className="flex flex-col items-center">
                       {path.icon}
-                      <p className="hidden md:block">{path.name}</p>
+                      <p className="hidden md:block text-nowrap">{path.name}</p>
                     </Link>
                   </li>
                 ))}
@@ -82,11 +110,10 @@ const Header: React.FC = () => {
                     </PopoverTrigger>
                     <PopoverContent align="end" sideOffset={15}>
                       <div className="flex gap-2 mb-4">
-                        <img
-                          src="/public/images/perry-casino.webp"
-                          alt="profile-pic"
-                          className="h-20 w-20 object-cover rounded-full"
-                        />
+                        <Avatar className="h-20 w-20">
+                          <AvatarImage src="/images/perry-casino.webp" />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
                         <div className="text-left">
                           <h1 className="font-medium text-lg">
                             Ignatius Jhon Hezkiel Chan
@@ -100,8 +127,7 @@ const Header: React.FC = () => {
                         View Profile
                       </Link>
                       <form
-                        action="/logout"
-                        method="POST"
+                        onSubmit={handleSubmitLogout}
                         className="text-gray-600"
                       >
                         <button

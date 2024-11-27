@@ -11,8 +11,8 @@ export class UserController {
             const token = await UserService.register(request);
 
             res.cookie("token", token, {
-                httpOnly: false,
-                secure: false,
+                httpOnly: true,
+                secure: true,
                 maxAge: 3600000,
                 path: "/",
             });
@@ -33,9 +33,9 @@ export class UserController {
             const token = await UserService.login(request);
 
             res.cookie("token", token, {
-                httpOnly: false, 
-                secure: false,
-                maxAge: 3600 * 1000, 
+                httpOnly: true, 
+                secure: true,
+                maxAge: 3600000, 
                 path: "/", 
             });
 
@@ -79,6 +79,23 @@ export class UserController {
             const request: UpdateUserRequest = req.body as UpdateUserRequest;
             const response = await UserService.update(userId, request);
             
+            res.status(200).json({
+                response
+            })
+        } catch(e) {
+            next(e);
+        }
+    }
+
+    static async logout(req: Request, res: Response, next: NextFunction){
+        try {    
+            res.clearCookie("token", {
+                httpOnly: true, 
+                secure: true,
+                path: "/", 
+            });
+            const response = formatResponse<string>(true,"","User logged out successfully")
+
             res.status(200).json({
                 response
             })

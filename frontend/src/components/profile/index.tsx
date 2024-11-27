@@ -6,6 +6,7 @@ import ExperienceSectionDetails from "./ExperienceSectionDetails";
 import ProfileSection from "./ProfileSection";
 import RecommendationSection from "./RecommendationSection";
 import SkillsSection from "./SkillsSection";
+import UserRecommendations from "./UserRecommendations";
 
 export{
     ActivitySection,
@@ -15,5 +16,6 @@ export{
     ExperienceSectionDetails,
     ProfileSection,
     RecommendationSection,
-    SkillsSection
+    SkillsSection,
+    UserRecommendations
 }
