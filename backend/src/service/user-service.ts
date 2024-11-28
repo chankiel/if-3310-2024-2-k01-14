@@ -148,10 +148,19 @@ export class UserService {
           mode: "insensitive",
         },
       },
-      select: prismaUserFormat,
+      select: {
+        id: true,
+        username: true,
+        full_name: true,
+        profile_photo_path: true,
+      },
     });
 
-    const formattedUsers = users.map((user) => this.formatUserResponse(user));
+    const formattedUsers = users.map((user)=> ({
+      ...user,
+      name: user.full_name,
+      full_name: undefined,
+    }));
 
     return formattedUsers;
   }

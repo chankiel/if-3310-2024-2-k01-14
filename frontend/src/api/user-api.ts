@@ -18,7 +18,7 @@ class UserApi {
     try{
         const response = await this.axios.get(`/profile/?q=${query}`)
 
-        return response.data
+        return response.data.body
     }catch(error){
         throw (error as any)?.response?.data;
     }

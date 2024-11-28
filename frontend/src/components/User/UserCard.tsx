@@ -2,16 +2,28 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { PlusIcon } from "@heroicons/react/24/solid";
 
-const UserCard: React.FC = () => {
+interface UserCardProps{
+  id: string;
+  username: string;
+  name: string | null;
+  profile_photo_path: string;
+}
+
+const UserCard = ({
+  id,
+  username,
+  name,
+  profile_photo_path,
+}: UserCardProps) => {
   return (
     <div className="flex p-5 items-center border-b-2 border-linkin-lightgray">
       <Avatar className="h-16 w-16">
-        <AvatarImage src="https://github.com/shadcn.png" />
+        <AvatarImage src={profile_photo_path} />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
       <div className="w-full ml-3">
-        <h2 className="text-lg font-bold">Suthasoma Mahardika</h2>
-        <h3 className="text-gray-600">@Suthasoma</h3>
+        <h2 className="text-lg font-bold">{username}</h2>
+        {name && <h3 className="text-gray-600">{name}</h3>}
       </div>
       <div className="flex items-center p-4 ">
         <Button

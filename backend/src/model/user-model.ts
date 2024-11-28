@@ -1,12 +1,13 @@
 import { FeedFormat } from "./feed-model";
 
 export type UserFormat = {
+  id?: number;
   username: string;
   name: string | null;
-  work_history: string | null;
-  skills: string | null;
-  profile_photo: string | null;
-  connection_count: number;
+  work_history?: string | null;
+  skills?: string | null;
+  profile_photo?: string | null;
+  connection_count?: number;
   relevant_posts?: FeedFormat[];
 };
 

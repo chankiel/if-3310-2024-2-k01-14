@@ -85,8 +85,8 @@ const Header: React.FC = () => {
           <ul className="flex justify-around gap-2 text-sm text-gray-500 ">
             {!isAuthenticated ? (
               <>
-                {paths.map((path) => (
-                  <li className="relative hover:text-black flex items-center justify-center min-w-14">
+                {paths.map((path,index) => (
+                  <li className="relative hover:text-black flex items-center justify-center min-w-14" key={index}>
                     <Link to={path.path} className="flex flex-col items-center">
                       {path.icon}
                       <p className="hidden md:block text-nowrap">{path.name}</p>
