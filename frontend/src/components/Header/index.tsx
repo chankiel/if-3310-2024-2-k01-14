@@ -13,34 +13,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
-  const { isAuthenticated, login, logout, username, name } = UseAuth();
-
+  const { isAuthenticated, logout, username, currentId, profile_photo } = UseAuth();
   const navigate = useNavigate();
 
-  const handleSubmitLogout = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-        try {
-            const response = await fetch(`http://localhost:3000/api/logout`, {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                console.log("Data: ",data.message)
-                navigate("/feed");
-            } else{
-              console.log("Data: ",data.message)
-            }
-        } catch (err) {
-            console.log("Error: ", err);
-        }
-    
-};
+  const handleLogout = async () => {
+    try {
+      const response = await logout();
+      console.log(response.message);
+      navigate("/feed");
+    } catch (err) {
+      console.log("Error: ", err);
+    }
+  };
 
   const paths = [
     {
@@ -83,10 +67,13 @@ const Header: React.FC = () => {
         </a>
         <nav className="w-full">
           <ul className="flex justify-around gap-2 text-sm text-gray-500 ">
-            {!isAuthenticated ? (
+            {isAuthenticated ? (
               <>
-                {paths.map((path,index) => (
-                  <li className="relative hover:text-black flex items-center justify-center min-w-14" key={index}>
+                {paths.map((path, index) => (
+                  <li
+                    className="relative hover:text-black flex items-center justify-center min-w-14"
+                    key={index}
+                  >
                     <Link to={path.path} className="flex flex-col items-center">
                       {path.icon}
                       <p className="hidden md:block text-nowrap">{path.name}</p>
@@ -97,7 +84,7 @@ const Header: React.FC = () => {
                   <Popover>
                     <PopoverTrigger>
                       <Avatar className="h-7 w-7">
-                        <AvatarImage src="/images/perry-casino.webp" />
+                        <AvatarImage src={profile_photo??""} />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
 
@@ -116,27 +103,26 @@ const Header: React.FC = () => {
                         </Avatar>
                         <div className="text-left">
                           <h1 className="font-medium text-lg">
-                            Ignatius Jhon Hezkiel Chan
+                            {username}
                           </h1>
                         </div>
                       </div>
                       <Link
-                        to={"/profile/company"}
+                        to={`/profile/${currentId}`}
                         className="block mb-3 text-linkin-blue font-semibold border border-linkin-blue rounded-xl px-2 text-center transition-all duration-100 ease-in hover:ring-linkin-dark-blue hover:ring-2 hover:bg-linkin-hoverblue"
                       >
                         View Profile
                       </Link>
-                      <form
-                        onSubmit={handleSubmitLogout}
+                      <div
                         className="text-gray-600"
                       >
                         <button
-                          type="submit"
                           className="w-full text-left hover:underline"
+                          onClick={handleLogout}
                         >
                           Logout
                         </button>
-                      </form>
+                      </div>
                     </PopoverContent>
                   </Popover>
                 </li>
@@ -144,20 +130,20 @@ const Header: React.FC = () => {
             ) : (
               <>
                 <li>
-                  <a
-                    href="/login"
+                  <Link
+                    to="/login"
                     className="py-2 px-4 rounded-full border-2 border-blue-600 text-blue-600 hover:bg-blue-100"
                   >
                     Login
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/register"
+                  <Link
+                    to="/register"
                     className="py-2 px-4 rounded-full bg-blue-600 text-white hover:bg-blue-700"
                   >
                     Register
-                  </a>
+                  </Link>
                 </li>
               </>
             )}
