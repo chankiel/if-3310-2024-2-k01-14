@@ -27,28 +27,6 @@ export class UserController {
         }
     }
 
-    static async login(req: Request, res: Response, next: NextFunction) {
-        try {
-            const request: LoginUserRequest = req.body as LoginUserRequest;
-            const token = await UserService.login(request);
-
-            res.cookie("token", token, {
-                httpOnly: true, 
-                secure: true,
-                maxAge: 3600000, 
-                path: "/", 
-            });
-
-            const response = formatResponse<string>(true,token,"User logged in successfully")
-
-            res.status(200).json({
-                response
-            })
-        } catch(e) {
-            next(e);
-        }
-    }
-
     static async index(req: AuthRequest, res: Response, next: NextFunction) {
         try{
             const query = typeof req.query.q === 'string' ? req.query.q : "";
@@ -86,24 +64,6 @@ export class UserController {
             next(e);
         }
     }
-
-    static async logout(req: Request, res: Response, next: NextFunction){
-        try {    
-            res.clearCookie("token", {
-                httpOnly: true, 
-                secure: true,
-                path: "/", 
-            });
-            const response = formatResponse<string>(true,"","User logged out successfully")
-
-            res.status(200).json({
-                response
-            })
-        } catch(e) {
-            next(e);
-        }
-    }
-
 
     // static async self(req: AuthRequest,)
 }
