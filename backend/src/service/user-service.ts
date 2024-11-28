@@ -14,7 +14,7 @@ import { Validation } from "../validation/validation";
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const prismaUserFormat = {
+export const prismaUserFormat = {
   username: true,
   full_name: true,
   work_history: true,
@@ -81,50 +81,11 @@ export class UserService {
 
     registerRequest.password = await bcrypt.hash(registerRequest.password, 10);
 
-    console.log("Regitser: ", registerRequest);
+    console.log("Register: ", registerRequest);
 
     const user = await prismaClient.user.create({
       data: registerRequest,
     });
-
-    const payload = {
-      userId: user.id,
-      email: user.email,
-      role: "jobseeker",
-      iat: Math.floor(Date.now() / 1000),
-      exp: Math.floor(Date.now() / 1000) + 3600, // TTL 1 jam
-    };
-
-    // Buat JWT
-    const token = createJwt(payload);
-
-    return token;
-  }
-
-  static async login(request: LoginUserRequest): Promise<string> {
-    const loginRequest = Validation.validate(UserValidation.LOGIN, request);
-
-    let user = await prismaClient.user.findFirst({
-      where: {
-        OR: [
-          { email: loginRequest.identifier },
-          { username: loginRequest.identifier },
-        ],
-      },
-    });
-
-    if (!user) {
-      throw new ResponseError(401, "Username or password is wrong");
-    }
-
-    const isPasswordValid = await bcrypt.compare(
-      loginRequest.password,
-      user.password
-    );
-
-    if (!isPasswordValid) {
-      throw new ResponseError(401, "Username or password is wrong");
-    }
 
     const payload = {
       userId: user.id,
