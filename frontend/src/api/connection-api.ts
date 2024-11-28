@@ -1,18 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios"
-import Cookies from "js-cookie"
 
 import { API_URL } from "../constant";
 import { ConnectionFormat, ConnectionResponse } from "../types";
 
 class ConnectionApi{
-    private static token = Cookies.get("token") || "";
     private static axios = axios.create({
         baseURL: API_URL,
         headers: {
-            Authorization: `Bearer ${this.token}`,
             "Content-Type": "application/json",
-        }
+        },
+        withCredentials: true,
     });
 
     static async getConnections(user_id: number): Promise<ConnectionFormat[]>{
@@ -26,7 +24,7 @@ class ConnectionApi{
 
     static async getPendingRequests(user_id: number ): Promise<ConnectionFormat[]>{
         try{
-            const response = await this.axios.get<ConnectionResponse>(`/connection-request/${user_id}/pending`)
+            const response = await this.axios.get<ConnectionResponse>(`/connection-requests/${user_id}/pending`)
 
             return response.data.body
         }catch(error){

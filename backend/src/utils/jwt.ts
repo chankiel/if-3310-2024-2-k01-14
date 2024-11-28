@@ -1,6 +1,15 @@
 import * as crypto from "crypto";
+import { AuthRequest } from "../middleware/auth-middleware";
 
 const secretKey = process.env.JWT_SECRET_KEY as string
+
+export interface PayloadFormat{
+    userId: number;
+    email: string;
+    role: string;
+    iat: string;
+    exp: string;
+}
 
 function base64UrlEncode(input: string): string {
     return Buffer.from(input)
@@ -28,7 +37,7 @@ export function createJwt(payload: object): string {
     return `${encodedHeader}.${encodedPayload}.${signature}`;
 }
 
-export function verifyJwt(token: string): object | null {
+export function verifyJwt(token: string): PayloadFormat | null {
     const [header, payload, signature] = token.split(".");
     const validSignature = crypto
         .createHmac("sha256", secretKey)

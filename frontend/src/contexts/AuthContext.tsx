@@ -1,92 +1,91 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import Cookies from "js-cookie";
 import UserApi from "../api/user-api";
-import { AuthRequest } from "../types";
+import { APIResponse, AuthRequest } from "../types";
 
 type AuthContext = {
   isAuthenticated: boolean;
-  token: string | null;
+  currentId: number;
   username: string;
   name: string | null;
-  currentId: number;
-  login: (payload: AuthRequest) => void;
-  logout: () => void;
+  profile_photo: string | null;
   update: boolean;
   setUpdate: (prop: boolean) => void;
+  login: (payload: AuthRequest) => Promise<APIResponse>;
+  logout: () => Promise<APIResponse>;
 };
 
 const AuthContext = createContext<AuthContext>({
   isAuthenticated: false,
-  token: null,
-  login: () => {},
-  logout: () => {},
   name: "",
   username: "",
   currentId: 0,
   update: false,
-  setUpdate: () => {}
+  setUpdate: () => {},
+  login: UserApi.login,
+  logout: UserApi.logout,
+  profile_photo: "",
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-  const [username, setUsername] = useState("user");
+  const [username, setUsername] = useState("Guest");
   const [currentId, setCurrentId] = useState(0);
   const [update, setUpdate] = useState(false);
   const [name, setName] = useState("");
+  const [profile_photo, setProfile] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = Cookies.get("token");
-
-      if (token) {
-        try {
-          const user = await UserApi.getSelf();
-
-          if (user) {
-            setIsAuthenticated(true);
-
-            setUsername(user.username);
-            setCurrentId(Number(user.id));
-            setName(user.name ?? "")
-
-            setToken(token);
-          }
-        } catch (error) {
-          console.log(error)
-          Cookies.remove("token");
-        }
+      try {
+        const user = await UserApi.getSelf();
+        setIsAuthenticated(true);
+        setUsername(user.username);
+        setCurrentId(Number(user.id));
+        setName(user.name ?? "");
+        setProfile(user.profile_photo ?? "")
+      } catch (error) {
+        setIsAuthenticated(false);
+        setUsername("");
+        setCurrentId(0);
+        setName("");
+        setProfile("")
+        console.log(error);
       }
-
-      setIsLoading(false);
     };
 
+    setIsLoading(false);
     fetchUser();
+
   }, [update]);
-
-  const login = async (payload: AuthRequest) => {
-      const auth = await UserApi.login(payload);
-      const expireInOneHour = new Date();
-      expireInOneHour.setHours(expireInOneHour.getHours() + 1); 
-      if (auth) {
-        setIsAuthenticated(true);
-        Cookies.set("token", auth.token, {expires: expireInOneHour , path:"/"});
-        setToken(auth.token);
-      }
-    }
-
-  const logout = () => {
-    setIsAuthenticated(false);
-    Cookies.remove("token");
-    setToken(null);
-  };
 
   if (isLoading) return null;
 
+  const login = async (payload: AuthRequest): Promise<APIResponse> => {
+    const res = await UserApi.login(payload);
+    setUpdate(!update);
+    return res;
+  };
+
+  const logout = async (): Promise<APIResponse> => {
+    const res = await UserApi.logout();
+    setUpdate(!update);
+    return res;
+  };
+
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, token, login, logout, username, name, currentId, update, setUpdate }}
+      value={{
+        isAuthenticated,
+        username,
+        name,
+        currentId,
+        profile_photo,
+        update,
+        setUpdate,
+        login,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

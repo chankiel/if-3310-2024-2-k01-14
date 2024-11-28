@@ -1,17 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
-import Cookies from "js-cookie"
 import { API_URL } from "../constant";
-import { AuthRequest, AuthResponse, UserFormat, UserRequest } from "../types";
+import { APIResponse, AuthRequest, UserFormat, UserRequest } from "../types";
 
 class UserApi {
-  private static token = Cookies.get("token") || "";
   private static axios = axios.create({
     baseURL: API_URL,
     headers: {
-      Authorization: `Bearer ${this.token}`,
       "Content-Type": "application/json",
     },
+    withCredentials: true,
   });
 
   static async getUsers(query: string): Promise<UserFormat[]>{
@@ -28,7 +26,7 @@ class UserApi {
     try{
         const response = await this.axios.get(`/profile/${user_id}`)
 
-        return response.data
+        return response.data.body
     }catch(error){
         throw (error as any)?.response?.data;
     }
@@ -36,9 +34,9 @@ class UserApi {
 
   static async getSelf(): Promise<UserFormat>{
     try{
-        const response = await this.axios.get(`/profile/me`)
+        const response = await this.axios.get(`/profile/self`)
 
-        return response.data
+        return response.data.body
     }catch(error){
         throw (error as any)?.response?.data;
     }
@@ -46,10 +44,18 @@ class UserApi {
 
   // static async updateUser(user_id: number, payload: UpdateUserRequest): Promise<UserResponse
 
-
   static async login(payload: AuthRequest){
     try {
-        const response = await this.axios.post<AuthResponse>("/login", payload);
+        const response = await this.axios.post<APIResponse>("/login", payload);
+        return response.data;
+      } catch (error) {
+        throw (error as any)?.response?.data;
+      }
+  }
+
+  static async logout(){
+    try {
+        const response = await this.axios.post<APIResponse>("/logout");
   
         return response.data;
       } catch (error) {
