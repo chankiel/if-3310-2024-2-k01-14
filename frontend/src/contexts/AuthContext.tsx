@@ -51,10 +51,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setName("");
         setProfile("")
         console.log(error);
+      }finally{
+        setIsLoading(false);
       }
     };
 
-    setIsLoading(false);
     fetchUser();
 
   }, [update]);
