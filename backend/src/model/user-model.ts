@@ -12,6 +12,7 @@ export type UserFormat = {
 };
 
 export type UserPrismaFormat = {
+  id?: number;
   username: string;
   full_name: string | null;
   profile_photo_path: string | null;

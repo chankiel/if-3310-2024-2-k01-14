@@ -67,11 +67,7 @@ export class ConnectionController {
     next: NextFunction
   ) {
     try {
-      const user_id: number = Validation.validate(
-        ConnectionValidation.INDEXREQUEST,
-        req.body
-      ).user_id;
-
+      const user_id: number = Number(req.params.user_id);
       if (req.userId != user_id) {
         throw new ResponseError(
           403,
