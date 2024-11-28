@@ -71,7 +71,7 @@ const Header: React.FC = () => {
               <>
                 {paths.map((path, index) => (
                   <li
-                    className="relative hover:text-black flex items-center justify-center min-w-14"
+                    className="relative hover:text-black flex items-center justify-center md:min-w-14"
                     key={index}
                   >
                     <Link to={path.path} className="flex flex-col items-center">
