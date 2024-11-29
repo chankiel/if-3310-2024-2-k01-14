@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import ExperienceSectionDetails from "./ExperienceSectionDetails";
 
 export interface Experience {
@@ -17,7 +16,7 @@ interface ExperienceSectionProps {
 export default function ExperienceSection({ experiences }: ExperienceSectionProps) {
     return(
         <>
-            <section className="bg-white mt-2 p-4 pl-8">
+            <section className="bg-white mt-2 p-4 pl-8 rounded-lg border">
                 <span className="text-xl font-semibold">Experience</span>
                 <ul className="pt-1">
                         <li className="py-2">

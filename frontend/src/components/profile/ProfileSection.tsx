@@ -20,8 +20,7 @@ export default function ProfileSection({ data }: ProfileDataProps) {
 
     return (
         <>
-            <section className="relative flex flex-col rounded-lg mb-4 bg-white overflow-hidden pb-4" 
-                style={{ boxShadow: '0 0 0 1px rgba(140, 140, 140, 0.2)' }}>
+            <section className="relative flex flex-col rounded-lg mb-4 border bg-white overflow-hidden pb-4" >
                 <div>
                     <img 
                         src="/bg-image-profile.png"

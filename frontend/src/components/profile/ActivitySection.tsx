@@ -9,10 +9,10 @@ export default function ActivitySection({ username, activity }: ActivitySectionP
 
     return (
         <>
-            <section className="bg-white mt-2 p-4 pl-8">
+            <section className="bg-white mt-2 p-4 pl-8 rounded-lg border">
                 <span className="text-xl font-semibold">Activity</span>
-                <ul className="pt-1">
-                    <li className="py-4 border-b border-gray-300">
+                {/* <ul className="pt-1">
+                    <li className="py-4 border-b border-gray-300"> */}
                         <div className="flex flex-col">
                             <div className="flex flex-col text-xs text-gray-500 py-2">
                                 <strong>
@@ -22,11 +22,12 @@ export default function ActivitySection({ username, activity }: ActivitySectionP
                             </div>
                             <textarea
                                 value={activity.content}
-                                className=""
+                                className="resize-none"
+                                rows={5}
                             />
                         </div>
-                    </li>
-                </ul>
+                    {/* </li>
+                </ul> */}
             </section>
         </>
     );

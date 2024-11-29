@@ -2,6 +2,7 @@ import { RouteObject, createBrowserRouter } from "react-router-dom";
 // import ProtectedRoute from "../components/ProtectedRoute";
 import {Connection, Requests, Login, NotFound, Register, Users, Profile} from "../pages";
 import AuthProviderLayout from "./AuthProviderLayout";
+import Notifications from "../pages/Notifications";
 
 const routes: RouteObject[] = [
   {
@@ -33,8 +34,8 @@ const routes: RouteObject[] = [
         element: null,
       },
       {
-        path: "/notification",
-        element: null,
+        path: "/notifications",
+        element: <Notifications />,
       },
       {
         path: "/connections/:userId",
