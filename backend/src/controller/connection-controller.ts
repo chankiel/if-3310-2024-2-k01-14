@@ -41,7 +41,7 @@ export class ConnectionController {
       if (req.userId != storeRequest.from_id) {
         throw new ResponseError(
           403,
-          `User is unauthorized to make Connection Request from User with Id ${storeRequest.from_id}!`
+          `User is unauthorized to make connection request!`
         );
       }
 
@@ -71,7 +71,7 @@ export class ConnectionController {
       if (req.userId != user_id) {
         throw new ResponseError(
           403,
-          `User is unauthorized to retrieve Pending Connections from User with Id ${user_id}!`
+          `User is unauthorized to retrieve pending connections!`
         );
       }
 
@@ -122,15 +122,15 @@ export class ConnectionController {
   ) {
     try {
       const respond_req: RespondRequest = {
-        from_id: req.body.from_id,
-        to_id: req.body.to_id,
+        from_id: Number(req.params.from_id),
+        to_id: Number(req.params.to_id),
         accept: req.params.action === "accept" ? true : false,
       } 
 
       if (req.userId != respond_req.to_id) {
         throw new ResponseError(
           403,
-          `User is unauthorized to respond Connection Request from User with Id ${respond_req.to_id}!`
+          `User is unauthorized to respond the connection request!`
         );
       }
 
@@ -143,7 +143,7 @@ export class ConnectionController {
       const response = formatResponse(
         true,
         respond_result,
-        `Request from User with Id ${respond_req.from_id} ${
+        `Connection request ${
           respond_req.accept ? "accepted" : "rejected"
         } successfully!`
       );
@@ -157,8 +157,8 @@ export class ConnectionController {
   static async deleteConnection(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const unconnect_req: ConnectionReqRequest = {
-        from_id: req.body.from_id,
-        to_id: req.body.to_id
+        from_id: Number(req.params.from_id),
+        to_id: Number(req.params.to_id)
       };
 
       if (
@@ -184,7 +184,45 @@ export class ConnectionController {
       const response = formatResponse(
         true,
         null,
-        `User Id ${unconnect_req.from_id} and User Id ${unconnect_req.to_id}'s Connection disconnected successfully!`
+        `Connection of user Id ${unconnect_req.from_id} with user Id ${unconnect_req.to_id} disconnected successfully!`
+      );
+
+      res.status(200).json(response);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  static async deleteConnectionRequest(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const delete_request: ConnectionReqRequest = {
+        from_id: Number(req.params.from_id),
+        to_id: Number(req.params.to_id)
+      };
+
+      if (
+        req.userId !== delete_request.from_id
+      ) {
+        throw new ResponseError(
+          403,
+          `User is unauthorized to perform delete request operation!`
+        );
+      }
+
+      await validateConnectionRequestExists(
+        delete_request.from_id,
+        delete_request.to_id,
+        false
+      );
+
+      const connection = await ConnectionService.deleteConnectionRequest(
+        delete_request
+      );
+
+      const response = formatResponse(
+        true,
+        null,
+        `Connection request from user Id ${delete_request.from_id} to user Id ${delete_request.to_id} deleted successfully!`
       );
 
       res.status(200).json(response);

@@ -120,5 +120,7 @@ export type UserFormat = {
   profile_photo: string | null;
   connection_count: number;
   relevant_posts?: Feed[];
+  is_connected?: boolean;
+  is_requested?: boolean;
 };
 

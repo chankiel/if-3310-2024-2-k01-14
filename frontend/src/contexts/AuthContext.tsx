@@ -9,7 +9,7 @@ type AuthContext = {
   name: string | null;
   profile_photo: string | null;
   update: boolean;
-  setUpdate: (prop: boolean) => void;
+  setUpdate: React.Dispatch<React.SetStateAction<boolean>>;
   login: (payload: AuthRequest) => Promise<APIResponse>;
   logout: () => Promise<APIResponse>;
 };
@@ -37,41 +37,41 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
+      setIsLoading(true)
       try {
         const user = await UserApi.getSelf();
-        setIsAuthenticated(true);
-        setUsername(user.username);
-        setCurrentId(Number(user.id));
-        setName(user.name ?? "");
-        setProfile(user.profile_photo ?? "")
+        if(user){
+          setIsAuthenticated(true);
+          setUsername(user.username);
+          setCurrentId(Number(user.id));
+          setName(user.name ?? "");
+          setProfile(user.profile_photo ?? "")
+        }
       } catch (error) {
-        setIsAuthenticated(false);
-        setUsername("");
-        setCurrentId(0);
-        setName("");
-        setProfile("")
         console.log(error);
-      }finally{
-        setIsLoading(false);
       }
+      setIsLoading(false);
     };
-
+    
     fetchUser();
-
   }, [update]);
 
-  if (isLoading) return null;
-
+  
   const login = async (payload: AuthRequest): Promise<APIResponse> => {
     const res = await UserApi.login(payload);
-    setUpdate(!update);
+    setUpdate((prev)=>!prev)
+    return res;
+  };
+  
+  const logout = async (): Promise<APIResponse> => {
+    const res = await UserApi.logout();
+    setIsAuthenticated(false)
     return res;
   };
 
-  const logout = async (): Promise<APIResponse> => {
-    const res = await UserApi.logout();
-    setUpdate(!update);
-    return res;
+  if (isLoading){
+    console.log("SINI")
+    return null
   };
 
   return (

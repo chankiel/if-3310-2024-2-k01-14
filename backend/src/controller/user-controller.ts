@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { AuthRequest } from "../middleware/auth-middleware";
+import { AuthRequest, getPayload } from "../middleware/auth-middleware";
 import { CreateUserRequest, LoginUserRequest, UpdateUserRequest, UserFormat } from "../model/user-model";
 import { UserService } from "../service/user-service";
 import { formatResponse } from "../utils/ResponseFormatter";
@@ -27,10 +27,13 @@ export class UserController {
         }
     }
 
-    static async index(req: AuthRequest, res: Response, next: NextFunction) {
+    static async index(req: Request, res: Response, next: NextFunction) {
         try{
             const query = typeof req.query.q === 'string' ? req.query.q : "";
-            const users = await UserService.getAll(query)
+
+            const userId = getPayload(req)?.userId
+
+            const users = await UserService.getAll(userId,query)
             const response = formatResponse<UserFormat[]>(true,users,"Users retrieved successfully")
 
             res.status(200).json(response)

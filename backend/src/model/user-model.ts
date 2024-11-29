@@ -9,6 +9,8 @@ export type UserFormat = {
   profile_photo?: string | null;
   connection_count?: number;
   relevant_posts?: FeedFormat[];
+  is_connected?: boolean;
+  is_requested?: boolean;
 };
 
 export type UserPrismaFormat = {

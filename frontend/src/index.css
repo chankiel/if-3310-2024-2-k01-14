@@ -6,3 +6,11 @@
     --radius: 0.5rem
   }
 }
+
+.Toastify__toast{
+  @apply border-2 border-linkin-border
+}
+
+/* .Toastify__toast.Toastify__toast--success{
+  @apply bg-linkin-green text-white 
+} */

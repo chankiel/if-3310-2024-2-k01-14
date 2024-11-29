@@ -2,7 +2,7 @@
 import axios from "axios";
 
 import { API_URL } from "../constant";
-import { ConnectionFormat, ConnectionResponse } from "../types";
+import { APIResponse, ConnectionFormat, ConnectionReqRequest, ConnectionResponse } from "../types";
 
 class ConnectionApi {
   private static axios = axios.create({
@@ -12,6 +12,17 @@ class ConnectionApi {
     },
     withCredentials: true,
   });
+
+  static async createRequest(payload: ConnectionReqRequest){
+    try {
+      const response = await this.axios.post<ConnectionResponse>(
+        "/connection-requests", payload
+      );
+      return response.data;
+    } catch (error) {
+      throw (error as any)?.response?.data;
+    }
+  }
 
   static async getConnections(user_id: number): Promise<ConnectionFormat[]> {
     try {
@@ -34,9 +45,28 @@ class ConnectionApi {
     return response.data.body;
   }
 
-  static async deleteConnection(from_id: number, to_id: number): Promise<void> {
+  static async deleteConnection(from_id: number, to_id: number): Promise<APIResponse> {
     try {
-      await this.axios.delete<void>(`/connections/${from_id}/${to_id}`);
+      const res = await this.axios.delete<APIResponse>(`/connections/${from_id}/${to_id}`);
+      return res.data
+    } catch (error) {
+      throw (error as any)?.response?.data;
+    }
+  }
+
+  static async respondRequest(from_id: number, to_id: number,isAccept: boolean): Promise<APIResponse> {
+    try {
+      const res = await this.axios.put<APIResponse>(`/connection-requests/${from_id}/${to_id}/${isAccept? "accept":"reject"}`);
+      return res.data
+    } catch (error) {
+      throw (error as any)?.response?.data;
+    }
+  }
+
+  static async deleteConnectionRequest(from_id: number, to_id: number): Promise<APIResponse> {
+    try {
+      const res = await this.axios.delete<APIResponse>(`/connection-requests/${from_id}/${to_id}`);
+      return res.data
     } catch (error) {
       throw (error as any)?.response?.data;
     }

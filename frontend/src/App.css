@@ -12,7 +12,7 @@ body {
 }
 
 main {
-  min-height: 50vh;
+  min-height: 40vh;
   padding: 20px;
   display: flex;
   justify-content: center;
@@ -26,4 +26,28 @@ section {
   border-radius: 10px;
   border-width: 2px;
   border-color: #dfdeda;
+}
+
+.button-blue{
+  border-width: 2px;
+  color: #0a66c2;
+  border-color: #0a66c2;
+  border-radius: 20px;
+  background-color: white;
+  font-weight: 700;
+}
+
+.button-white{
+  color: white;
+  background-color: #0a66c2;
+  border-radius: 20px;
+}
+
+.button-white:hover{
+  background-color: #004182;
+}
+
+.button-blue:hover{
+  background-color: #ebf4fd;
+  border-color: #004182;
 }

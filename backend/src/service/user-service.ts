@@ -101,25 +101,56 @@ export class UserService {
     return token;
   }
 
-  static async getAll(query: string = ""): Promise<UserFormat[]> {
+  static async getAll(
+    userId: number = 0,
+    query: string = ""
+  ): Promise<UserFormat[]> {
+    const select_query = {
+      id: true,
+      username: true,
+      full_name: true,
+      profile_photo_path: true,
+      connectionsTo: userId
+        ? {
+            where: {
+              from_id: userId,
+            },
+          }
+        : undefined,
+      connectionRequestsTo: userId
+        ? {
+            where: {
+              from_id: userId,
+            },
+          }
+        : undefined,
+    };
+
     const users = await prismaClient.user.findMany({
       where: {
         username: {
           contains: query,
           mode: "insensitive",
         },
+        ...(userId !== 0 && {
+          id: {
+            not: userId,
+          },
+        }),
       },
-      select: {
-        id: true,
-        username: true,
-        full_name: true,
-        profile_photo_path: true,
-      },
+      select: select_query,
     });
 
-    const formattedUsers = users.map((user)=> ({
+    const formattedUsers = users.map((user) => ({
       ...user,
       name: user.full_name,
+      is_connected: user.connectionsTo.length > 0,
+      is_requested: user.connectionRequestsTo.length > 0,
+      profile_photo: user.profile_photo_path,
+      
+      profile_photo_path: undefined,
+      connectionRequestsTo: undefined,
+      connectionsTo: undefined,
       full_name: undefined,
     }));
 
@@ -153,7 +184,7 @@ export class UserService {
         user_id: id,
       },
       orderBy: {
-        created_at: 'desc',
+        created_at: "desc",
       },
     });
 
@@ -180,13 +211,12 @@ export class UserService {
 
       // download the image to local
 
-
       url_profile_photo = uploadPath;
     }
 
     await prismaClient.user.update({
       where: {
-        id: id
+        id: id,
       },
       data: {
         username: updateRequest.username,
@@ -195,7 +225,7 @@ export class UserService {
         skills: updateRequest.skills,
         profile_photo_path: url_profile_photo,
       },
-      select: prismaUserFormat
+      select: prismaUserFormat,
     });
 
     return "User updated successfully";

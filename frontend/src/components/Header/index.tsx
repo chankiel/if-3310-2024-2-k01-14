@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { UseAuth } from "../../contexts/AuthContext";
 import {
   ChatIcon,
@@ -7,13 +7,15 @@ import {
   LinkedInIcon,
   NotificationIcon,
 } from "../Icons";
-import { MagnifyingGlassIcon, ClockIcon } from "@heroicons/react/24/solid";
+import { ClockIcon, UserGroupIcon } from "@heroicons/react/24/solid";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
-  const { isAuthenticated, logout, username, currentId, profile_photo } = UseAuth();
+  const { isAuthenticated, logout, username, currentId, profile_photo } =
+    UseAuth();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -29,8 +31,8 @@ const Header: React.FC = () => {
   const paths = [
     {
       path: "/users",
-      name: "Search",
-      icon: <MagnifyingGlassIcon height={24} width={24} />,
+      name: "Users",
+      icon: <UserGroupIcon height={24} width={24} />,
     },
     {
       path: "/feed",
@@ -71,20 +73,29 @@ const Header: React.FC = () => {
               <>
                 {paths.map((path, index) => (
                   <li
-                    className="relative hover:text-black flex items-center justify-center md:min-w-14"
+                    className={`hover:text-black relative flex items-center justify-center md:min-w-14 ${
+                      path.path === location.pathname ? "text-black" : ""
+                    }`}
                     key={index}
                   >
                     <Link to={path.path} className="flex flex-col items-center">
                       {path.icon}
                       <p className="hidden md:block text-nowrap">{path.name}</p>
                     </Link>
+
+                    {/* Add bottom border when active */}
+                    <div
+                      className={`absolute bottom-0 left-0 right-0 h-1 ${
+                        path.path === location.pathname ? "bg-black" : "hidden"
+                      }`}
+                    />
                   </li>
                 ))}
                 <li className="flex flex-col items-center relative">
                   <Popover>
                     <PopoverTrigger>
                       <Avatar className="h-7 w-7">
-                        <AvatarImage src={profile_photo??""} />
+                        <AvatarImage src={profile_photo ?? ""} />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
 
@@ -102,9 +113,7 @@ const Header: React.FC = () => {
                           <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                         <div className="text-left">
-                          <h1 className="font-medium text-lg">
-                            {username}
-                          </h1>
+                          <h1 className="font-medium text-lg">{username}</h1>
                         </div>
                       </div>
                       <Link
@@ -113,9 +122,7 @@ const Header: React.FC = () => {
                       >
                         View Profile
                       </Link>
-                      <div
-                        className="text-gray-600"
-                      >
+                      <div className="text-gray-600">
                         <button
                           className="w-full text-left hover:underline"
                           onClick={handleLogout}

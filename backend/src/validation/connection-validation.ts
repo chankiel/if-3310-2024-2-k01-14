@@ -5,18 +5,8 @@ import { ResponseError } from "../error/response-error";
 export class ConnectionValidation {
   static readonly STOREREQUEST: ZodType = z
     .object({
-      from_id: z
-        .string()
-        .transform((val) => Number(val))
-        .refine((val) => !isNaN(val), {
-          message: "Request Sender Id must be a valid number",
-        }),
-      to_id: z
-        .string()
-        .transform((val) => Number(val))
-        .refine((val) => !isNaN(val), {
-          message: "Request Receiver Id must be a valid number",
-        }),
+      from_id: z.number(),
+      to_id: z.number()
     })
     .refine((data) => data.from_id !== data.to_id, {
       message: "Sender and Receiver Id must be different",
@@ -33,12 +23,7 @@ export class ConnectionValidation {
 
   static readonly RESPONDREQ: ZodType = z
     .object({
-      accept: z
-        .string()
-        .refine((val) => val === "true" || val === "false", {
-          message: "Value must be either 'true' or 'false'",
-        })
-        .transform((val) => val === "true"),
+      accept: z.boolean()
     })
     .and(this.STOREREQUEST);
 }

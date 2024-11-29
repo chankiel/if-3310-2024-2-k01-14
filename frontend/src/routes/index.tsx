@@ -1,22 +1,7 @@
-import { Outlet, RouteObject, createBrowserRouter } from "react-router-dom";
+import { RouteObject, createBrowserRouter } from "react-router-dom";
 // import ProtectedRoute from "../components/ProtectedRoute";
-import { AuthProvider } from "../contexts/AuthContext";
-import { Footer, Header } from "../components";
 import {Connection, Requests, Login, NotFound, Register, Users, Profile} from "../pages";
-
-const AuthProviderLayout = () => {
-  return (
-    <AuthProvider>
-      <Header />
-
-      <main>
-        <Outlet />
-      </main>
-
-      <Footer />
-    </AuthProvider>
-  );
-};
+import AuthProviderLayout from "./AuthProviderLayout";
 
 const routes: RouteObject[] = [
   {
@@ -33,11 +18,11 @@ const routes: RouteObject[] = [
       },
       {
         path: "/feed",
-        element: <Login />,
+        element: null,
       },
       {
         path: "/mynetworks/connections",
-        element: <Login />,
+        element: <Connection/>,
       },
       {
         path: "/mynetworks/pending",
@@ -45,11 +30,11 @@ const routes: RouteObject[] = [
       },
       {
         path: "/chat",
-        element: <Login />,
+        element: null,
       },
       {
         path: "/notification",
-        element: <Login />,
+        element: null,
       },
       {
         path: "/connections/:userId",

@@ -14,7 +14,7 @@ export default {
         "linkin-subtleblue": "#f0f7fe",
         "linkin-subtleyellow": "#f4f2ee",
         "linkin-hoverblue": "#EBF4FD",
-		"linkin-border": "#DFDEDA"
+        "linkin-border": "#DFDEDA",
       },
       backgroundColor: {},
       borderRadius: {
