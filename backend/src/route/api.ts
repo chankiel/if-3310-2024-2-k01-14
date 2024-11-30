@@ -3,6 +3,7 @@ import { authMiddleware, AuthRequest } from "../middleware/auth-middleware";
 import { UserController } from "../controller/user-controller";
 import { ConnectionController } from "../controller/connection-controller";
 import multer from "multer";
+import { PushController } from "../controller/push-controller";
 
 const upload = multer();
 const apiRouter = express.Router();
@@ -45,5 +46,22 @@ apiRouter.delete(
   authMiddleware,
   ConnectionController.deleteConnectionRequest
 );
+
+
+
+apiRouter.post(
+  "/api/subscribe",
+  upload.none(),
+  authMiddleware,
+  PushController.subscribe,
+)
+
+apiRouter.post(
+  "/api/send-notification",
+  upload.none(),
+  authMiddleware,
+  PushController.sendPushNotification,
+)
+
 
 export default apiRouter;

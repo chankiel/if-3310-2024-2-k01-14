@@ -14,6 +14,7 @@ services:
       - DB_PASSWORD=${POSTGRES_PASSWORD}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - CHOKIDAR_USEPOLLING=true
+      - VAPID_PUBLIC_KEY=${VAPID_PUBLIC_KEY}
     volumes:
       - ./backend:/home/node/app
       - /home/node/app/node_modules

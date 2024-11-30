@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Register() {
     const navigate = useNavigate();
-    const [isSuccess, setIsSuccess] = useState<boolean>(false);
-    const [responseMessage, setResponseMessage] = useState<string>("");
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [responseMessage, setResponseMessage] = useState("");
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -40,7 +40,7 @@ export default function Register() {
                 console.log(formData)
                 const response = await fetch(`http://localhost:3000/api/register`, {
                     method: "POST",
-                    credentials: "include", 
+                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -72,16 +72,22 @@ export default function Register() {
 
     return (
         <>
-            <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">Make the most of your professional life</h2>
+            <div className="min-h-screen flex flex-col items-center">
+                <h2 className="text-3xl text-gray-800 mb-6 mt-24">
+                    Make the most of your professional life
+                </h2>
                 <form
                     onSubmit={handleSubmit}
                     className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
                 >
-                    <h2 className="text-xl font-semibold text-center mb-4">Sign Up</h2>
+                    <h2 className="text-2xl font-semibold text-center mb-4">
+                        Sign Up
+                    </h2>
+
                     {responseMessage && !isSuccess && (
-                        <div className="text-red-500 text-sm mb-4">{responseMessage}</div>
+                        <div className="text-red-500 text-sm py-2 text-center">{responseMessage}</div>
                     )}
+
                     <div className="mb-4">
                         <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                             Username
@@ -92,7 +98,7 @@ export default function Register() {
                             name="username"
                             value={formData.username}
                             onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            className="mt-1 block w-full rounded-md border border-slate-500 py-2 px-3 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         />
                     </div>
                     <div className="mb-4">
@@ -105,7 +111,7 @@ export default function Register() {
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            className="mt-1 block w-full rounded-md border border-slate-500 py-2 px-3 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         />
                     </div>
                     <div className="mb-4">
@@ -118,7 +124,7 @@ export default function Register() {
                             name="full_name"
                             value={formData.full_name}
                             onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            className="mt-1 block w-full rounded-md border border-slate-500 py-2 px-3 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         />
                     </div>
                     <div className="mb-4">
@@ -131,7 +137,7 @@ export default function Register() {
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            className="mt-1 block w-full rounded-md border border-slate-500 py-2 px-3 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         />
                     </div>
                     <div className="mb-6">
@@ -144,15 +150,22 @@ export default function Register() {
                             name="confirmPassword"
                             value={formData.confirmPassword}
                             onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            className="mt-1 block w-full rounded-md border border-slate-500 py-2 px-3 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         />
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-full hover:bg-blue-700 transition-colors"
+                        className="w-full bg-blue-600 text-white font-bold p-4 rounded-full hover:bg-blue-700 transition-colors"
                     >
                         Sign Up
                     </button>
+
+                    <div className="mt-4 text-center">
+                        <p>
+                            Already on LinkInPurry?
+                            <Link className="text-blue-600" to="/login"> Sign in</Link>
+                        </p>
+                    </div>
                 </form>
             </div>
         </>
