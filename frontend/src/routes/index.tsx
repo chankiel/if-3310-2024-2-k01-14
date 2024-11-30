@@ -1,6 +1,6 @@
 import { RouteObject, createBrowserRouter } from "react-router-dom";
 // import ProtectedRoute from "../components/ProtectedRoute";
-import {Connection, Requests, Login, NotFound, Register, Users, Profile} from "../pages";
+import {Connection, Requests, Login, NotFound, Register, Users, Profile, Feed} from "../pages";
 import AuthProviderLayout from "./AuthProviderLayout";
 import Notifications from "../pages/Notifications";
 
@@ -19,7 +19,7 @@ const routes: RouteObject[] = [
       },
       {
         path: "/feed",
-        element: null,
+        element: <Feed />,
       },
       {
         path: "/mynetworks/connections",

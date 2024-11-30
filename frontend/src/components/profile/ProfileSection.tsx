@@ -8,7 +8,7 @@ interface ProfileDataProps{
 
 export default function ProfileSection({ data }: ProfileDataProps) {
 
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleEditProfileClick = () => {
         setIsModalOpen(true);
