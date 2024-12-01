@@ -21,7 +21,7 @@ export class UserValidation {
 
     static readonly UPDATE : ZodType = z.object({
         username: z.string().min(1),
-        photo_profile: z
+        profile_photo: z
                 .instanceof(File)
                 .refine((files) => files.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
                 .refine(

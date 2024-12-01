@@ -1,5 +1,5 @@
 interface SkillsSectionProps {
-    skills: string;
+    skills: string | null;
 }
 
 export default function SkillsSection({ skills }: SkillsSectionProps) {
@@ -7,16 +7,17 @@ export default function SkillsSection({ skills }: SkillsSectionProps) {
         <>
             <section className="bg-white mt-2 p-4 pl-8 rounded-lg border">
                 <span className="text-xl font-semibold">Skills</span>
-                <ul className="pt-1">
-                    {/* {skills.slice(0, 5).map((skill, index) => (
-                        <li key = {index} className={index < skills.length - 1 ? "border-b border-gray-300" : ""}>
-                            <span className="text-base w-full flex flex-row font-semibold py-2">{skill}</span>
-                        </li>
-                    ))} */}
-                    <li>
-                        <span className="text-base w-full flex flex-row font-semibold py-2">{skills}</span>
-                    </li>
-                </ul>
+                <div className="pt-1">
+                    {skills ? (
+                        <div className="py-2">
+                            {skills}
+                        </div>
+                    ) : (
+                        <div className="py-2 text-gray-500">
+                            <strong>No skills available.</strong>
+                        </div>
+                    )}
+                </div>
             </section>
         </>
     );

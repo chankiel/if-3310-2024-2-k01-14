@@ -1,4 +1,4 @@
-import { RouteObject, createBrowserRouter } from "react-router-dom";
+import { Navigate, RouteObject, createBrowserRouter } from "react-router-dom";
 // import ProtectedRoute from "../components/ProtectedRoute";
 import {Connection, Requests, Login, NotFound, Register, Users, Profile, Feed} from "../pages";
 import AuthProviderLayout from "./AuthProviderLayout";
@@ -9,6 +9,14 @@ const routes: RouteObject[] = [
     path: "/",
     element: <AuthProviderLayout />,
     children: [
+      {
+        path: "/",
+        element: <Navigate to="/feed" replace />,
+      },
+      {
+        path: "/home",
+        element: <Navigate to="/feed" replace />,
+      },
       {
         path: "/login",
         element: <Login />,

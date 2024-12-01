@@ -3,7 +3,6 @@ import { prismaClient } from "../application/database";
 import { ResponseError } from "../error/response-error";
 import {
   CreateUserRequest,
-  LoginUserRequest,
   UpdateUserRequest,
   UserFormat,
   UserPrismaFormat,
@@ -39,15 +38,10 @@ export class UserService {
   static formatUserResponse(user: UserPrismaFormat): UserFormat {
     const formattedUser = {
       ...user,
-      relevant_posts: user.feeds,
+      feeds: user.feeds,
       profile_photo: user.profile_photo_path,
-      name: user.full_name,
+      full_name: user.full_name,
       connection_count: user._count.connectionsFrom,
-
-      _count: undefined,
-      feeds: undefined,
-      profile_photo_path: undefined,
-      full_name: undefined,
     };
 
     return formattedUser;
@@ -143,7 +137,7 @@ export class UserService {
 
     const formattedUsers = users.map((user) => ({
       ...user,
-      name: user.full_name,
+      full_name: user.full_name,
       is_connected: user.connectionsTo.length > 0,
       is_requested: user.connectionRequestsTo.length > 0,
       profile_photo: user.profile_photo_path,
@@ -151,7 +145,6 @@ export class UserService {
       profile_photo_path: undefined,
       connectionRequestsTo: undefined,
       connectionsTo: undefined,
-      full_name: undefined,
     }));
 
     return formattedUsers;
@@ -172,14 +165,14 @@ export class UserService {
     const isOwner = currentUserId === id;
     const isConnected = await prismaClient.connection.findFirst({
       where: {
-        from_id: currentUserId,
-        to_id: id,
+        from_id: id,
+        to_id: currentUserId,
       },
     });
 
     const formattedUser = this.formatUserResponse(user);
 
-    const latestPost = await prismaClient.feed.findFirst({
+    const feeds = await prismaClient.feed.findFirst({
       where: {
         user_id: id,
       },
@@ -188,12 +181,12 @@ export class UserService {
       },
     });
 
-    console.log(latestPost);
+    console.log
 
-    if (!(isOwner && isConnected)) {
-      formattedUser.relevant_posts = undefined;
+    if (!(isOwner || isConnected)) {
+      formattedUser.feeds = undefined;
     } else {
-      formattedUser.relevant_posts = latestPost ? [latestPost] : [];
+      formattedUser.feeds = feeds ? [feeds] : [];
     }
 
     return formattedUser;

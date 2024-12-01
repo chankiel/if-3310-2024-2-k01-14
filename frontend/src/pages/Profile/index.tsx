@@ -7,12 +7,12 @@ import {
   RecommendationSection,
 } from "../../components/profile";
 import { useEffect, useState } from "react";
-// import Cookies from "js-cookie";
-// import jwtDecode from 'jwt-js-decode';
+import { UseAuth } from "../../contexts/AuthContext";
+import { API_URL } from "../../constant";
 
-export interface Activity {
+export interface Feed {
   content: string;
-  created_At: string;
+  created_at: string;
   updated_at: string;
 }
 
@@ -21,9 +21,9 @@ export interface ProfileData {
   work_history: string | null;
   skills: string | null;
   profile_photo: string | null;
-  name: string;
+  full_name: string;
   connection_count: number;
-  activity?: Activity;
+  feeds?: Feed[] | null;
 }
 
 export interface UserRecommendation {
@@ -35,12 +35,21 @@ export interface RecommendationData {
   recommendations: UserRecommendation[];
 }
 
-export default function Profile() {
-  const { user_id } = useParams<{ user_id: string }>();
-  // const [profileData, setProfileData] = useState<ProfileData | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const [recommendations, setRecommendations] = useState<RecommendationData | undefined>(undefined);
+interface Connection {
+  id: number;
+  username: string;
+  full_name: string;
+  profile_photo_path: string;
+  created_at: string;
+}
 
+export default function Profile() {
+  const { isAuthenticated, currentId } = UseAuth();
+  const { user_id } = useParams<{ user_id: string }>();
+  const [profileData, setProfileData] = useState<ProfileData | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isConnected, setIsConnected] = useState(false);
+  // const [recommendations, setRecommendations] = useState<RecommendationData | undefined>(undefined);
 
   const recommendations: UserRecommendation[] = [
     {
@@ -65,80 +74,65 @@ export default function Profile() {
     },
   ];
 
-  const dummyActivity: Activity = {
-    content: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea deleniti, quos illum quo error eum neque maxime nemo alias molestiae eius eaque, consequuntur sapiente, id nostrum deserunt dolores animi eligendi?",
-    created_At: "3 months ago",
-    updated_at: "2 minutes ago"
-  };
+  useEffect(() => {
+    const fetchProfileDataAndConnecetions = async () => {
+      try {
+        const profileResponse = await fetch(`${API_URL}/profile/${user_id}`, {
+          method: "GET",
+        });
 
-  const profileData: ProfileData = {
-    "username": "francesco",
-    "work_history": "Makan kentang goreng",
-    "skills": "Tidur",
-    "profile_photo": "/perry-casino.webp",
-    "name": "Francesco Michael Kusuma",
-    "connection_count": 0,
-    "activity": dummyActivity
+        if (!profileResponse.ok) {
+          throw new Error("Failed to fetch profile data");
+        }
+
+        const connectionsResponse = await fetch(`${API_URL}/connections/${currentId}`, {
+          method: "GET",
+        });
+
+        if (!connectionsResponse.ok) {
+          throw new Error("Failed to fetch connections data");
+        }
+
+        const profileData = await profileResponse.json();
+        setProfileData(profileData.body);
+
+        const connectionsData = await connectionsResponse.json();
+
+        const isUserConnected = connectionsData.body.some((connection: Connection) => connection.id === Number(user_id));
+
+        setIsConnected(isUserConnected);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log("Error fetch profile data and connections: ");
+          console.error(error.message);
+        } else {
+          console.error("An unknown error occurred");
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProfileDataAndConnecetions();
+  }, [user_id]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
-  // useEffect(() => {
-  //   const fetchProfileData = async () => {
-  //     // const token = Cookies.get("token");
-
-  //     // if(token) {
-  //     //     try {
-  //     //         const decodedToken = jwtDecode(token);
-  //     //         console.log(decodedToken);
-  //     //     } catch(error) {
-  //     //         console.error("Token decoding failed: ", error);
-  //     //     }
-  //     // } else {
-  //     //     console.log("No token");
-  //     // }
-
-  //     const response = await fetch(`http://localhost:3000/api/profile/${user_id}`, {
-  //       method: "GET",
-  //       // headers: {
-  //       //     "Authorization": `Bearer ${token}`,
-  //       // }
-  //     });
-
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       setProfileData(data.body);
-  //     } else {
-  //       console.error("Failed to fetch profile data");
-  //     }
-
-  //     setIsLoading(false);
-  //   };
-
-  //   fetchProfileData();
-  // }, [user_id]);
-
-  // useEffect(() => {
-  //   if (profileData) {
-  //     console.log("Profile data: ", profileData);
-  //   }
-  // }, [profileData]);
-
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (!profileData) {
-  //   return <div>No profile found.</div>;
-  // }
+  if (!profileData) {
+    return <div>No profile found.</div>;
+  }
 
   return (
     <>
       <main className="bg-custom-bg-color min-h-screen">
         <div className="flex flex-col md:flex-row justify-center gap-x-6">
           <div className="ml-2 max-w-3xl">
-            <ProfileSection data={profileData} />
-            {profileData.activity && <ActivitySection username = {profileData.username} activity={profileData.activity} />}
-            {profileData.work_history && <ExperienceSection experiences={profileData.work_history} />}
-            {profileData.skills && <SkillsSection skills={profileData.skills} />}
+            <ProfileSection data={profileData} isAuthenticated={isAuthenticated} currentId={currentId} user_id={Number(user_id)} isConnected={isConnected} />
+            <ActivitySection username={profileData.username} activity={profileData.feeds?.[0] || null} />
+            <ExperienceSection experiences={profileData.work_history || null} />
+            <SkillsSection skills={profileData.skills || null} />
           </div>
 
           <div className="max-w-xs">

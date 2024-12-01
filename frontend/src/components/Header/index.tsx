@@ -55,7 +55,7 @@ const Header: React.FC = () => {
       icon: <ChatIcon />,
     },
     {
-      path: "/notification",
+      path: "/notifications",
       name: "Notification",
       icon: <NotificationIcon />,
     },
