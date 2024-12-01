@@ -103,7 +103,7 @@ export class ConnectionService {
   static async deleteConnection(request: ConnectionReqRequest) {
     const connection = await prismaClient.connection.deleteMany({
       where: {
-        AND: [
+        OR: [
           {
             from_id: request.from_id,
             to_id: request.to_id,
