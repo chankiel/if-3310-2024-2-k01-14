@@ -93,11 +93,11 @@ export class UserService {
       email: user.email,
       role: "jobseeker",
       iat: Math.floor(Date.now() / 1000),
-      exp: Math.floor(Date.now() / 1000) + 3600, // TTL 1 jam
+      exp: Math.floor(Date.now() / 1000) + 3600,
     };
-
-    // Buat JWT
+    
     const token = createJwt(payload);
+
 
     return token;
   }

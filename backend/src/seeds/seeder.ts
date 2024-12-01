@@ -1,5 +1,5 @@
 import { prismaClient } from "../application/database";
-const bcrypt = require("bcrypt");
+import bcrypt from "bcryptjs";
 
 async function seedUser(){
     await prismaClient.user.deleteMany()

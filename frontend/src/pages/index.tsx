@@ -6,6 +6,7 @@ import Register from "./Register/Register";
 import Connection from "./Connection";
 import Requests from "./Request";
 import Users from "./Users";
+import Notifications from "./Notifications";
 
 export{
     Users,
@@ -15,6 +16,7 @@ export{
     Profile,
     Register,
     Connection,
+    Notifications,
     Requests
 };
 

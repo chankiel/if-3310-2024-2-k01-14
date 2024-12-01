@@ -1,8 +1,9 @@
 import { RouteObject, createBrowserRouter } from "react-router-dom";
 // import ProtectedRoute from "../components/ProtectedRoute";
-import {Connection, Requests, Login, NotFound, Register, Users, Profile} from "../pages";
+import {Connection, Requests, Login, NotFound, Register, Users, Profile, Feed} from "../pages";
 import ProviderLayout from "./ProviderLayout";
 import Chat from "../pages/Chat/Chat";
+import Notifications from "../pages/Notifications";
 
 const routes: RouteObject[] = [
   {
@@ -19,7 +20,7 @@ const routes: RouteObject[] = [
       },
       {
         path: "/feed",
-        element: null,
+        element: <Feed />,
       },
       {
         path: "/mynetworks/connections",
@@ -34,8 +35,8 @@ const routes: RouteObject[] = [
         element: null,
       },
       {
-        path: "/notification",
-        element: null,
+        path: "/notifications",
+        element: <Notifications />,
       },
       {
         path: "/connections/:userId",

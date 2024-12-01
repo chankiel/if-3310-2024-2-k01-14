@@ -66,7 +66,7 @@ export default function Profile() {
   ];
 
   const dummyActivity: Activity = {
-    content: "Completed a project on React and TypeScript.",
+    content: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea deleniti, quos illum quo error eum neque maxime nemo alias molestiae eius eaque, consequuntur sapiente, id nostrum deserunt dolores animi eligendi?",
     created_At: "3 months ago",
     updated_at: "2 minutes ago"
   };
@@ -132,8 +132,8 @@ export default function Profile() {
 
   return (
     <>
-      <div className="bg-custom-bg-color min-h-screen">
-        <div className="flex flex-col md:flex-row p-24 justify-center gap-x-6 mt-8">
+      <main className="bg-custom-bg-color min-h-screen">
+        <div className="flex flex-col md:flex-row justify-center gap-x-6">
           <div className="ml-2 max-w-3xl">
             <ProfileSection data={profileData} />
             {profileData.activity && <ActivitySection username = {profileData.username} activity={profileData.activity} />}
@@ -147,7 +147,7 @@ export default function Profile() {
             />
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

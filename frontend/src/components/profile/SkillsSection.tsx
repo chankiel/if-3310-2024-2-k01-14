@@ -5,7 +5,7 @@ interface SkillsSectionProps {
 export default function SkillsSection({ skills }: SkillsSectionProps) {
     return (
         <>
-            <section className="bg-white mt-2 p-4 pl-8">
+            <section className="bg-white mt-2 p-4 pl-8 rounded-lg border">
                 <span className="text-xl font-semibold">Skills</span>
                 <ul className="pt-1">
                     {/* {skills.slice(0, 5).map((skill, index) => (
