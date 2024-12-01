@@ -10,8 +10,8 @@ export type User = {
   work_history?: string | null;
   skills?: string | null;
   feeds: Feed[];
-  chatsFrom: Chat[];
-  chatsTo: Chat[];
+  chatsFrom: ChatFormat[];
+  chatsTo: ChatFormat[];
   connectionsFrom: Connection[];
   connectionsTo: Connection[];
   connectionRequestsFrom: ConnectionRequest[];
@@ -26,15 +26,14 @@ export type Feed = {
   updated_at: Date;
 };
 
-export type Chat = {
-  id: number;
+export type ChatFormat = {
+  id?: number;
   timestamp: Date;
   from_id: number;
   to_id: number;
   message: string;
-  from: User;
-  to: User;
-};
+  room_id: number;
+}
 
 export type ConnectionRequest = {
   from_id: number;
@@ -122,5 +121,14 @@ export type UserFormat = {
   relevant_posts?: Feed[];
   is_connected?: boolean;
   is_requested?: boolean;
+  room_id?: number | null;
 };
 
+export type RoomChatFormat =  {
+  id: number;
+  updated_at: Date;
+  first_user_id: number;
+  second_user_id: number;
+  last_message: string | null;
+  last_sender_id: number | null;
+}
