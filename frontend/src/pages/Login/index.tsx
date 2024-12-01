@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { APIResponse } from "../../types";
-import { UseAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Login() {
-  const {login} = UseAuth();
+  const {login} = useAuth();
   const navigate = useNavigate();
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");

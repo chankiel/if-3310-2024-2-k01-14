@@ -1,12 +1,13 @@
 import { RouteObject, createBrowserRouter } from "react-router-dom";
 // import ProtectedRoute from "../components/ProtectedRoute";
 import {Connection, Requests, Login, NotFound, Register, Users, Profile} from "../pages";
-import AuthProviderLayout from "./AuthProviderLayout";
+import ProviderLayout from "./ProviderLayout";
+import Chat from "../pages/Chat/Chat";
 
 const routes: RouteObject[] = [
   {
     path: "/",
-    element: <AuthProviderLayout />,
+    element: <ProviderLayout />,
     children: [
       {
         path: "/login",
@@ -47,6 +48,10 @@ const routes: RouteObject[] = [
       {
         path: "/profile/:user_id",
         element: <Profile />
+      },
+      {
+        path: "/chat/:roomId",
+        element: <Chat/>
       },
       {
         path: "*",

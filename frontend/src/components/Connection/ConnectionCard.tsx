@@ -9,7 +9,6 @@ import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import { TrashIcon, EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import { timeAgo } from "../../lib/utils";
-import { toast } from "react-toastify";
 
 import {
   AlertDialog,

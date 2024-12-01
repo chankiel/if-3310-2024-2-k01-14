@@ -3,11 +3,11 @@ import { Sidebar } from "../../components";
 import { RequestCard } from "../../components/Connection";
 import { APIResponse, ConnectionFormat } from "../../types";
 import ConnectionApi from "../../api/connection-api";
-import { UseAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
 
 const Requests = () => {
-  const { currentId } = UseAuth();
+  const { currentId } = useAuth();
   const [requests, setRequests] = useState<ConnectionFormat[]>([]);
   const [loading, setLoading] = useState(true);
 
