@@ -16,6 +16,7 @@ import {
 } from "../validation/connection-validation";
 import { ResponseError } from "../error/response-error";
 import { validateUserExists } from "../validation/user-validation";
+import { ChatService } from "../service/chat-service";
 
 export class ConnectionController {
   static async storeConnectionRequest(
@@ -139,6 +140,12 @@ export class ConnectionController {
       await validateConnectionExists(respond_req.from_id, respond_req.to_id, true);
 
       const respond_result = await ConnectionService.respondRequest(respond_req);
+      if(respond_req.accept){
+        const room_chat = await ChatService.makeRoomChat({
+          first_id: respond_req.from_id,
+          second_id: respond_req.to_id,
+        })
+      }
 
       const response = formatResponse(
         true,

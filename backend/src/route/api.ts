@@ -3,13 +3,13 @@ import { authMiddleware, AuthRequest } from "../middleware/auth-middleware";
 import { UserController } from "../controller/user-controller";
 import { ConnectionController } from "../controller/connection-controller";
 import multer from "multer";
+import { ChatController } from "../controller/chat-controller";
 import { PushController } from "../controller/push-controller";
 
 const upload = multer();
 const apiRouter = express.Router();
 
 apiRouter.route("/profile/:user_id(\\d+)").put(UserController.update);
-
 
 /*----------------- Connections -----------------*/
 apiRouter.post(
@@ -46,6 +46,22 @@ apiRouter.delete(
   authMiddleware,
   ConnectionController.deleteConnectionRequest
 );
+
+/*----------------- Room Chat -----------------*/
+apiRouter.get(
+  "/room-chats/:room_id(\\d+)/receiver",
+  upload.none(),
+  authMiddleware,
+  ChatController.getReceiver
+)
+
+/*----------------- Chat -----------------*/
+apiRouter.get(
+  "/chats/:room_id(\\d+)",
+  upload.none(),
+  authMiddleware,
+  ChatController.getMessages,
+)
 
 
 

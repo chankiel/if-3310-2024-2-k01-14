@@ -5,17 +5,17 @@ import React, { useEffect, useState } from "react";
 import { ConnectionResponse, UserFormat } from "../../types";
 import { useDebouncedCallback } from "use-debounce";
 import { useSearchParams } from "react-router-dom";
-import { UseAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import ConnectionApi from "../../api/connection-api";
 import { toast } from "react-toastify";
 
 const Users = () => {
-  const { currentId } = UseAuth();
+  const { currentId } = useAuth();
   const [users, setUsers] = useState<UserFormat[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const query_value = searchParams.get("query") ?? "";
   const [loading, setLoading] = useState(true);
-
+  console.log(users)
   const handleRequest = async (id: string, isStore: boolean) => {
     try {
       const res = isStore
@@ -111,12 +111,7 @@ const Users = () => {
             users.map((user,index) => (
               <UserCard
                 key={index}
-                id={user.id!}
-                name={user.name}
-                username={user.username}
-                profile_photo_path={user.profile_photo ?? ""}
-                is_connected={user.is_connected}
-                is_requested={user.is_requested}
+                user={user}
                 handleRequest={handleRequest}
                 isFirst = {index==0}
               />

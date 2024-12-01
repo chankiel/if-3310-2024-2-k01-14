@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { APIResponse } from "../../types";
-import { UseAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { Link } from 'react-router-dom';
 
 export default function Login() {
-  const { login } = UseAuth();
+  const {login} = useAuth();
   const navigate = useNavigate();
   const [isSuccess, setIsSuccess] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");

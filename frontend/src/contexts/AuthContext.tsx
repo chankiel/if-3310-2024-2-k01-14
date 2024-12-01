@@ -70,7 +70,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   if (isLoading){
-    console.log("SINI")
     return null
   };
 
@@ -93,6 +92,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const UseAuth = () => {
+export const useAuth = () => {
   return useContext(AuthContext);
 };

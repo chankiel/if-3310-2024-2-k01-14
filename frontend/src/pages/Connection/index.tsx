@@ -4,10 +4,10 @@ import { ConnectionCard } from "../../components/Connection";
 import { ConnectionFormat } from "../../types";
 import ConnectionApi from "../../api/connection-api";
 import { useParams } from "react-router-dom";
-import { UseAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Connection = () => {
-  const { currentId } = UseAuth();
+  const { currentId } = useAuth();
   const [connections, setConnections] = useState<ConnectionFormat[]>([]);
   const { userId } = useParams();
   const [loading, setLoading] = useState(true);

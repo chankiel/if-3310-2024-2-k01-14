@@ -1,10 +1,10 @@
 import React from "react";
-import { UseAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Link } from "react-router";
 
 const Sidebar: React.FC = () => {
-  const { username, currentId, name, isAuthenticated, profile_photo } = UseAuth();
+  const { username, currentId, name, isAuthenticated, profile_photo } = useAuth();
 
   return (
     <aside className="w-[250px] self-start sticky top-[90px] hidden md:block">

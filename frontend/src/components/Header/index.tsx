@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { UseAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import {
   ChatIcon,
   GroupIcon,
@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
   const { isAuthenticated, logout, username, currentId, profile_photo } =
-    UseAuth();
+    useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 

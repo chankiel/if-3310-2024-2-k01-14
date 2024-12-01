@@ -1,32 +1,36 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "password_hash" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "full_name" TEXT,
+    "profile_photo_path" TEXT,
+    "skills" TEXT,
+    "work_history" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Feed" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "content" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
-    "user_id" BIGINT NOT NULL,
+    "user_id" INTEGER NOT NULL,
 
     CONSTRAINT "Feed_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Chat" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "from_id" BIGINT NOT NULL,
-    "to_id" BIGINT NOT NULL,
+    "from_id" INTEGER NOT NULL,
+    "to_id" INTEGER NOT NULL,
     "message" TEXT NOT NULL,
 
     CONSTRAINT "Chat_pkey" PRIMARY KEY ("id")
@@ -34,18 +38,18 @@ CREATE TABLE "Chat" (
 
 -- CreateTable
 CREATE TABLE "ConnectionRequest" (
-    "from_id" BIGINT NOT NULL,
-    "to_id" BIGINT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL,
+    "from_id" INTEGER NOT NULL,
+    "to_id" INTEGER NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "ConnectionRequest_pkey" PRIMARY KEY ("from_id","to_id")
 );
 
 -- CreateTable
 CREATE TABLE "Connection" (
-    "from_id" BIGINT NOT NULL,
-    "to_id" BIGINT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL,
+    "from_id" INTEGER NOT NULL,
+    "to_id" INTEGER NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Connection_pkey" PRIMARY KEY ("from_id","to_id")
 );
@@ -53,7 +57,7 @@ CREATE TABLE "Connection" (
 -- CreateTable
 CREATE TABLE "PushSubscription" (
     "endpoint" TEXT NOT NULL,
-    "user_id" BIGINT,
+    "user_id" INTEGER,
     "keys" JSONB NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

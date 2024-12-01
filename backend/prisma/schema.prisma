@@ -27,7 +27,9 @@ model User {
   feeds                  Feed[]              @relation("UserFeeds")
   pushSubscriptions      PushSubscription[]
 
-  @@map("users")
+  rooms_chat_first  RoomChat[] @relation("FirstUserRoom")
+  rooms_chat_second RoomChat[] @relation("SecondUserRoom")
+  last_sender_rooms RoomChat[] @relation("LastSender")
 }
 
 model Feed {
@@ -39,8 +41,6 @@ model Feed {
   user       User     @relation("UserFeeds", fields: [user_id], references: [id])
 
   @@index([user_id])
-
-  @@map("feeds")
 }
 
 model Chat {
@@ -49,12 +49,27 @@ model Chat {
   from_id   Int
   to_id     Int
   message   String
+  room_id   Int
   from      User     @relation("UserChatsFrom", fields: [from_id], references: [id])
   to        User     @relation("UserChatsTo", fields: [to_id], references: [id])
+  room      RoomChat @relation(fields: [room_id], references: [id], onDelete: Cascade)
 
   @@index([from_id, to_id])
+}
 
-  @@map("chats")
+model RoomChat {
+  id             Int   @id @default(autoincrement())
+  first_user_id  Int
+  second_user_id Int
+  last_message   String?  @db.Text
+  last_sender_id Int?
+  updated_at     DateTime @default(now()) @db.Timestamptz
+  first_user     User     @relation("FirstUserRoom", fields: [first_user_id], references: [id], onDelete: Cascade)
+  second_user    User     @relation("SecondUserRoom", fields: [second_user_id], references: [id], onDelete: Cascade)
+  last_sender    User?    @relation("LastSender", fields: [last_sender_id], references: [id], onDelete: Cascade)
+  chats          Chat[]   @relation()
+
+  @@unique([first_user_id, second_user_id])
 }
 
 model ConnectionRequest {
@@ -65,8 +80,6 @@ model ConnectionRequest {
   to         User     @relation("ConnectionRequestTo", fields: [to_id], references: [id])
 
   @@id([from_id, to_id])
-
-  @@map("connectionrequests")
 }
 
 model Connection {
@@ -77,8 +90,6 @@ model Connection {
   to         User     @relation("UserConnectionsTo", fields: [to_id], references: [id])
 
   @@id([from_id, to_id])
-
-  @@map("connections")
 }
 
 model PushSubscription {
@@ -89,6 +100,4 @@ model PushSubscription {
   user       User?    @relation(fields: [user_id], references: [id])
 
   @@index([user_id])
-
-  @@map("pushsubscriptions")
 }

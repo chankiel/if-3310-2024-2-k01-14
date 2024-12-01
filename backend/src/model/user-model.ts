@@ -11,6 +11,7 @@ export type UserFormat = {
   feeds?: FeedFormat[];
   is_connected?: boolean;
   is_requested?: boolean;
+  room_id?: number | null;
 };
 
 export type UserPrismaFormat = {

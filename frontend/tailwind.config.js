@@ -15,6 +15,9 @@ export default {
         "linkin-subtleyellow": "#f4f2ee",
         "linkin-hoverblue": "#EBF4FD",
         "linkin-border": "#DFDEDA",
+        "linkin-gray-border": "#E6E6E6",
+        "linkin-sent-chat": "#D0EEFD",
+        "linkin-received-chat": "#F6F6F6",
       },
       backgroundColor: {},
       borderRadius: {
