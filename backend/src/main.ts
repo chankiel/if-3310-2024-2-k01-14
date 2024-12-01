@@ -1,7 +1,10 @@
-import { web } from "./application/web";
+import { server } from "./application/web";
+import { ChatController } from "./controller/chat-controller";
 
 const PORT = process.env.PORT || 3000;
 
-web.listen(PORT, () => {
-    console.log("Server listening at port 3000");
+ChatController.setupSocket()
+
+server.listen(PORT, () => {
+    console.log(`Server listening at port ${PORT}`);
 })
