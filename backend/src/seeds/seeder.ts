@@ -28,7 +28,7 @@ async function seedConnectionAndRequests(){
     await prismaClient.connection.deleteMany()
     await prismaClient.connectionRequest.deleteMany()
 
-    const connections = [], requests = []
+    const connections = [], requests = [], roomChats = []
     for(let i=1;i<=20;i++){
         for(let j=i+1;j<=20;j++){
             if(j<=10){
@@ -39,6 +39,10 @@ async function seedConnectionAndRequests(){
                 connections.push({
                     from_id: j,
                     to_id: i,
+                }),
+                roomChats.push({
+                    first_user_id: i,
+                    second_user_id: j,
                 })
             }else{
                 requests.push({
@@ -55,6 +59,10 @@ async function seedConnectionAndRequests(){
 
     await prismaClient.connectionRequest.createMany({
         data: requests
+    })
+
+    await prismaClient.roomChat.createMany({
+        data: roomChats
     })
 }
 
