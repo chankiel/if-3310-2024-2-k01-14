@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Sidebar } from "../../components";
 import { RecommendationSection } from "../../components/profile";
 import CreatePostModal from "../../components/Feed/CreatePostModal";
-import { UseAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 export interface UserRecommendation {
@@ -12,7 +12,7 @@ export interface UserRecommendation {
 
 export default function Feed() {
 
-    const { isAuthenticated } = UseAuth();
+    const { isAuthenticated } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     if(!isAuthenticated) {

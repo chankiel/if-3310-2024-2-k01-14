@@ -7,7 +7,7 @@ import {
   RecommendationSection,
 } from "../../components/profile";
 import { useEffect, useState } from "react";
-import { UseAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { API_URL } from "../../constant";
 
 export interface Feed {
@@ -44,7 +44,7 @@ interface Connection {
 }
 
 export default function Profile() {
-  const { isAuthenticated, currentId } = UseAuth();
+  const { isAuthenticated, currentId } = useAuth();
   const { user_id } = useParams<{ user_id: string }>();
   const [profileData, setProfileData] = useState<ProfileData | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
