@@ -15,6 +15,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 export const prismaUserFormat = {
+  id: true,
   username: true,
   full_name: true,
   work_history: true,
@@ -105,27 +106,6 @@ export class UserService {
     userId: number = 0,
     query: string = ""
   ): Promise<UserFormat[]> {
-    const select_query = {
-      id: true,
-      username: true,
-      full_name: true,
-      profile_photo_path: true,
-      connectionsTo: userId
-        ? {
-            where: {
-              from_id: userId,
-            },
-          }
-        : undefined,
-      connectionRequestsTo: userId
-        ? {
-            where: {
-              from_id: userId,
-            },
-          }
-        : undefined,
-    };
-
     const users = await prismaClient.user.findMany({
       where: {
         username: {
@@ -138,7 +118,38 @@ export class UserService {
           },
         }),
       },
-      select: select_query,
+      select: {
+        id: true,
+        username: true,
+        full_name: true,
+        profile_photo_path: true,
+        connectionsTo: {
+          where: {
+            from_id: userId,
+          },
+        },
+        connectionRequestsTo: {
+          where: {
+            from_id: userId,
+          },
+        },
+        rooms_chat_first: {
+          where: {
+            second_user_id: userId,
+          },
+          select: {
+            id: true,
+          },
+        },
+        rooms_chat_second: {
+          where: {
+            first_user_id: userId,
+          },
+          select: {
+            id: true,
+          },
+        },
+      },
     });
 
     const formattedUsers = users.map((user) => ({
@@ -146,8 +157,16 @@ export class UserService {
       name: user.full_name,
       is_connected: user.connectionsTo.length > 0,
       is_requested: user.connectionRequestsTo.length > 0,
+      room_id:
+        user.rooms_chat_first.length > 0
+          ? user.rooms_chat_first[0].id
+          : user.rooms_chat_second.length > 0
+          ? user.rooms_chat_second[0].id
+          : null,
       profile_photo: user.profile_photo_path,
-      
+
+      rooms_chat_first: undefined,
+      rooms_chat_second: undefined,
       profile_photo_path: undefined,
       connectionRequestsTo: undefined,
       connectionsTo: undefined,
