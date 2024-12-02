@@ -23,3 +23,12 @@ export type ChatFormat = {
   message: string;
   room_id: number;
 }
+
+export type InboxFormat = {
+  username: string;
+  profile_photo: string | null;
+  room_id: number;
+  last_message: string | null;
+  last_sender_id: number | null;
+  updated_at: Date;
+}
