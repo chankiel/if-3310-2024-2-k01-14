@@ -10,6 +10,7 @@ import {
   Profile,
   Feed,
   LandingPage,
+  Inbox,
 } from "../pages";
 import ProviderLayout from "./ProviderLayout";
 import Chat from "../pages/Chat/Chat";
@@ -66,7 +67,7 @@ const routes: RouteObject[] = [
       },
       {
         path: "/chat",
-        element: null,
+        element: <Inbox/>,
       },
       {
         path: "/notifications",
