@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sidebar } from "../../components";
 import { RecommendationSection } from "../../components/profile";
 import CreatePostModal from "../../components/Feed/CreatePostModal";
 import { useAuth } from "../../contexts/AuthContext";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import FeedApi from "../../api/feed-api";
+import { FeedFormat } from "../../types";
+import { Navigate } from "react-router-dom";
+import moment from 'moment';
 
 export interface UserRecommendation {
     name: string;
@@ -12,12 +15,36 @@ export interface UserRecommendation {
 
 export default function Feed() {
 
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, currentId } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    // const [isEditOpen, setIsEditOpen] = useState(false);
+    // const [feedEdit, setFeedEdit] = useState(0);
+    const [feeds, setFeeds] = useState<FeedFormat[]>([]);
+    const [loading, setLoading] = useState(true);
+    const hasFeed = feeds && feeds.length > 0;
+
 
     if(!isAuthenticated) {
         return <Navigate to="/login" replace />;
     }
+
+    // Fetch data dari backend
+    useEffect(() => {
+        const fetchFeeds = async () => {
+            try {
+                console.log(currentId)
+                const data = await FeedApi.getFeed(Number(currentId))
+                setFeeds(data)
+            } catch (error) {
+                console.error("Failed to fetch feeds", error);
+            } finally{
+                setLoading(false)
+            }
+        };
+        fetchFeeds();
+    }, [currentId]);
+
+    if(loading) return null
 
     const handleEditProfileClick = () => {
         setIsModalOpen(true);
@@ -25,6 +52,18 @@ export default function Feed() {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+    }
+    
+    const handleDelete = async(feed_id:Number) => {
+        console.log("delete")
+        try {
+            await FeedApi.deleteFeed(Number(feed_id))
+            setFeeds((prev) =>
+                prev.filter((feed) => feed.id !== Number(feed_id))
+              );
+        } catch (error) {
+            
+        }
     }
 
     const dummyFeeds = [
@@ -98,8 +137,14 @@ export default function Feed() {
                             Start a post, try writing with AI
                         </button>
                     </div>
+                    <h1 className="px-5 text-xl font-semibold mb-3">
+                    {hasFeed
+                        ? `Ignatius • ${feeds.length} Feeds`
+                        : "You don't have a Feed yet."}
+                    </h1>
+                    {hasFeed ? (
                     <ul>
-                        {dummyFeeds.map((feed, index) => (
+                        {feeds.map((feed, index) => (
                             <li key={index} className="flex flex-row py-4 px-4 border-b bg-white mb-4 border rounded-lg">
                                 <div>
                                     <div className="flex items-center w-full pb-2">
@@ -116,10 +161,12 @@ export default function Feed() {
                                                     Francesco Michael Kusuma
                                                 </div>
                                                 <div className="font-normal text-xs text-gray-500">
-                                                    posted {feed.created} ago
+                                                    posted {moment(feed.created_at).fromNow()}
+                                                    {/* posted {DateHelper.timeDifference(feed.created_at)} ago */}
                                                 </div>
                                                 <div className="font-normal text-xs text-gray-500">
-                                                    updated {feed.updated} ago
+                                                    updated {moment(feed.updated_at).fromNow()}
+                                                    {/* updated {DateHelper.timeDifference(feed.updated_at) } ago */}
                                                 </div>
                                             </div>
                                         </div>
@@ -127,10 +174,34 @@ export default function Feed() {
                                     <div className="text-xl ml-4">
                                         {feed.content}
                                     </div>
+                                    {/* Tombol Edit dan Delete */}
+                                    <div className="top-2 right-2 flex gap-2">
+                                        <button
+                                            // onClick={() => handleEdit(feed.id)}
+                                            className="px-3 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(feed.id)}
+                                            className="px-3 py-1 text-sm text-white bg-red-500 rounded hover:bg-red-600"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
                                 </div>
                             </li>
                         ))}
-                    </ul>
+                    </ul>): (
+                    <div className="flex flex-col items-center">
+                    <img src="/images/no-request.png" alt="no-connection" className="w-1/2 min-w-52" />
+                        <h2 className="px-5 text-lg mt-5">
+                        Discover innovative ideas and job openings on LinkedIn through
+                        your connections and their networks. Find your first connection
+                        below.
+                        </h2>
+                    </div>
+                    )}
                 </div>
                 <div className="max-w-sm">
                     <RecommendationSection
@@ -143,6 +214,12 @@ export default function Feed() {
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
             />
+
+            {/* <EditPostModal
+                isOpen={isEditOpen}
+                onClose={handleCloseEdit}
+                postId = {feedEdit}
+            /> */}
         </>
     );
 }

@@ -9,7 +9,7 @@ export type User = {
   profile_photo_path?: string | null;
   work_history?: string | null;
   skills?: string | null;
-  feeds: Feed[];
+  feeds: FeedFormat[];
   chatsFrom: ChatFormat[];
   chatsTo: ChatFormat[];
   connectionsFrom: Connection[];
@@ -19,7 +19,7 @@ export type User = {
   pushSubscriptions: PushSubscription[];
 };
 
-export type Feed = {
+export type FeedFormat = {
   id: number;
   content: string;
   created_at: Date;
@@ -118,7 +118,7 @@ export type UserFormat = {
   skills: string | null;
   profile_photo: string | null;
   connection_count: number;
-  relevant_posts?: Feed[];
+  relevant_posts?: FeedFormat[];
   is_connected?: boolean;
   is_requested?: boolean;
   room_id?: number | null;
@@ -131,4 +131,8 @@ export type RoomChatFormat =  {
   second_user_id: number;
   last_message: string | null;
   last_sender_id: number | null;
+}
+
+export type FeedResponse = APIResponse & {
+  body: FeedFormat[]
 }
