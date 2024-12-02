@@ -1,6 +1,7 @@
-import ProtectedRoute from "./ProtectedRoute";
 import Header from "./Header";
 import Footer from "./Footer";
 import Sidebar from "./Sidebar";
+import ProtectedRoute from "./RouteAuth/ProtectedRoute";
+import UnauthRoute from "./RouteAuth/UnauthRoute";
 
-export { ProtectedRoute, Header, Footer, Sidebar };
+export { ProtectedRoute, UnauthRoute, Header, Footer, Sidebar };

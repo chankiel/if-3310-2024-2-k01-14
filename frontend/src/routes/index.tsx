@@ -1,6 +1,16 @@
-import { Navigate, RouteObject, createBrowserRouter } from "react-router-dom";
-// import ProtectedRoute from "../components/ProtectedRoute";
-import {Connection, Requests, Login, NotFound, Register, Users, Profile, Feed} from "../pages";
+import { RouteObject, createBrowserRouter } from "react-router-dom";
+import { UnauthRoute, ProtectedRoute } from "../components";
+import {
+  Connection,
+  Requests,
+  Login,
+  NotFound,
+  Register,
+  Users,
+  Profile,
+  Feed,
+  LandingPage,
+} from "../pages";
 import ProviderLayout from "./ProviderLayout";
 import Chat from "../pages/Chat/Chat";
 import Notifications from "../pages/Notifications";
@@ -12,19 +22,35 @@ const routes: RouteObject[] = [
     children: [
       {
         path: "/",
-        element: <Navigate to="/feed" replace />,
+        element: (
+          <UnauthRoute>
+            <LandingPage />
+          </UnauthRoute>
+        ),
       },
       {
         path: "/home",
-        element: <Navigate to="/feed" replace />,
+        element: (
+          <UnauthRoute>
+            <LandingPage />
+          </UnauthRoute>
+        ),
       },
       {
         path: "/login",
-        element: <Login />,
+        element: (
+          <UnauthRoute>
+            <Login />
+          </UnauthRoute>
+        ),
       },
       {
         path: "/register",
-        element: <Register />,
+        element: (
+          <UnauthRoute>
+            <Register />
+          </UnauthRoute>
+        ),
       },
       {
         path: "/feed",
@@ -32,11 +58,11 @@ const routes: RouteObject[] = [
       },
       {
         path: "/mynetworks/connections",
-        element: <Connection/>,
+        element: <Connection />,
       },
       {
         path: "/mynetworks/pending",
-        element: <Requests/>,
+        element: <Requests />,
       },
       {
         path: "/chat",
@@ -48,19 +74,19 @@ const routes: RouteObject[] = [
       },
       {
         path: "/connections/:userId",
-        element: <Connection />
+        element: <Connection />,
       },
       {
         path: "/users",
-        element: <Users />
+        element: <Users />,
       },
       {
         path: "/profile/:user_id",
-        element: <Profile />
+        element: <Profile />,
       },
       {
         path: "/chat/:roomId",
-        element: <Chat/>
+        element: <Chat />,
       },
       {
         path: "*",
