@@ -86,5 +86,13 @@ apiRouter.post(
   PushController.sendPushNotification,
 )
 
+/*----------------- Feeds -----------------*/
+apiRouter.delete(
+  "/feed/:feed_id(\\d+)",
+  upload.none(),
+  authMiddleware,
+  FeedController.deleteFeed
+);
+
 
 export default apiRouter;

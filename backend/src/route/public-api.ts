@@ -4,6 +4,7 @@ import { ConnectionController } from "../controller/connection-controller";
 import multer from "multer";
 import { AuthController } from "../controller/auth-controller";
 import { authMiddleware } from "../middleware/auth-middleware";
+import { FeedController } from "../controller/feed-controller";
 
 const publicRouter = express.Router();
 const upload = multer()
@@ -20,6 +21,8 @@ publicRouter.get("/profile/:user_id(\\d+)",UserController.show)
 
 /*----------------- Connections -----------------*/
 publicRouter.get("/connections/:user_id(\\d+)",ConnectionController.indexConnection)
+
+publicRouter.get("/feed/:user_id(\\d+)",FeedController.showFeeds)
 
 
 export default publicRouter
