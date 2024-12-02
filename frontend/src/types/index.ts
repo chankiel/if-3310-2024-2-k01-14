@@ -130,3 +130,12 @@ export type RoomChatFormat =  {
   last_message: string | null;
   last_sender_id: number | null;
 }
+
+export type InboxFormat = {
+  username: string;
+  profile_photo: string | null;
+  room_id: number;
+  last_message: string | null;
+  last_sender_id: number | null;
+  updated_at: Date;
+}

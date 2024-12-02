@@ -64,6 +64,13 @@ apiRouter.get(
   ChatController.getMessages,
 )
 
+apiRouter.get(
+  "/chats/:user_id(\\d+)/inbox",
+  upload.none(),
+  authMiddleware,
+  ChatController.getInbox,
+)
+
 /*----------------- Connections -----------------*/
 apiRouter.post(
   "/feed",

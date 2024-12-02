@@ -2,7 +2,7 @@
 import axios from "axios";
 
 import { API_URL } from "../constant";
-import { APIResponse, ConnectionFormat, ConnectionReqRequest, ConnectionResponse } from "../types";
+import { APIResponse, ConnectionFormat, ConnectionReqRequest } from "../types";
 
 class ConnectionApi {
   private static axios = axios.create({

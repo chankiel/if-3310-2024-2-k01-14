@@ -2,7 +2,7 @@
 import axios from "axios";
 
 import { API_URL } from "../constant";
-import { APIResponse, ChatFormat, UserFormat } from "../types";
+import { APIResponse, ChatFormat, InboxFormat, UserFormat } from "../types";
 
 class ChatApi {
   private static axios = axios.create({
@@ -32,6 +32,17 @@ class ChatApi {
       return response.data.body as ChatFormat[]
     } catch (error) {
       throw (error as any)?.response?.data;
+    }
+  }
+
+  static async getInboxes(user_id: number): Promise<InboxFormat[]>{
+    try{
+      const response = await this.axios.get<APIResponse>(
+        `/chats/${user_id}/inbox`,  
+      )
+      return response.data.body as InboxFormat[]
+    }catch(error){
+      throw (error as any)?.response?.data
     }
   }
 }
