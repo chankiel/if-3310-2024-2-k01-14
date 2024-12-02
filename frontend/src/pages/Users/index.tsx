@@ -1,4 +1,4 @@
-import { Sidebar } from "../../components";
+import { RightSidebar, Sidebar } from "../../components";
 import { UserCard } from "../../components/User";
 import UserApi from "../../api/user-api";
 import React, { useEffect, useState } from "react";
@@ -139,6 +139,7 @@ const Users = () => {
           )}
         </div>
       </section>
+      <RightSidebar/>
     </>
   );
 };

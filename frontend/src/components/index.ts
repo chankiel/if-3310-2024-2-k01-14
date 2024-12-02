@@ -1,7 +1,8 @@
 import Header from "./Header";
 import Footer from "./Footer";
-import Sidebar from "./Sidebar";
+import Sidebar from "./Sidebar/Sidebar";
 import ProtectedRoute from "./RouteAuth/ProtectedRoute";
 import UnauthRoute from "./RouteAuth/UnauthRoute";
+import RightSidebar from "./Sidebar/RightSidebar";
 
-export { ProtectedRoute, UnauthRoute, Header, Footer, Sidebar };
+export { RightSidebar, ProtectedRoute, UnauthRoute, Header, Footer, Sidebar };
