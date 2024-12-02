@@ -7,8 +7,10 @@ import Connection from "./Connection";
 import Requests from "./Request";
 import Users from "./Users";
 import Notifications from "./Notifications";
+import LandingPage from "./Landing";
 
 export{
+    LandingPage,
     Users,
     Feed,
     Login,
