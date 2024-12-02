@@ -64,7 +64,7 @@ const Inbox = () => {
           <CommandInput placeholder="Type a friend's name..." />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup>
+            <CommandGroup heading="Connections">
               {connections.map((con,index) => (
                 <CommandItem key={index}>
                   <Link to={`/chat/${con.room_id}`} className="flex items-center">
