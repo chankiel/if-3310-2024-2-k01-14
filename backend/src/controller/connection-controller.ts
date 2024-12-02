@@ -126,7 +126,7 @@ export class ConnectionController {
         from_id: Number(req.params.from_id),
         to_id: Number(req.params.to_id),
         accept: req.params.action === "accept" ? true : false,
-      } 
+      };
 
       if (req.userId != respond_req.to_id) {
         throw new ResponseError(
@@ -135,21 +135,35 @@ export class ConnectionController {
         );
       }
 
-      await validateConnectionRequestExists(respond_req.from_id, respond_req.to_id, false);
+      await validateConnectionRequestExists(
+        respond_req.from_id,
+        respond_req.to_id,
+        false
+      );
 
-      await validateConnectionExists(respond_req.from_id, respond_req.to_id, true);
+      await validateConnectionExists(
+        respond_req.from_id,
+        respond_req.to_id,
+        true
+      );
 
-      const respond_result = await ConnectionService.respondRequest(respond_req);
-      if(respond_req.accept){
-        const room_chat = await ChatService.makeRoomChat({
+      const respond_result = await ConnectionService.respondRequest(
+        respond_req
+      );
+      let room_id = -1;
+      if (respond_req.accept) {
+        room_id = await ChatService.makeRoomChat({
           first_id: respond_req.from_id,
           second_id: respond_req.to_id,
-        })
+        });
       }
 
       const response = formatResponse(
         true,
-        respond_result,
+        {
+          new_connect: respond_result,
+          room_id: room_id == -1 ? undefined : room_id,
+        },
         `Connection request ${
           respond_req.accept ? "accepted" : "rejected"
         } successfully!`
@@ -161,11 +175,15 @@ export class ConnectionController {
     }
   }
 
-  static async deleteConnection(req: AuthRequest, res: Response, next: NextFunction) {
+  static async deleteConnection(
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const unconnect_req: ConnectionReqRequest = {
         from_id: Number(req.params.from_id),
-        to_id: Number(req.params.to_id)
+        to_id: Number(req.params.to_id),
       };
 
       if (
@@ -200,16 +218,18 @@ export class ConnectionController {
     }
   }
 
-  static async deleteConnectionRequest(req: AuthRequest, res: Response, next: NextFunction) {
+  static async deleteConnectionRequest(
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const delete_request: ConnectionReqRequest = {
         from_id: Number(req.params.from_id),
-        to_id: Number(req.params.to_id)
+        to_id: Number(req.params.to_id),
       };
 
-      if (
-        req.userId !== delete_request.from_id
-      ) {
+      if (req.userId !== delete_request.from_id) {
         throw new ResponseError(
           403,
           `User is unauthorized to perform delete request operation!`

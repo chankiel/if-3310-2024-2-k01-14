@@ -8,10 +8,26 @@ import {
   ChatBubbleOvalLeftEllipsisIcon,
   ClockIcon,
 } from "@heroicons/react/24/solid";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 
 interface UserCardProps {
   user: UserFormat;
-  handleRequest: (id: string, isStore: boolean) => Promise<void>;
+  handleRequest: (
+    id: string,
+    isStore: boolean,
+    gotRequest?: boolean,
+    isAccept?: boolean
+  ) => Promise<void>;
   isFirst: boolean;
 }
 
@@ -40,7 +56,7 @@ const UserCard = ({ user, handleRequest, isFirst }: UserCardProps) => {
                 <p className="text-lg">Chat</p>
               </Link>
             </Button>
-          ) : (
+          ) : !user.got_request ? (
             <Button
               variant={"outline"}
               className="button-blue px-5"
@@ -58,6 +74,45 @@ const UserCard = ({ user, handleRequest, isFirst }: UserCardProps) => {
                 </>
               )}
             </Button>
+          ) : (
+            <div className="flex items-center py-1 gap-4">
+              <AlertDialog>
+                <AlertDialogTrigger className="text-gray-900">
+                  Reject
+                </AlertDialogTrigger>
+                <AlertDialogContent className="md:w-1/2 w-2/3">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-xl font-semibold py-2 border-b-2 border-b-linkin-border">
+                      Reject Request
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="text-md text-black pb-2 border-b-2 border-b-linkin-border">
+                      You are about to reject this connection request. This
+                      action cannot be undone. The person will not be notified,
+                      but the request will be removed from your list.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="button-blue text-lg">
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => handleRequest(user.id!, false, true, false )}
+                      className="button-white bg-white text-lg"
+                    >
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
+              <Button
+                variant={"outline"}
+                className="border-linkin-blue text-linkin-blue text-[17px] font rounded-[20px] px-5"
+                onClick={() => handleRequest(user.id!, false, true, true)}
+              >
+                Accept
+              </Button>
+            </div>
           )}
         </div>
       )}

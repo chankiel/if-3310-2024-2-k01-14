@@ -84,7 +84,7 @@ export class ConnectionService {
 
     const res = await prismaClient.$transaction(operations);
 
-    return res[2];
+    return request.accept ? flattenFrom(res[2]):null;
   }
 
   static async indexConnection(user_id: number) {

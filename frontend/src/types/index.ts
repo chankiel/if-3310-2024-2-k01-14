@@ -89,11 +89,8 @@ export type ConnectionFormat = {
   full_name: string | null;
   profile_photo_path: string | null;
   created_at: Date;
+  room_id?: number;
 };
-
-export type ConnectionResponse = APIResponse & {
-  body: ConnectionFormat[]
-}
 
 export type UserRequest = {
   email: string;
@@ -121,6 +118,7 @@ export type UserFormat = {
   relevant_posts?: Feed[];
   is_connected?: boolean;
   is_requested?: boolean;
+  got_request?: boolean;
   room_id?: number | null;
 };
 
