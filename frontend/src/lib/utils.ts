@@ -29,3 +29,29 @@ export function timeAgo(createdAt: Date | string): string {
 
   return "just now";
 }
+
+export function formatDate(date: Date): string {
+  const now = new Date();
+  const givenDate = new Date(date);
+
+  const isSameDay = (d1: Date, d2: Date) =>
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate();
+
+  const isYesterday = (d: Date, today: Date) => {
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    return isSameDay(d, yesterday);
+  };
+
+  if (isSameDay(givenDate, now)) {
+    return givenDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  if (isYesterday(givenDate, now)) {
+    return "Yesterday";
+  }
+
+  return givenDate.toLocaleDateString('en-GB'); // Formats as "DD/MM/YYYY"
+}

@@ -25,7 +25,13 @@ export class ChatController {
           roomId: string,
           message: string
         ) => {
-          ChatService.sendMessage(socket,senderId,receiverId,roomId,message);
+          ChatService.sendMessage(
+            socket,
+            senderId,
+            receiverId,
+            roomId,
+            message
+          );
         }
       );
 
@@ -83,13 +89,46 @@ export class ChatController {
     try {
       const room_id = req.params.room_id;
       const userId = Number(req.userId);
+      const room_chat = await ChatService.getRoomChat(room_id);
+      if (
+        userId !== room_chat.first_user_id &&
+        userId !== room_chat.second_user_id
+      ) {
+        throw new ResponseError(
+          403,
+          `User unauthorized. User isn't part of the room chat!`
+        );
+      }
 
       const messages = await ChatService.getMessages(room_id);
 
       const response = formatResponse(
         true,
         messages,
-        "Receiver retrieved successfully!"
+        "Messages retrieved successfully!"
+      );
+
+      res.status(200).json(response);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  static async getInbox(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const userId_param = Number(req.params.user_id);
+      const userId = Number(req.userId);
+
+      if (userId != userId_param) {
+        throw new ResponseError(403, `User unauthorized!`);
+      }
+
+      const inboxes = await ChatService.getInbox(userId);
+
+      const response = formatResponse(
+        true,
+        inboxes,
+        "Inboxes retrieved successfully!"
       );
 
       res.status(200).json(response);

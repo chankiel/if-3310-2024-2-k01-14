@@ -172,7 +172,7 @@ const Chat = () => {
                       ? profile_photo
                       : receiver?.profile_photo
                   }
-                  showProfile={msg.from_id !== messages[index - 1]?.from_id}
+                  showProfile={msg.from_id != messages[index - 1]?.from_id}
                 />
               </div>
             );

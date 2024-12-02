@@ -7,8 +7,12 @@ import Connection from "./Connection";
 import Requests from "./Request";
 import Users from "./Users";
 import Notifications from "./Notifications";
+import LandingPage from "./Landing";
+import Inbox from "./Chat/Inbox";
 
 export{
+    Inbox,
+    LandingPage,
     Users,
     Feed,
     Login,

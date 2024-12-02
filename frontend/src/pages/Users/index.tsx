@@ -1,8 +1,8 @@
-import { Sidebar } from "../../components";
+import { RightSidebar, Sidebar } from "../../components";
 import { UserCard } from "../../components/User";
 import UserApi from "../../api/user-api";
 import React, { useEffect, useState } from "react";
-import { ConnectionResponse, UserFormat } from "../../types";
+import { APIResponse, ConnectionFormat, UserFormat } from "../../types";
 import { useDebouncedCallback } from "use-debounce";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -15,14 +15,21 @@ const Users = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query_value = searchParams.get("query") ?? "";
   const [loading, setLoading] = useState(true);
-  console.log(users)
-  const handleRequest = async (id: string, isStore: boolean) => {
+
+  const handleRequest = async (
+    id: string,
+    isStore: boolean,
+    gotRequest: boolean = false,
+    isAccept: boolean = false
+  ) => {
     try {
       const res = isStore
         ? await ConnectionApi.createRequest({
             from_id: currentId,
             to_id: Number(id),
           })
+        : gotRequest
+        ? await ConnectionApi.respondRequest(Number(id), currentId, isAccept)
         : await ConnectionApi.deleteConnectionRequest(currentId, Number(id));
 
       setUsers((prev) =>
@@ -31,12 +38,18 @@ const Users = () => {
             ? {
                 ...user,
                 is_requested: isStore,
+                is_connected: gotRequest && isAccept,
+                got_request: gotRequest && isAccept,
+                room_id:
+                  !isStore && gotRequest && isAccept
+                    ? (res.body as ConnectionFormat).room_id
+                    : undefined,
               }
             : user
         )
       );
     } catch (error) {
-      toast.error((error as ConnectionResponse).message);
+      toast.error((error as APIResponse).message);
     }
   };
 
@@ -55,7 +68,7 @@ const Users = () => {
         const users = await UserApi.getUsers(query);
         console.log(users);
         setUsers(users);
-        setLoading(false)
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -63,7 +76,7 @@ const Users = () => {
     fetchUsers(query_value);
   }, [query_value]);
 
-  if(loading) return null
+  if (loading) return null;
 
   return (
     <>
@@ -108,12 +121,12 @@ const Users = () => {
           </div>
 
           {users && users.length > 0 ? (
-            users.map((user,index) => (
+            users.map((user, index) => (
               <UserCard
                 key={index}
                 user={user}
                 handleRequest={handleRequest}
-                isFirst = {index==0}
+                isFirst={index == 0}
               />
             ))
           ) : query_value ? (
@@ -126,6 +139,7 @@ const Users = () => {
           )}
         </div>
       </section>
+      <RightSidebar/>
     </>
   );
 };

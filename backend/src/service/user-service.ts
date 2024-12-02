@@ -11,7 +11,6 @@ import { createJwt } from "../utils/jwt";
 import { UserValidation } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 
 export const prismaUserFormat = {
   id: true,
@@ -143,6 +142,11 @@ export class UserService {
             id: true,
           },
         },
+        connectionRequestsFrom:{
+          where:{
+            to_id: userId,
+          }
+        }
       },
     });
 
@@ -158,6 +162,7 @@ export class UserService {
           ? user.rooms_chat_second[0].id
           : null,
       profile_photo: user.profile_photo_path,
+      got_request: user.connectionRequestsFrom.length>0,
 
       rooms_chat_first: undefined,
       rooms_chat_second: undefined,

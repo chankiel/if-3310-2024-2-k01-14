@@ -2,7 +2,7 @@
 import axios from "axios";
 
 import { API_URL } from "../constant";
-import { APIResponse, ConnectionFormat, ConnectionReqRequest, ConnectionResponse } from "../types";
+import { APIResponse, ConnectionFormat, ConnectionReqRequest } from "../types";
 
 class ConnectionApi {
   private static axios = axios.create({
@@ -15,7 +15,7 @@ class ConnectionApi {
 
   static async createRequest(payload: ConnectionReqRequest){
     try {
-      const response = await this.axios.post<ConnectionResponse>(
+      const response = await this.axios.post<APIResponse>(
         "/connection-requests", payload
       );
       return response.data;
@@ -26,10 +26,10 @@ class ConnectionApi {
 
   static async getConnections(user_id: number): Promise<ConnectionFormat[]> {
     try {
-      const response = await this.axios.get<ConnectionResponse>(
+      const response = await this.axios.get<APIResponse>(
         `/connections/${user_id}`
       );
-      return response.data.body;
+      return response.data.body as ConnectionFormat[];
     } catch (error) {
       throw (error as any)?.response?.data;
     }
@@ -38,11 +38,11 @@ class ConnectionApi {
   static async getPendingRequests(
     user_id: number
   ): Promise<ConnectionFormat[]> {
-    const response = await this.axios.get<ConnectionResponse>(
+    const response = await this.axios.get<APIResponse>(
       `/connection-requests/${user_id}/pending`
     );
 
-    return response.data.body;
+    return response.data.body as ConnectionFormat[];
   }
 
   static async deleteConnection(from_id: number, to_id: number): Promise<APIResponse> {

@@ -19,9 +19,9 @@ const BubbleChat: React.FC<BubbleChatProps> = ({
 }) => {
   return (
     <div
-      className={`flex items-end gap-1 ${
+      className={`flex items-end gap-1 my-2 ${
         variant === "sent" ? "flex-row-reverse" : ""
-      } mb-2`}
+      }`}
       ref={chatRef ?? null}
     >
       {showProfile ? (
@@ -36,7 +36,7 @@ const BubbleChat: React.FC<BubbleChatProps> = ({
         className={`relative max-w-[70%] p-3 rounded-[20px] text-sm ${
           variant === "sent"
             ? "bg-linkin-sent-chat self-end"
-            : "bg-linkin-received-chat text-gray-700 self-start"
+            : "bg-gray-200 text-gray-700 self-start"
         }`}
       >
         <div className="text-md break-words">{text}</div>
