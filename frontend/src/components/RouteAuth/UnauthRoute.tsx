@@ -9,7 +9,11 @@ const UnauthRoute = ({children}: {children: React.ReactNode}) => {
 
   useEffect(() => {
     if(isAuthenticated){
-        navigate(-1)
+        if(window.history.length > 1){
+            navigate(-1)
+        }else{
+            navigate("/feed")
+        }
     }
   }, [isAuthenticated,navigate]);
 
