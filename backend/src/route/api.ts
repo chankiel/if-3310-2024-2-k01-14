@@ -5,6 +5,7 @@ import { ConnectionController } from "../controller/connection-controller";
 import multer from "multer";
 import { ChatController } from "../controller/chat-controller";
 import { PushController } from "../controller/push-controller";
+import { FeedController } from "../controller/feed-controller";
 
 const upload = multer();
 const apiRouter = express.Router();
@@ -63,7 +64,13 @@ apiRouter.get(
   ChatController.getMessages,
 )
 
-
+/*----------------- Connections -----------------*/
+apiRouter.post(
+  "/feed",
+  upload.none(),
+  authMiddleware,
+  FeedController.store
+)
 
 apiRouter.post(
   "/api/subscribe",

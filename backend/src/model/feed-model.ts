@@ -4,3 +4,7 @@ export type FeedFormat = {
     created_at: Date;
     updated_at: Date;
 }
+
+export type CreateFeedRequest = {
+    content: string;
+}

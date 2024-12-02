@@ -130,7 +130,7 @@ export default function Profile() {
         <div className="flex flex-col md:flex-row justify-center gap-x-6">
           <div className="ml-2 max-w-3xl">
             <ProfileSection data={profileData} isAuthenticated={isAuthenticated} currentId={currentId} user_id={Number(user_id)} isConnected={isConnected} />
-            <ActivitySection username={profileData.username} activity={profileData.feeds?.[0] || null} />
+            <ActivitySection username={profileData.username} activity={profileData.feeds?.[0] || null} currentId={currentId} user_id={Number(user_id)}/>
             <ExperienceSection experiences={profileData.work_history || null} />
             <SkillsSection skills={profileData.skills || null} />
           </div>
