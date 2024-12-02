@@ -24,8 +24,8 @@ const RightSidebar = ({ children }: { children?: React.ReactNode }) => {
       </div>
 
       <ul className="px-5 py-4 flex flex-wrap gap-5 justify-center items-center">
-        {footer_component.map((comp) => (
-          <li className="text-xs text-[#62615F]">{comp}</li>
+        {footer_component.map((comp,index) => (
+          <li key={index} className="text-xs text-[#62615F]">{comp}</li>
         ))}
       </ul>
       <div className="px-3 flex items-center gap-1">

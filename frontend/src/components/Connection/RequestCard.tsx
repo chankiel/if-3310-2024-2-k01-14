@@ -38,7 +38,7 @@ const RequestCard = ({
         <AvatarImage src={profile_photo_path ?? ""} />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
-      <div className="w-full flex flex-col md:flex-row md:justify-between">
+      <div className="w-full flex flex-col sm:flex-row sm:justify-between">
         <div className="w-full ml-3">
           <h2 className="text-lg font-bold">{username}</h2>
           <h3 className="text-gray-600">{full_name}</h3>
