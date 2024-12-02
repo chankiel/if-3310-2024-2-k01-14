@@ -84,7 +84,7 @@ export class ConnectionService {
 
     const res = await prismaClient.$transaction(operations);
 
-    return request.accept ? flattenFrom(res[2]):null;
+    return request.accept ? flattenFrom(res[2]) : null;
   }
 
   static async indexConnection(user_id: number) {
@@ -95,7 +95,28 @@ export class ConnectionService {
       },
     });
 
-    const flattenedConnections = connections.map((con) => flattenFrom(con));
+    const flattenedConnections = await Promise.all(
+      connections.map(async (con) => {
+        const flattenedCon = flattenFrom(con);
+
+        const room = await prismaClient.roomChat.findFirst({
+          where: {
+            OR: [
+              { first_user_id: user_id, second_user_id: flattenedCon.id },
+              { first_user_id: flattenedCon.id, second_user_id: user_id },
+            ],
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        return {
+          ...flattenedCon,
+          room_id: room?.id || null,
+        };
+      })
+    );
 
     return flattenedConnections;
   }
@@ -122,10 +143,10 @@ export class ConnectionService {
   static async deleteConnectionRequest(request: ConnectionReqRequest) {
     const connection = await prismaClient.connectionRequest.delete({
       where: {
-        from_id_to_id:{
-            from_id: request.from_id,
-            to_id: request.to_id,
-        }
+        from_id_to_id: {
+          from_id: request.from_id,
+          to_id: request.to_id,
+        },
       },
     });
 
