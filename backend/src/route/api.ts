@@ -94,6 +94,13 @@ apiRouter.post(
 )
 
 /*----------------- Feeds -----------------*/
+apiRouter.get(
+  "/feed",
+  upload.none(),
+  authMiddleware,
+  FeedController.showFeedsPagination
+);
+
 apiRouter.delete(
   "/feed/:feed_id(\\d+)",
   upload.none(),

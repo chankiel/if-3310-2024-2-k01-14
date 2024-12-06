@@ -8,3 +8,8 @@ export type FeedFormat = {
 export type CreateFeedRequest = {
     content: string;
 }
+
+export type FeedPagination = {
+    cursor : number | null;
+    feeds : FeedFormat[];
+}

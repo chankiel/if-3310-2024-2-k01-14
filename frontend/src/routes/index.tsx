@@ -15,6 +15,8 @@ import {
 import ProviderLayout from "./ProviderLayout";
 import Chat from "../pages/Chat/Chat";
 import Notifications from "../pages/Notifications";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
 
 const routes: RouteObject[] = [
   {
@@ -55,7 +57,11 @@ const routes: RouteObject[] = [
       },
       {
         path: "/feed",
-        element: <Feed />,
+        element: (
+          <QueryClientProvider client={queryClient}>
+            <Feed />
+          </QueryClientProvider>
+        ),
       },
       {
         path: "/mynetworks/connections",

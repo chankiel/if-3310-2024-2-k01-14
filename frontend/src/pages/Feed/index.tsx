@@ -1,98 +1,94 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { Sidebar } from "../../components";
 import { RecommendationSection } from "../../components/profile";
 import CreatePostModal from "../../components/Feed/CreatePostModal";
 import { useAuth } from "../../contexts/AuthContext";
 import FeedApi from "../../api/feed-api";
-import { FeedFormat } from "../../types";
 import { Navigate } from "react-router-dom";
-import moment from 'moment';
+import moment from "moment";
 
 export interface UserRecommendation {
     name: string;
     profile_photo: string;
 }
 
+
 export default function Feed() {
-
-    const { isAuthenticated, currentId } = useAuth();
+    const { isAuthenticated } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    // const [isEditOpen, setIsEditOpen] = useState(false);
-    // const [feedEdit, setFeedEdit] = useState(0);
-    const [feeds, setFeeds] = useState<FeedFormat[]>([]);
-    const [loading, setLoading] = useState(true);
-    const hasFeed = feeds && feeds.length > 0;
+    const loadMoreRef = useRef<HTMLDivElement | null>(null);    
+    const queryClient = useQueryClient();
 
-
-    if(!isAuthenticated) {
+    if (!isAuthenticated) {
         return <Navigate to="/login" replace />;
     }
 
-    // Fetch data dari backend
-    useEffect(() => {
-        const fetchFeeds = async () => {
-            try {
-                console.log(currentId)
-                const data = await FeedApi.getFeed(Number(currentId))
-                setFeeds(data)
-            } catch (error) {
-                console.error("Failed to fetch feeds", error);
-            } finally{
-                setLoading(false)
-            }
-        };
-        fetchFeeds();
-    }, [currentId]);
+    // Menggunakan useInfiniteQuery untuk pagination
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+        isError,
+    } = useInfiniteQuery({
+            queryKey : ["feeds"],
+            queryFn : async ({ pageParam = null }: { pageParam: number | null }) => FeedApi.getFeed(pageParam),
+            getNextPageParam: (lastPage) => {
+                console.log(lastPage.body.cursor)
+                return lastPage.body.cursor ? lastPage.body.cursor : undefined;
+            },
+            initialPageParam: null, // Nilai awal untuk pageParam
+        },
+    );
 
-    if(loading) return null
+    const feeds = data?.pages.flatMap((page) => page.body.feeds) || [];
+    const hasFeed = feeds.length > 0;
 
     const handleEditProfileClick = () => {
         setIsModalOpen(true);
-    }
+    };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-    }
-    
-    const handleDelete = async(feed_id:Number) => {
-        console.log("delete")
-        try {
-            await FeedApi.deleteFeed(Number(feed_id))
-            setFeeds((prev) =>
-                prev.filter((feed) => feed.id !== Number(feed_id))
-              );
-        } catch (error) {
-            
-        }
-    }
+    };
 
-    const dummyFeeds = [
-        {
-            content: "Excited to start my new project on AI! I've been researching various algorithms and frameworks, and I can't wait to implement them in my upcoming project. It's going to be a challenging yet rewarding experience as I dive deeper into machine learning and artificial intelligence.",
-            created: "3d",
-            updated: "3h",
-        },
-        {
-            content: "Just finished reading a great book on software development. The insights on agile methodologies and best practices for coding have really inspired me to improve my own workflow. I highly recommend it to anyone looking to enhance their programming skills and project management techniques.",
-            created: "4d",
-            updated: "1h",
-        },
-        {
-            content: "Had a productive meeting with my team today! We discussed our progress on the current project and brainstormed some innovative ideas for the next phase. Collaboration is key, and I feel fortunate to work with such talented individuals who are passionate about what they do.",
-            created: "5d",
-            updated: "30m",
-        },
-        {
-            content: "Looking forward to the weekend! I plan to catch up on some personal projects and spend quality time with family and friends. It's important to recharge and find a balance between work and personal life, and I’m excited to take a break from the usual routine.",
-            created: "6d",
-            updated: "2h",
-        },
-        {
-            content: "Just launched my new website! Check it out. I've put a lot of effort into designing a user-friendly interface and showcasing my portfolio. It features my latest projects, blog posts, and a contact form for potential collaborations. I would love to hear your feedback!",
-            created: "7d",
-            updated: "5h",
-        },
-    ];
+    // Menggunakan efek untuk mendeteksi scroll dan memuat halaman berikutnya
+    useEffect(() => {
+        const handleScroll = () => {
+            if (
+                loadMoreRef.current &&
+                loadMoreRef.current.getBoundingClientRect().top <= window.innerHeight
+            ) {
+                if (hasNextPage && !isFetchingNextPage) {
+                    fetchNextPage();
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+
+    const handleDelete = async (feed_id: number) => {
+        try {
+            await FeedApi.deleteFeed(feed_id);
+            // Optimistically update the UI
+            data?.pages.forEach((page) =>
+                page.body.feeds.splice(
+                    page.body.feeds.findIndex((feed) => feed.id === feed_id),
+                    1
+                )
+            );
+            queryClient.invalidateQueries(["feeds"]);
+        } catch (error) {
+            console.error("Failed to delete feed", error);
+        }
+    };
 
     const recommendations: UserRecommendation[] = [
         {
@@ -138,88 +134,89 @@ export default function Feed() {
                         </button>
                     </div>
                     <h1 className="px-5 text-xl font-semibold mb-3">
-                    {hasFeed
-                        ? `Ignatius • ${feeds.length} Feeds`
-                        : "You don't have a Feed yet."}
+                        {hasFeed
+                            ? `Ignatius • ${feeds.length} Feeds`
+                            : "You don't have a Feed yet."}
                     </h1>
-                    {hasFeed ? (
-                    <ul>
-                        {feeds.map((feed, index) => (
-                            <li key={index} className="flex flex-row py-4 px-4 border-b bg-white mb-4 border rounded-lg">
-                                <div>
-                                    <div className="flex items-center w-full pb-2">
-                                        <div className="w-1/7 pl-4">
-                                            <img
-                                                src="/perry-casino.webp"
-                                                alt="Profile"
-                                                className="w-14 h-14 rounded-full"
-                                            />
-                                        </div>
-                                        <div className="flex-1 w-6/7 px-4">
-                                            <div className="py-2">
-                                                <div className="font-semibold text-base">
-                                                    Francesco Michael Kusuma
-                                                </div>
-                                                <div className="font-normal text-xs text-gray-500">
-                                                    posted {moment(feed.created_at).fromNow()}
-                                                    {/* posted {DateHelper.timeDifference(feed.created_at)} ago */}
-                                                </div>
-                                                <div className="font-normal text-xs text-gray-500">
-                                                    updated {moment(feed.updated_at).fromNow()}
-                                                    {/* updated {DateHelper.timeDifference(feed.updated_at) } ago */}
+                    {isLoading ? (
+                        <p>Loading feeds...</p>
+                    ) : isError ? (
+                        <p>Failed to load feeds.</p>
+                    ) : hasFeed ? (
+                        <ul>
+                            {feeds.map((feed, index) => (
+                                <li
+                                    key={index}
+                                    className="flex flex-row py-4 px-4 border-b bg-white mb-4 border rounded-lg"
+                                >
+                                    <div>
+                                        <div className="flex items-center w-full pb-2">
+                                            <div className="w-1/7 pl-4">
+                                                <img
+                                                    src="/perry-casino.webp"
+                                                    alt="Profile"
+                                                    className="w-14 h-14 rounded-full"
+                                                />
+                                            </div>
+                                            <div className="flex-1 w-6/7 px-4">
+                                                <div className="py-2">
+                                                    <div className="font-semibold text-base">
+                                                        Francesco Michael Kusuma
+                                                    </div>
+                                                    <div className="font-normal text-xs text-gray-500">
+                                                        posted{" "}
+                                                        {moment(feed.created_at).fromNow()}
+                                                    </div>
+                                                    <div className="font-normal text-xs text-gray-500">
+                                                        updated{" "}
+                                                        {moment(feed.updated_at).fromNow()}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div className="text-xl ml-4">
+                                            {feed.content}
+                                        </div>
+                                        <div className="top-2 right-2 flex gap-2">
+                                            <button
+                                                className="px-3 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(feed.id)}
+                                                className="px-3 py-1 text-sm text-white bg-red-500 rounded hover:bg-red-600"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className="text-xl ml-4">
-                                        {feed.content}
-                                    </div>
-                                    {/* Tombol Edit dan Delete */}
-                                    <div className="top-2 right-2 flex gap-2">
-                                        <button
-                                            // onClick={() => handleEdit(feed.id)}
-                                            className="px-3 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(feed.id)}
-                                            className="px-3 py-1 text-sm text-white bg-red-500 rounded hover:bg-red-600"
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>): (
-                    <div className="flex flex-col items-center">
-                    <img src="/images/no-request.png" alt="no-connection" className="w-1/2 min-w-52" />
-                        <h2 className="px-5 text-lg mt-5">
-                        Discover innovative ideas and job openings on LinkedIn through
-                        your connections and their networks. Find your first connection
-                        below.
-                        </h2>
-                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <div className="flex flex-col items-center">
+                            <img
+                                src="/images/no-request.png"
+                                alt="no-connection"
+                                className="w-1/2 min-w-52"
+                            />
+                            <h2 className="px-5 text-lg mt-5">
+                                Discover innovative ideas and job openings on LinkedIn
+                                through your connections and their networks. Find your
+                                first connection below.
+                            </h2>
+                        </div>
                     )}
+                    {hasNextPage && (isFetchingNextPage && <div>Loading more...</div>)}
+                    <div ref={loadMoreRef} />
                 </div>
                 <div className="max-w-sm">
-                    <RecommendationSection
-                        recommendations={recommendations}
-                    />
+                    <RecommendationSection recommendations={recommendations} />
                 </div>
             </main>
 
-            <CreatePostModal
-                isOpen={isModalOpen}
-                onClose={handleCloseModal}
-            />
-
-            {/* <EditPostModal
-                isOpen={isEditOpen}
-                onClose={handleCloseEdit}
-                postId = {feedEdit}
-            /> */}
+            <CreatePostModal isOpen={isModalOpen} onClose={handleCloseModal} />
         </>
     );
 }

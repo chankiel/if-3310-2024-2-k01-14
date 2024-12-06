@@ -59,5 +59,29 @@ export class FeedService {
         return feed;
       }
 
+      static async getFeedPagination(id: number, cursor:number ,limit:number) {
+        console.log(cursor)
+        console.log(limit)
+        const feeds = await prismaClient.feed.findMany({
+            where: {
+                user_id: id,
+              },
+            orderBy: [
+              {
+                created_at: "desc"
+              },
+              {
+                id: "desc"
+              }
+            ],
+            take:limit,
+            skip: cursor ? 1 : 0, // Lewati 1 data jika cursor diberikan
+            cursor: cursor ? { id: cursor } : undefined, // Mulai dari cursor ID jika 
+        });
+        // Determine next cursor
+        const nextCursor = feeds.length === limit ? feeds[feeds.length - 1].id : null;
+        return {nextCursor, feeds};
+      }
+
     
 }

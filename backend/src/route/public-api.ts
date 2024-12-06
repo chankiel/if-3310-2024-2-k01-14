@@ -22,7 +22,5 @@ publicRouter.get("/profile/:user_id(\\d+)",UserController.show)
 /*----------------- Connections -----------------*/
 publicRouter.get("/connections/:user_id(\\d+)",ConnectionController.indexConnection)
 
-publicRouter.get("/feed/:user_id(\\d+)",FeedController.showFeeds)
-
 
 export default publicRouter
