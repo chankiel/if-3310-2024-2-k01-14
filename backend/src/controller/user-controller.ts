@@ -47,6 +47,8 @@ export class UserController {
             const userId = Number(req.params.user_id);
             const user = await UserService.get(userId);
             const response = formatResponse(true,user,"User retrieved successfully!")
+
+            console.log(response)
             
             res.status(200).json(response)
         } catch(e) {
@@ -57,7 +59,16 @@ export class UserController {
     static async update(req: Request, res: Response, next: NextFunction) {
         try {
             const userId = Number(req.params.user_id);
-            const request: UpdateUserRequest = req.body as UpdateUserRequest;
+            const request: UpdateUserRequest = {
+                username: req.body.username,
+                name: req.body.name,
+                work_history: req.body.work_history,
+                skills: req.body.skills,
+                profile_photo: req.file
+            };
+
+            console.log("Request data:", request);
+    
             const response = await UserService.update(userId, request);
             
             res.status(200).json({

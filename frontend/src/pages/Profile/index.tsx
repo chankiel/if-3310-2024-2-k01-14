@@ -81,25 +81,27 @@ export default function Profile() {
           method: "GET",
         });
 
+        
         if (!profileResponse.ok) {
           throw new Error("Failed to fetch profile data");
         }
-
-        const connectionsResponse = await fetch(`${API_URL}/connections/${currentId}`, {
-          method: "GET",
-        });
-
-        if (!connectionsResponse.ok) {
-          throw new Error("Failed to fetch connections data");
-        }
-
+        
+        // const connectionsResponse = await fetch(`${API_URL}/connections/${currentId}`, {
+        //   method: "GET",
+        // });
+        // console.log("Di sini")
+        
+        // if (!connectionsResponse.ok) {
+        //   throw new Error("Failed to fetch connections data");
+        // }
+        
         const profileData = await profileResponse.json();
         setProfileData(profileData.body);
 
-        const connectionsData = await connectionsResponse.json();
+        // const connectionsData = await connectionsResponse.json();
 
-        const isUserConnected = connectionsData.body.some((connection: Connection) => connection.id === Number(user_id));
-
+        // const isUserConnected = connectionsData.body.some((connection: Connection) => connection.id === Number(user_id));
+        const isUserConnected = true;
         setIsConnected(isUserConnected);
       } catch (error) {
         if (error instanceof Error) {

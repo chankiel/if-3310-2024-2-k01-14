@@ -11,6 +11,8 @@ import { createJwt } from "../utils/jwt";
 import { UserValidation } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
 const bcrypt = require("bcrypt");
+import multer from 'multer';
+import fs from 'fs';
 
 export const prismaUserFormat = {
   id: true,
@@ -33,6 +35,18 @@ export const prismaUserFormat = {
     },
   },
 };
+
+const storage = multer.memoryStorage();
+const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type. Only JPEG, PNG, and GIF files are allowed.') as any, false);
+  }
+};
+
+const upload = multer({ storage, fileFilter });
 
 export class UserService {
   static formatUserResponse(user: UserPrismaFormat): UserFormat {
@@ -88,7 +102,7 @@ export class UserService {
       iat: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + 3600,
     };
-    
+
     const token = createJwt(payload);
 
 
@@ -142,8 +156,8 @@ export class UserService {
             id: true,
           },
         },
-        connectionRequestsFrom:{
-          where:{
+        connectionRequestsFrom: {
+          where: {
             to_id: userId,
           }
         }
@@ -205,8 +219,6 @@ export class UserService {
       },
     });
 
-    console.log
-
     if (!(isOwner || isConnected)) {
       formattedUser.feeds = undefined;
     } else {
@@ -220,28 +232,39 @@ export class UserService {
     const updateRequest = Validation.validate(UserValidation.UPDATE, request);
 
     let url_profile_photo = null;
+    let urlDB = "";
 
     if (updateRequest.profile_photo) {
       const file = updateRequest.profile_photo;
 
-      const uploadPath = path.join(__dirname, `./public/image/profile_${id}`);
+      // Docker :
+      // const uploadPath = path.join(__dirname, `../../../frontend/public/image/profile_${id}${path.extname(file.originalname)}`);
 
-      // download the image to local
+      const uploadPath = path.join(__dirname, `../../../frontend/public/profile_${id}${path.extname(file.originalname)}`);
+      urlDB = `/profile_${id}${path.extname(file.originalname)}`;
+
+      const dir = path.dirname(uploadPath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+
+      fs.writeFileSync(uploadPath, file.buffer);
 
       url_profile_photo = uploadPath;
     }
+
+    const updateData: any = {};
+    if (updateRequest.username) updateData.username = updateRequest.username;
+    if (updateRequest.name) updateData.full_name = updateRequest.name;
+    if (updateRequest.work_history) updateData.work_history = updateRequest.work_history;
+    if (updateRequest.skills) updateData.skills = updateRequest.skills;
+    if (url_profile_photo) updateData.profile_photo_path = urlDB;
 
     await prismaClient.user.update({
       where: {
         id: id,
       },
-      data: {
-        username: updateRequest.username,
-        full_name: updateRequest.name,
-        work_history: updateRequest.work_history,
-        skills: updateRequest.skills,
-        profile_photo_path: url_profile_photo,
-      },
+      data: updateData,
       select: prismaUserFormat,
     });
 

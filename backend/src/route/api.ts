@@ -10,7 +10,7 @@ import { FeedController } from "../controller/feed-controller";
 const upload = multer();
 const apiRouter = express.Router();
 
-apiRouter.route("/profile/:user_id(\\d+)").put(UserController.update);
+apiRouter.route("/profile/:user_id(\\d+)").put(upload.single("profile_photo"), UserController.update);
 
 /*----------------- Connections -----------------*/
 apiRouter.post(
