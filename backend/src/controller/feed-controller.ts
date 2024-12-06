@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthRequest } from "../middleware/auth-middleware";
-import { CreateFeedRequest, FeedFormat } from "../model/feed-model";
+import { CreateFeedRequest, FeedFormat, FeedPagination } from "../model/feed-model";
 import { FeedService } from "../service/feed-service";
 import { formatResponse } from "../utils/ResponseFormatter";
 
@@ -63,4 +63,32 @@ export class FeedController {
           next(e);
         }
       }
+
+      static async showFeedsPagination(req: AuthRequest, res: Response, next: NextFunction){
+        try {
+            const userId = req.userId;
+            const {cursor, limit} = req.query;
+            console.log(req.query)
+            console.log(cursor)
+            console.log(limit)
+ 
+
+            const feeds_list = await FeedService.getFeedPagination(userId!, Number(cursor), Number(limit));
+
+            console.log(feeds_list)
+            const feed = feeds_list.feeds
+            const nextCursor = feeds_list.nextCursor
+
+            const response = formatResponse<FeedPagination>(
+                true,
+                {cursor: nextCursor, feeds: feed},
+                "Feed list retrieved successfully!"
+              );
+
+            res.status(200).json(response)
+
+        } catch(e) {
+            next(e);
+        }
+    }
 }

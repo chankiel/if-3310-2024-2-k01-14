@@ -10,7 +10,7 @@ import {
 import { createJwt } from "../utils/jwt";
 import { UserValidation } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 export const prismaUserFormat = {
   id: true,

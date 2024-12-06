@@ -6,7 +6,7 @@ import {
 import { createJwt } from "../utils/jwt";
 import { UserValidation } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 export class AuthService {
   static async login(request: LoginUserRequest): Promise<string> {

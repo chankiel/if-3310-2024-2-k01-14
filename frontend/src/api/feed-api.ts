@@ -2,7 +2,7 @@
 import axios from "axios";
 
 import { API_URL } from "../constant";
-import {FeedFormat, FeedResponse, APIResponse } from "../types";
+import {FeedResponse, APIResponse } from "../types";
 
 class FeedApi {
   private static axios = axios.create({
@@ -13,13 +13,15 @@ class FeedApi {
     withCredentials: true,
   });
 
-  static async getFeed(user_id: number) : Promise<FeedFormat[]>{
+  static async getFeed(pageParam : number | null , limit = 10) : Promise<FeedResponse>{
     try {
       const response = await this.axios.get<FeedResponse>(
-        `/feed/${user_id}`
+        pageParam
+        ? `/feed?cursor=${pageParam}&limit=${limit}`
+        : `/feed?limit=${limit}`
       );
-      console.log(response.data.body)
-      return response.data.body;
+      // console.log(response.data.body)
+      return response.data;
     } catch (error) {
       throw (error as any)?.response?.data;
     }
@@ -46,7 +48,27 @@ class FeedApi {
       throw (error as any)?.response?.data;
     }
   }
+
+//   static async getFeedPagination({ pageParam = null, limit = 10 }) : Promise<FeedFormat[]>{
+//     try {
+//       const response = await this.axios.get<FeedResponse>(
+//         `/feed`, {
+//           params: {
+//             cursor: pageParam,
+//             limit: limit,
+//           },
+//         }
+//       );
+//       console.log(response.data.body)
+//       return response.data.body;
+//     } catch (error) {
+//       throw (error as any)?.response?.data;
+//     }
+//   }
+  
 }
+
+
 
 
 
