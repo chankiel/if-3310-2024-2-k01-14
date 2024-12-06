@@ -47,6 +47,7 @@ export default function ProfileSection({ data, isAuthenticated, currentId, user_
                 </div>
                 <div className="ml-4 p-4">
                     <h1 className="text-2xl font-bold">{data.full_name}</h1>
+                    <h1 className="text-sm font-semibold">{data.username}</h1>
                     <p className="text-gray-500">{data.connection_count} connections</p>
                 </div>
                 <div className="ml-4 h-12 pt-2 text-base pl-4 flex">
@@ -130,6 +131,7 @@ export default function ProfileSection({ data, isAuthenticated, currentId, user_
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
                 initialData={data}
+                user_id={user_id}
             />
         </>
     );

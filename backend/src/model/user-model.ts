@@ -47,7 +47,7 @@ export type LoginUserRequest = {
 
 export type UpdateUserRequest = {
   username?: string;
-  profile_photo?: File;
+  profile_photo?: Express.Multer.File;
   name?: string;
   work_history?: string;
   skills?: string;
