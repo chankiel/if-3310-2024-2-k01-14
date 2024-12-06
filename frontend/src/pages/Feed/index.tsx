@@ -20,10 +20,6 @@ export default function Feed() {
     const loadMoreRef = useRef<HTMLDivElement | null>(null);    
     const queryClient = useQueryClient();
 
-    if (!isAuthenticated) {
-        return <Navigate to="/login" replace />;
-    }
-
     // Menggunakan useInfiniteQuery untuk pagination
     const {
         data,
@@ -89,6 +85,10 @@ export default function Feed() {
             console.error("Failed to delete feed", error);
         }
     };
+
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
 
     const recommendations: UserRecommendation[] = [
         {
