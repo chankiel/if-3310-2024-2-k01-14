@@ -17,7 +17,7 @@ const Header: React.FC = () => {
     useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-
+  console.log(profile_photo);
   const handleLogout = async () => {
     try {
       const response = await logout();
@@ -101,7 +101,7 @@ const Header: React.FC = () => {
                 <Popover>
                   <PopoverTrigger>
                     <Avatar className="h-7 w-7">
-                      <AvatarImage src={profile_photo ?? ""} />
+                      <AvatarImage src={profile_photo || "/images/perry-casino.webp"} />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
 

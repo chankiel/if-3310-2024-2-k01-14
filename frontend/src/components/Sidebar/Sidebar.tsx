@@ -18,7 +18,7 @@ const Sidebar: React.FC = () => {
           <Avatar className="h-20 w-20 absolute bottom-[-80%] left-5">
             <AvatarImage src={
               profile_photo
-                ? profile_photo : "/images/question-mark.jpg"}/>
+                ? profile_photo : "/images/perry-casino.webp"}/>
             <AvatarFallback>GUEST</AvatarFallback>
           </Avatar>
         </div>
