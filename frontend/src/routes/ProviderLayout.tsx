@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { AuthProvider } from "../contexts/AuthContext";
 import { SocketProvider } from "../contexts/SocketContext";
-import { Footer, Header } from "../components";
+import { Header } from "../components";
 
 const ProviderLayout = () => {
   return (
@@ -13,7 +13,6 @@ const ProviderLayout = () => {
           <Outlet />
         </main>
 
-        <Footer />
       </SocketProvider>
     </AuthProvider>
   );

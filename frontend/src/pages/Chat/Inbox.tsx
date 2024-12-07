@@ -20,6 +20,7 @@ import {
   AvatarImage,
 } from "../../components/ui/avatar";
 import { Link } from "react-router-dom";
+import { Button } from "../../components/ui/button";
 
 const Inbox = () => {
   const { currentId } = useAuth();
@@ -63,11 +64,14 @@ const Inbox = () => {
         <CommandDialog open={open} onOpenChange={setOpen}>
           <CommandInput placeholder="Type a friend's name..." />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandEmpty>No users found.</CommandEmpty>
             <CommandGroup heading="Connections">
-              {connections.map((con,index) => (
+              {connections.map((con, index) => (
                 <CommandItem key={index}>
-                  <Link to={`/chat/${con.room_id}`} className="flex items-center">
+                  <Link
+                    to={`/chat/${con.room_id}`}
+                    className="flex items-center"
+                  >
                     <Avatar className="h-16 w-16">
                       <AvatarImage src={con.profile_photo_path ?? ""} />
                       <AvatarFallback>CN</AvatarFallback>
@@ -92,20 +96,36 @@ const Inbox = () => {
             <PencilSquareIcon width={30} height={30} />
           </button>
         </div>
-        <ul>
-          {inboxes.map((inbox, index) => (
-            <InboxCard
-              isFirst={index == 0}
-              isLastSender={inbox.last_sender_id == currentId}
-              last_message={inbox.last_message}
-              profile_photo={inbox.profile_photo}
-              room_id={inbox.room_id}
-              updated_at={new Date(inbox.updated_at)}
-              username={inbox.username}
-              key={index}
+        {inboxes.length > 0 ? (
+          <ul>
+            {inboxes.map((inbox, index) => (
+              <InboxCard
+                isFirst={index == 0}
+                isLastSender={inbox.last_sender_id == currentId}
+                last_message={inbox.last_message}
+                profile_photo={inbox.profile_photo}
+                room_id={inbox.room_id}
+                updated_at={new Date(inbox.updated_at)}
+                username={inbox.username}
+                key={index}
+              />
+            ))}
+          </ul>
+        ) : (
+          <div className="flex flex-col items-center">
+            <img
+              src="/images/no-request.png"
+              alt="no-connection"
+              className="w-1/2 min-w-52"
             />
-          ))}
-        </ul>
+            <h2 className="px-5 text-lg mt-5">
+              Contact people and start conversations to advance your career!
+            </h2>
+            <Button variant={"outline"} className="text-xl my-7 border-black rounded-[20px] p-5" onClick={()=> setOpen(!open)}>
+              Start Chat
+            </Button>
+          </div>
+        )}
       </section>
       <RightSidebar />
     </>
