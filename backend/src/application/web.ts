@@ -7,6 +7,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import http from "http"
 import { Server } from "socket.io";
+import path from "path";
 
 const web = express();
 web.use(cors({ origin: "http://localhost:5173", credentials: true }));
@@ -17,6 +18,8 @@ web.use("/api", apiRouter);
 web.use("/api", publicRouter);
 
 web.use(errorMiddleware);
+
+web.use('/store', express.static(path.join(__dirname, '../store')));
 
 const redis = new Redis({
   host: "redis",

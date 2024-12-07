@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useContext, useState } from "react";
 import { io, Socket } from "socket.io-client";
+import useNotification from "../hooks/useNotification";
 
 interface SocketContextType {
     socket: Socket | null;
@@ -9,6 +10,8 @@ const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
+
+  useNotification();
 
   useEffect(() => {
     const socketInstance = io("http://localhost:3000",{

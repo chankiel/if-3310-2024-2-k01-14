@@ -56,7 +56,7 @@ export default function Login() {
   return (
     <>
       <div className="min-h-screen flex flex-col items-center">
-        <h2 className="text-3xl text-gray-800 mb-6 mt-32">
+        <h2 className="text-3xl text-gray-800 mb-6 mt-32 text-center">
           Stay updated on your professional world
         </h2>
         <form

@@ -1,9 +1,9 @@
 import * as crypto from "crypto";
 import { AuthRequest } from "../middleware/auth-middleware";
 
-// const secretKey = process.env.JWT_SECRET_KEY as string
+const secretKey = process.env.JWT_SECRET_KEY as string;
 
-const secretKey = "f3c9e1b2d4a5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t1u2v3w4x5y6z7a8b9c0";
+// const secretKey = "f3c9e1b2d4a5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t1u2v3w4x5y6z7a8b9c0";
 
 export interface PayloadFormat{
     userId: number;
