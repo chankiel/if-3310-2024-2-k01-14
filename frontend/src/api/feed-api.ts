@@ -39,10 +39,9 @@ class FeedApi {
   static async updateFeed(feed_id: number , content:string): Promise<APIResponse> {
     try {
       const res = await this.axios.put<APIResponse>(`/feed/${feed_id}`,{
-        body: JSON.stringify({
           content:content,
-        }),
       });
+      // console.log(res.data)
       return res.data
     } catch (error) {
       throw (error as any)?.response?.data;

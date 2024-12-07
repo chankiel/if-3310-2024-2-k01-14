@@ -22,26 +22,26 @@ export class FeedController {
         }
     }
 
-    static async showFeeds(req: AuthRequest, res: Response, next: NextFunction){
-        try {
-            const userId = req.userId;
+    // static async showFeeds(req: AuthRequest, res: Response, next: NextFunction){
+    //     try {
+    //         const userId = req.userId;
 
-            const feeds_list = await FeedService.getFeed(userId!);
+    //         const feeds_list = await FeedService.getFeed(userId!);
 
-            console.log(feeds_list)
+    //         console.log(feeds_list)
 
-            const response = formatResponse<FeedFormat[]>(
-                true,
-                feeds_list,
-                "Feed list retrieved successfully!"
-              );
+    //         const response = formatResponse<FeedFormat[]>(
+    //             true,
+    //             feeds_list,
+    //             "Feed list retrieved successfully!"
+    //           );
 
-            res.status(200).json(response)
+    //         res.status(200).json(response)
 
-        } catch(e) {
-            next(e);
-        }
-    }
+    //     } catch(e) {
+    //         next(e);
+    //     }
+    // }
 
     static async deleteFeed(req: AuthRequest, res: Response, next: NextFunction) {
         try {
@@ -64,13 +64,37 @@ export class FeedController {
         }
       }
 
+      static async EditFeed(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+          const feed_id = Number(req.params.feed_id)
+          const request: CreateFeedRequest = req.body as CreateFeedRequest;
+          console.log(feed_id)
+          console.log(request)
+    
+          const feed = await FeedService.updateFeed(
+            feed_id, request
+          );
+    
+          const response = formatResponse(
+            true,
+            null,
+            `Feed with ${feed_id} updated successfully!`
+          );
+    
+          res.status(200).json(response);
+        } catch (e) {
+          next(e);
+        }
+      }
+
+
       static async showFeedsPagination(req: AuthRequest, res: Response, next: NextFunction){
         try {
             const userId = req.userId;
             const {cursor, limit} = req.query;
-            console.log(req.query)
-            console.log(cursor)
-            console.log(limit)
+            // console.log(req.query)
+            // console.log(cursor)
+            // console.log(limit)
  
 
             const feeds_list = await FeedService.getFeedPagination(userId!, Number(cursor), Number(limit));
