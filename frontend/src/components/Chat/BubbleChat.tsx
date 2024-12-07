@@ -19,7 +19,7 @@ const BubbleChat: React.FC<BubbleChatProps> = ({
 }) => {
   return (
     <div
-      className={`flex items-end gap-1 my-2 ${
+      className={`flex items-end gap-2 my-2 ${
         variant === "sent" ? "flex-row-reverse" : ""
       }`}
       ref={chatRef ?? null}
@@ -40,6 +40,7 @@ const BubbleChat: React.FC<BubbleChatProps> = ({
         }`}
       >
         <div className="text-md break-words">{text}</div>
+        {!text && <div className="loader "></div>}
       </div>
       <div
         className={`text-xs text-opacity-75 ${
