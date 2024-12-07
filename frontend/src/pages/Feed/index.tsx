@@ -26,6 +26,7 @@ export default function Feed() {
     const [editContent, setEditContent] = useState("")
     const [isModalEdit, setIsModalEdit] = useState(false);
     const [feedIdEdit, setFeedIdEdit] = useState(0);
+    const [update, setUpdate] = useState(false);
     // console.log(currentId)
 
     // Menggunakan useInfiniteQuery untuk pagination
@@ -46,13 +47,62 @@ export default function Feed() {
             initialPageParam: null, // Nilai awal untuk pageParam
         },
     );
+    
 
     const feeds = data?.pages.flatMap((page) => page.body.feeds) || [];
     const hasFeed = feeds.length > 0;
 
-    const handleEditProfileClick = () => {
+    const handleNewPostClick = () => {
         setIsModalOpen(true);
+        setUpdate(!update)
     };
+
+    const handleNewPost = (newFeed: any) => {
+        queryClient.setQueryData(["feeds"], (prevData: any) => {
+            if (!prevData) return;
+            return {
+                ...prevData,
+                pages: prevData.pages.map((page: any, index: number) =>
+                    index === 0
+                        ? {
+                              ...page,
+                              body: {
+                                  ...page.body,
+                                  feeds: [newFeed, ...page.body.feeds], // Tambahkan feed baru di awal
+                              },
+                          }
+                        : page
+                ),
+            };
+        });
+    };
+
+
+    const handleUpdateFeed = (feed_id: number, updatedContent: string) => {
+        const updatedFeeds = feeds.map((feed) =>
+            feed.id === feed_id ? { ...feed, content: updatedContent, updated_at: new Date().toISOString() } : feed
+        );
+        console.log(updatedFeeds)
+        // Perbarui cache `react-query` atau gunakan state local
+        queryClient.setQueryData(["feeds"], (prevData: any) => {
+            if (!prevData) return;
+            return {
+                ...prevData,
+                pages: prevData.pages.map((page: any) => ({
+                    ...page,
+                    body: {
+                        ...page.body,
+                        feeds: updatedFeeds,
+                    },
+                })),
+            };
+        });
+    };
+
+    useEffect(() => {
+        console.log(data);
+    }, [data]);
+    
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
@@ -61,6 +111,18 @@ export default function Feed() {
     const handleCloseModalEdit = () => {
         setIsModalEdit(false);
     };
+
+    useEffect(() => {
+        const fecthUlang = async () => {
+            queryClient.invalidateQueries(["feeds"]);
+        };
+        
+        fecthUlang();
+      }, [update]);
+
+    // useEffect(() => {
+    //     setEditContent(editContent); // Update postContent whenever content changes
+    // }, [editContent]);
     
 
     // Menggunakan efek untuk mendeteksi scroll dan memuat halaman berikutnya
@@ -82,24 +144,30 @@ export default function Feed() {
         };
     }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+
     const handleEdit = async (feed_id: number, content:string) => {
         setEditContent(content)
         setFeedIdEdit(feed_id)
         setIsModalEdit(true)
+        console.log(feed_id)
+        console.log(content)
+        console.log("ikan")
+        console.log(editContent)
+        console.log(feedIdEdit)
+        console.log(data)
+        setUpdate(!update)
     };
 
     const handleDelete = async (feed_id: number) => {
         try {
             await FeedApi.deleteFeed(feed_id);
+            setUpdate(!update)
             console.log(data)
             // Optimistically update the UI
             data?.pages.forEach((page) =>
-                page.body.feeds.splice(
-                    page.body.feeds.findIndex((feed) => feed.id === feed_id),
-                    1
+                page.body.feeds.filter(((feed) => feed.id !== feed_id)
                 )
             );
-            queryClient.invalidateQueries(["feeds"]);
         } catch (error) {
             console.error("Failed to delete feed", error);
         }
@@ -131,6 +199,7 @@ export default function Feed() {
             profile_photo: "/perry-casino.webp",
         },
     ];
+    console.log(data)
 
     return (
         <>
@@ -147,7 +216,7 @@ export default function Feed() {
                         </div>
                         <button
                             className="flex-1 ml-4 p-4 border border-gray-400 rounded-3xl text-left focus:outline-none hover:bg-gray-100"
-                            onClick={handleEditProfileClick}
+                            onClick={handleNewPostClick}
                         >
                             Start a post, try writing with AI
                         </button>
@@ -200,7 +269,7 @@ export default function Feed() {
                             
                                 {/* Tombol di kanan atas */}
                                 <div
-                                    className={`absolute top-2 right-2 flex gap-2 ${
+                                    className={`absolute top-6 right-2 flex gap-2 ${
                                         currentId === feed.user.id ? "" : "hidden"
                                     }`}
                                 >
@@ -231,9 +300,7 @@ export default function Feed() {
                                 className="w-1/2 min-w-52"
                             />
                             <h2 className="px-5 text-lg mt-5">
-                                Discover innovative ideas and job openings on LinkedIn
-                                through your connections and their networks. Find your
-                                first connection below.
+                                No Feed
                             </h2>
                         </div>
                     )}
@@ -245,8 +312,8 @@ export default function Feed() {
                 </div>
             </main>
 
-            <CreatePostModal isOpen={isModalOpen} onClose={handleCloseModal} />
-            <EditPostModal isOpen={isModalEdit} onClose={handleCloseModalEdit} feed_id={feedIdEdit} user_id={currentId} username={username} content={editContent} />
+            <CreatePostModal isOpen={isModalOpen} onClose={handleCloseModal} onAddFeed={handleNewPost}/>
+            <EditPostModal isOpen={isModalEdit} onClose={handleCloseModalEdit} feed_id={feedIdEdit} user_id={currentId} username={username} content={editContent} onUpdate={handleUpdateFeed} />
         </>
     );
 }
