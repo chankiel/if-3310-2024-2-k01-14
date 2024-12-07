@@ -36,7 +36,6 @@ export class AuthController{
                 id: req.userId
             },
             select:{
-                id: true,
                 ...prismaUserFormat
             }
         })
