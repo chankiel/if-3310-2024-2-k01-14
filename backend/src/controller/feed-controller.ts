@@ -64,7 +64,7 @@ export class FeedController {
         }
       }
 
-      static async EditFeed(req: AuthRequest, res: Response, next: NextFunction) {
+      static async editFeed(req: AuthRequest, res: Response, next: NextFunction) {
         try {
           const feed_id = Number(req.params.feed_id)
           const request: CreateFeedRequest = req.body as CreateFeedRequest;

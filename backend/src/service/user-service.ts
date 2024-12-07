@@ -70,7 +70,7 @@ export class UserService {
         request
       );
       
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.flatten())
       throw new ResponseError(400, "Register Error", error.flatten().fieldErrors)
     }
