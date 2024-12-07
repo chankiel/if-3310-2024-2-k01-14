@@ -13,11 +13,12 @@ import { ArrowLeft } from "lucide-react";
 import { Sidebar } from "../../components";
 import BubbleChat from "../../components/Chat/BubbleChat";
 import { PaperAirplaneIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
+import { API_URL } from "../../constant";
 
 const Chat = () => {
   const { roomId } = useParams();
   const { socket } = useSocket();
-  const { currentId, profile_photo } = useAuth();
+  const { name, currentId, profile_photo } = useAuth();
   const [messages, setMessages] = useState<ChatFormat[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
 
@@ -112,6 +113,20 @@ const Chat = () => {
       setNewMessage("");
       socket.emit("sendTyping", roomId, false);
       scrollToBottom();
+
+      fetch(`${API_URL}/send-chat-notification`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            full_name: name,
+            messages,
+            room_id: roomId,
+            to_id: receiver?.id
+        }),
+    });
     }
   };
 

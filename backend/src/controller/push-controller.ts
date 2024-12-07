@@ -1,19 +1,20 @@
 import webPush from "web-push";
 import { NextFunction, Request, Response } from "express";
-import { vapidKeys } from "../main";
 import { AuthRequest } from "../middleware/auth-middleware";
 import { PushService } from "../service/push-service";
 
-let subscriptions: any = [];
+const vapidKeys = {
+    publicKey: process.env.VAPID_PUBLIC_KEY,
+    privateKey: process.env.VAPID_PRIVATE_KEY
+}
+
+webPush.setVapidDetails(
+    "mailto:francescokusuma15@gmail.com",
+    vapidKeys.publicKey!,
+    vapidKeys.privateKey!
+)
 
 export class PushController {
-    constructor() {
-        webPush.setVapidDetails(
-            "test@gmail.com",
-            vapidKeys.publicKey!,
-            vapidKeys.privateKey!
-        )
-    }
 
     static async subscribe(req: AuthRequest, res: Response, next: NextFunction) {
         const { user_id, subscription } = req.body;
@@ -26,77 +27,74 @@ export class PushController {
         }
     }
 
-    // static sendPushNotification(req: Request, res: Response) {
-    //     const notificationPayload = {
-    //         title: "New Notification",
-    //         body: "This is a new notification",
-    //         icon: "https://some-image-url.jpg",
-    //         data: {
-    //             url: "https://example.com",
-    //         }
-    //     }
-
-    //     Promise.all(
-    //         subscriptions.map((subscription: any) =>
-    //             webPush.sendNotification(subscription, JSON.stringify(notificationPayload))
-    //         )
-    //     )
-    //         .then(() => res.status(200).json({ message: "Notification sent successfully." }))
-    //         .catch((err) => {
-    //             console.error("Error sending notification");
-    //             res.sendStatus(500);
-    //         });
-    // }
-
     static async sendChatNotification(req: AuthRequest, res: Response, next: NextFunction) {
+        const { full_name, message, room_id, to_id } = req.body;
 
-        const { username, message, room_id, to_id } = req.body;
-
-        // const notificationPayload = {
-        //     title: `New message from ${chat.from.username}`,
-        //     body: chat.message,
-        //     icon: "https://some-image-url.jpg",
-        //     data: {
-        //         url: `/chat/${chat.room_id}`,
-        //     }
-        // };
+        console.log("masuk sini");
 
         const notificationPayload = {
-            title: `New message from ${username}`,
+            title: `New message from ${full_name}`,
             body: message,
             icon: "https://some-image-url.jpg",
             data: {
                 url: `/chat/${room_id}`,
             }
         };
-    
-        const subscriptions = await PushService.getSubscriptionsForUser(to_id);
 
-        console.log("halo");
-    
-        Promise.all(
-            subscriptions.map((subscription: any) =>
-                webPush.sendNotification(subscription.endpoint, JSON.stringify(notificationPayload))
-            )
-        )
-        .then(() => console.log("Chat notification sent successfully."))
-        .catch((err) => {
+        try {
+            const userSubscriptions = await PushService.getSubscriptionsForUser(to_id);
+
+            console.log("Target user: ", userSubscriptions);
+
+            const formattedSubscriptions = userSubscriptions.map((target) => {
+                const keys = target.keys as { auth: string; p256dh: string };
+                return {
+                    endpoint: target.endpoint,
+                    keys: {
+                        auth: keys.auth,
+                        p256dh: keys.p256dh,
+                    },
+                };
+            });
+
+            console.log("Format: ", formattedSubscriptions);
+
+            const validSubscriptions: Array<{ endpoint: string; keys: { auth: string; p256dh: string } }> = [];
+            const invalidSubscriptions: Array<{ endpoint: string; keys: { auth: string; p256dh: string } }> = [];
+
+            for (const subscription of formattedSubscriptions) {
+                try {
+                    await webPush.sendNotification(subscription, JSON.stringify(notificationPayload));
+                    validSubscriptions.push(subscription);
+                } catch (error: any) {
+                    if (error.statusCode === 404 || error.statusCode === 410) {
+                        invalidSubscriptions.push(subscription);
+                    }
+                }
+            }
+
+            if (invalidSubscriptions.length > 0) {
+                await PushService.removeSubscriptions(invalidSubscriptions);
+                console.log("Removed invalid subscriptions:", invalidSubscriptions);
+            }
+
+            await Promise.all(
+                validSubscriptions.map((subscription) =>
+                    webPush.sendNotification(subscription, JSON.stringify(notificationPayload))
+                )
+            );
+
+            console.log("Chat notification sent successfully.");
+            res.status(200).json({ message: "Chat notification sent successfully." });
+        } catch (err) {
             console.error("Error sending chat notification", err);
-        });
+            res.status(500).json({ message: "Error sending chat notification." });
+        }
     }
 
     static async sendNewPostNotification(req: AuthRequest, res: Response, next: NextFunction) {
 
-        const {full_name, username, user_id, content} = req.body;
-
-        // const notificationPayload = {
-        //     title: `${feed.user.username} has a new post!`,
-        //     body: feed.content,
-        //     icon: "https://some-image-url.jpg",
-        //     data: {
-        //         url: `/post/${feed.id}`,
-        //     }
-        // };
+        const { full_name, username, user_id, content } = req.body;
 
         const notificationPayload = {
             title: `${full_name}(@${username}) has a new post!`,
@@ -106,23 +104,53 @@ export class PushController {
                 url: `/profile/${user_id}`,
             }
         };
-    
-        const connections = await PushService.getConnectionsForUser(user_id);
-    
-        Promise.all(
-            connections.map(async (connection: any) => {
+
+        try {
+            const connections = await PushService.getConnectionsForUser(user_id);
+            const validSubscriptions: Array<{ endpoint: string; keys: { auth: string; p256dh: string } }> = [];
+            const invalidSubscriptions: Array<{ endpoint: string; keys: { auth: string; p256dh: string } }> = [];
+
+            for (const connection of connections) {
                 const subscriptions = await PushService.getSubscriptionsForUser(connection.to_id);
-                return Promise.all(
-                    subscriptions.map((subscription: any) =>
-                        webPush.sendNotification(subscription.endpoint, JSON.stringify(notificationPayload))
-                    )
-                );
-            })
-        )
-        .then(() => console.log("New post notification sent successfully."))
-        .catch((err) => {
+
+                for (const subscription of subscriptions) {
+                    const keys = subscription.keys as { auth: string; p256dh: string };
+                    const formattedSubscription = {
+                        endpoint: subscription.endpoint,
+                        keys: {
+                            auth: keys.auth,
+                            p256dh: keys.p256dh,
+                        },
+                    };
+
+                    try {
+                        await webPush.sendNotification(formattedSubscription, JSON.stringify(notificationPayload));
+                        validSubscriptions.push(formattedSubscription);
+                    } catch (error: any) {
+                        if (error.statusCode === 404 || error.statusCode === 410) {
+                            invalidSubscriptions.push(formattedSubscription);
+                        }
+                    }
+                }
+            }
+
+            if (invalidSubscriptions.length > 0) {
+                await PushService.removeSubscriptions(invalidSubscriptions);
+                console.log("Removed invalid subscriptions:", invalidSubscriptions);
+            }
+
+            await Promise.all(
+                validSubscriptions.map((subscription) =>
+                    webPush.sendNotification(subscription, JSON.stringify(notificationPayload))
+                )
+            );
+
+            console.log("New post notification sent successfully.");
+            res.status(200).json({ message: "New post notification sent successfully." });
+        } catch (err) {
             console.error("Error sending new post notification", err);
-        });
+            res.status(500).json({ message: "Error sending new post notification." });
+        }
     }
 }
 

@@ -41,10 +41,8 @@ export default function CreatePostModal({ isOpen, onClose, onAddFeed}: CreatePos
             // console.log(postContent)
 
             const data = await response.json();
-
-            console.log("masuk")
-
-            await fetch(`${API_URL}/send-new-post-notification`, {
+            
+            fetch(`${API_URL}/send-new-post-notification`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -57,8 +55,6 @@ export default function CreatePostModal({ isOpen, onClose, onAddFeed}: CreatePos
                     postContent
                 }),
             });
-
-            console.log("sini")
 
             if (response.ok) {
                 setIsSuccess(true);

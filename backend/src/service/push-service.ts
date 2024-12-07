@@ -30,6 +30,7 @@ export class PushService {
     }
 
     static async getSubscriptionsForUser(user_id: number) {
+        console.log("cari: ", user_id)
         return await prismaClient.pushSubscription.findMany({
             where: {
                 user_id: user_id
@@ -47,6 +48,18 @@ export class PushService {
             }
         });
         return connections;
+    }
+
+    static async removeSubscriptions(invalidSubscriptions: Array<{ endpoint: string; keys: { auth: string; p256dh: string } }>) {
+        const endpoints = invalidSubscriptions.map(sub => sub.endpoint);
+        
+        await prismaClient.pushSubscription.deleteMany({
+            where: {
+                endpoint: {
+                    in: endpoints,
+                },
+            },
+        });
     }
 
 }
