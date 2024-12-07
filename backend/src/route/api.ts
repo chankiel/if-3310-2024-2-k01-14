@@ -54,7 +54,7 @@ apiRouter.get(
   upload.none(),
   authMiddleware,
   ChatController.getReceiver
-)
+);
 
 /*----------------- Chat -----------------*/
 apiRouter.get(
@@ -62,14 +62,14 @@ apiRouter.get(
   upload.none(),
   authMiddleware,
   ChatController.getMessages,
-)
+);
 
 apiRouter.get(
   "/chats/:user_id(\\d+)/inbox",
   upload.none(),
   authMiddleware,
   ChatController.getInbox,
-)
+);
 
 /*----------------- Connections -----------------*/
 apiRouter.post(
@@ -77,21 +77,26 @@ apiRouter.post(
   upload.none(),
   authMiddleware,
   FeedController.store
-)
+);
 
+/*----------------- Push Notifications -----------------*/
 apiRouter.post(
-  "/api/subscribe",
+  "/subscribe",
   upload.none(),
-  authMiddleware,
   PushController.subscribe,
-)
+);
 
 apiRouter.post(
-  "/api/send-notification",
+  "/send-chat-notification",
   upload.none(),
-  authMiddleware,
-  PushController.sendPushNotification,
-)
+  PushController.sendChatNotification,
+);
+
+apiRouter.post(
+  "/send-new-post-notification",
+  upload.none(),
+  PushController.sendNewPostNotification,
+);
 
 /*----------------- Feeds -----------------*/
 apiRouter.get(

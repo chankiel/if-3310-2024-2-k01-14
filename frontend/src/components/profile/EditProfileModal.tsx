@@ -7,9 +7,10 @@ interface EditModalProps {
     onClose: () => void;
     initialData: ProfileData;
     user_id: number;
+    onUpdate: (updatedData: ProfileData) => void;
 }
 
-export default function EditProfileModal({ isOpen, onClose, initialData, user_id }: EditModalProps) {
+export default function EditProfileModal({ isOpen, onClose, initialData, user_id, onUpdate }: EditModalProps) {
     const [username, setUsername] = useState(initialData.username);
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [name, setName] = useState(initialData.full_name);
@@ -54,7 +55,16 @@ export default function EditProfileModal({ isOpen, onClose, initialData, user_id
             const data = await response.json();
             console.log("Profile updated:", data);
     
-            window.location.reload();
+            onUpdate({
+                ...initialData,
+                username: data.username || username,
+                full_name: data.full_name || name,
+                work_history: data.work_history || experiences,
+                skills: data.skills || skills,
+                profile_photo: data.profile_photo_path || initialData.profile_photo,
+            });
+
+            onClose();
         } catch(error) {
             console.error("Error updating profile:", error);
         }

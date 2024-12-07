@@ -74,6 +74,10 @@ export default function Profile() {
     },
   ];
 
+  const handleProfileUpdate = (updatedData: ProfileData) => {
+    setProfileData(updatedData);
+  };
+
   useEffect(() => {
     const fetchProfileDataAndConnecetions = async () => {
       try {
@@ -131,7 +135,7 @@ export default function Profile() {
       <main className="bg-custom-bg-color min-h-screen">
         <div className="flex flex-col md:flex-row justify-center gap-x-6">
           <div className="ml-2 max-w-3xl">
-            <ProfileSection data={profileData} isAuthenticated={isAuthenticated} currentId={currentId} user_id={Number(user_id)} isConnected={isConnected} />
+            <ProfileSection data={profileData} isAuthenticated={isAuthenticated} currentId={currentId} user_id={Number(user_id)} isConnected={isConnected} onUpdate={handleProfileUpdate}/>
             <ActivitySection username={profileData.username} activity={profileData.feeds?.[0] || null} currentId={currentId} user_id={Number(user_id)}/>
             <ExperienceSection experiences={profileData.work_history || null} />
             <SkillsSection skills={profileData.skills || null} />

@@ -229,19 +229,23 @@ export class UserService {
   }
 
   static async update(id: number, request: UpdateUserRequest) {
-    const updateRequest = Validation.validate(UserValidation.UPDATE, request);
-
     let url_profile_photo = null;
     let urlDB = "";
 
-    if (updateRequest.profile_photo) {
-      const file = updateRequest.profile_photo;
+    if (request.profile_photo) {
+      const file = request.profile_photo;
 
+      
       // Docker :
-      // const uploadPath = path.join(__dirname, `../../../frontend/public/image/profile_${id}${path.extname(file.originalname)}`);
+      const uploadPath = path.join(__dirname, `../../store/profile_${id}${path.extname(file.originalname)}`);
 
-      const uploadPath = path.join(__dirname, `../../../frontend/public/profile_${id}${path.extname(file.originalname)}`);
-      urlDB = `/profile_${id}${path.extname(file.originalname)}`;
+      // const uploadPath = `../public/profile_${id}${path.extname(file.originalname)}`;
+      
+      // const uploadPath = path.join(__dirname, `../../../frontend/public/profile_${id}${path.extname(file.originalname)}`);
+      urlDB = `profile_${id}${path.extname(file.originalname)}`;
+      console.log("Current directory:", process.cwd());
+      console.log("Upload: ", uploadPath);
+      console.log("URL DB: ", urlDB);
 
       const dir = path.dirname(uploadPath);
       if (!fs.existsSync(dir)) {
@@ -254,10 +258,10 @@ export class UserService {
     }
 
     const updateData: any = {};
-    if (updateRequest.username) updateData.username = updateRequest.username;
-    if (updateRequest.name) updateData.full_name = updateRequest.name;
-    if (updateRequest.work_history) updateData.work_history = updateRequest.work_history;
-    if (updateRequest.skills) updateData.skills = updateRequest.skills;
+    if (request.username) updateData.username = request.username;
+    if (request.name) updateData.full_name = request.name;
+    if (request.work_history) updateData.work_history = request.work_history;
+    if (request.skills) updateData.skills = request.skills;
     if (url_profile_photo) updateData.profile_photo_path = urlDB;
 
     await prismaClient.user.update({
