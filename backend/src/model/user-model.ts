@@ -1,5 +1,3 @@
-import { FeedFormat } from "./feed-model";
-
 export type UserFormat = {
   id?: number;
   username: string;
@@ -8,7 +6,12 @@ export type UserFormat = {
   skills?: string | null;
   profile_photo?: string | null;
   connection_count?: number;
-  feeds?: FeedFormat[];
+  feeds?: {
+    id: number;
+    created_at: Date;
+    updated_at: Date;
+    content: string;
+  }[];
   is_connected?: boolean;
   is_requested?: boolean;
   got_request?: boolean;

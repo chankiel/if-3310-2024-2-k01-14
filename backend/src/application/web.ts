@@ -18,18 +18,22 @@ web.use("/api", publicRouter);
 
 web.use(errorMiddleware);
 
-// const redis = new Redis({
-//   host: "rediss",
-//   port: 6379,
-// });
+const redis = new Redis({
+  host: "redis",
+  port: 6379,
+  retryStrategy(times) {
+      const delay = Math.min(times*50,2000);
+      return delay;
+  },
+});
 
-// redis.on("connect", () => {
-//   console.log("Connected to Redis!");
-// });
+redis.on("connect", () => {
+  console.log("Connected to Redis!");
+});
 
-// redis.on("error", (err: Error) => {
-//   console.error("Redis connection error:", err);
-// });
+redis.on("error", (err: Error) => {
+  console.error("Redis connection error:", err);
+});
 
 const server = http.createServer(web)
 const io = new Server(server,{
@@ -39,4 +43,4 @@ const io = new Server(server,{
   }
 })
 
-export {server,io}
+export {server,io,redis}

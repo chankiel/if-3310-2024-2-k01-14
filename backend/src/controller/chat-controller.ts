@@ -18,6 +18,13 @@ export class ChatController {
       });
 
       socket.on(
+        "sendTyping",
+        (roomId: string, isTyping: boolean) => {
+          ChatService.sendIsTyping(socket,roomId,isTyping);
+        }
+      );
+
+      socket.on(
         "sendMessage",
         (
           senderId: string,

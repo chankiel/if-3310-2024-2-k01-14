@@ -24,6 +24,7 @@ const Chat = () => {
   const [receiver, setReceiver] = useState<UserFormat>();
   const [loading, setLoading] = useState(true);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -61,6 +62,10 @@ const Chat = () => {
             room_id: Number(roomId),
           },
         ]);
+      });
+      socket.on("updateTyping", (isTyping: boolean) => {
+        setIsTyping(isTyping);
+        console.log("TYPING: ", isTyping);
       });
     }
 
@@ -105,6 +110,7 @@ const Chat = () => {
         },
       ]);
       setNewMessage("");
+      socket.emit("sendTyping", roomId, false);
       scrollToBottom();
     }
   };
@@ -177,6 +183,15 @@ const Chat = () => {
               </div>
             );
           })}
+          {isTyping && (
+            <BubbleChat
+              date={""}
+              text={""}
+              variant={"received"}
+              profile_photo={receiver?.profile_photo}
+              showProfile={true}
+            />
+          )}
 
           <div ref={messagesEndRef} />
         </div>
@@ -194,6 +209,20 @@ const Chat = () => {
             className="py-3 px-6 w-full border border-gray-300 rounded-md resize-none no-scrollbar"
             value={newMessage}
             onChange={(e) => {
+              if (
+                e.target.value.length > 0 &&
+                newMessage.length == 0 &&
+                socket
+              ) {
+                socket.emit("sendTyping", roomId, true);
+              }
+              if (
+                e.target.value.length == 0 &&
+                newMessage.length > 0 &&
+                socket
+              ) {
+                socket.emit("sendTyping", roomId, false);
+              }
               setNewMessage(e.target.value);
             }}
             placeholder="Type a message..."
