@@ -24,6 +24,12 @@ export type FeedFormat = {
   content: string;
   created_at: Date;
   updated_at: Date;
+  user : {
+    id: number;
+    username: string;
+    full_name: string;
+    profile_photo_path: string;
+  }
 };
 
 export type ChatFormat = {
@@ -132,7 +138,7 @@ export type RoomChatFormat =  {
 }
 
 export type FeedResponse = APIResponse & {
-  body: FeedFormat[]
+  body: {feeds : FeedFormat[], cursor : number | null}
 }
 export type InboxFormat = {
   username: string;
