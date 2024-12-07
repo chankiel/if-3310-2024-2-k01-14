@@ -50,7 +50,7 @@ export class PushController {
 
     static async sendChatNotification(req: AuthRequest, res: Response, next: NextFunction) {
 
-        const {username, message, room_id, to_id} = req.body;
+        const { username, message, room_id, to_id } = req.body;
 
         // const notificationPayload = {
         //     title: `New message from ${chat.from.username}`,
@@ -71,6 +71,8 @@ export class PushController {
         };
     
         const subscriptions = await PushService.getSubscriptionsForUser(to_id);
+
+        console.log("halo");
     
         Promise.all(
             subscriptions.map((subscription: any) =>
@@ -85,7 +87,7 @@ export class PushController {
 
     static async sendNewPostNotification(req: AuthRequest, res: Response, next: NextFunction) {
 
-        const {full_name, username, user_id, content, room_id, to_id} = req.body;
+        const {full_name, username, user_id, content} = req.body;
 
         // const notificationPayload = {
         //     title: `${feed.user.username} has a new post!`,

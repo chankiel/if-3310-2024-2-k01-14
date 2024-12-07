@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { API_URL } from "../../constant";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface CreatePostModalProps {
     isOpen: boolean;
@@ -7,6 +8,7 @@ interface CreatePostModalProps {
 }
 
 export default function CreatePostModal({ isOpen, onClose }: CreatePostModalProps) {
+    const { name, username, currentId } = useAuth();
     const [postContent, setPostContent] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
     const [responseMessage, setResponseMessage] = useState("");
@@ -37,6 +39,24 @@ export default function CreatePostModal({ isOpen, onClose }: CreatePostModalProp
             });
 
             const data = await response.json();
+
+            console.log("masuk")
+
+            await fetch(`${API_URL}/send-new-post-notification`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    full_name: name,
+                    username,
+                    user_id: currentId,
+                    postContent
+                }),
+            });
+
+            console.log("sini")
 
             if (response.ok) {
                 setIsSuccess(true);
