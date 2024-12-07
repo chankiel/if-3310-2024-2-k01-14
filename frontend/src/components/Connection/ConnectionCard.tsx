@@ -5,8 +5,6 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
 import { TrashIcon, EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import { timeAgo } from "../../lib/utils";
 
@@ -59,15 +57,6 @@ const ConnectionCard = ({
       </div>
       {isSelf && (
         <div className="flex items-center p-4 gap-4">
-          <Button
-            asChild
-            variant={"outline"}
-            className="border-linkin-blue text-linkin-blue rounded-[20px] px-5"
-          >
-            <Link to={`/chat/${id}`} className="text-[17px]">
-              Chat
-            </Link>
-          </Button>
           <DropdownMenu>
         <DropdownMenuTrigger>
           <EllipsisHorizontalIcon height={30} width={30} />

@@ -14,6 +14,10 @@ export default function Register() {
     password: "",
     confirmPassword: "",
   });
+  const [errorUsernameMessage, setErrorUsernameMessage] = useState("")
+  const [errorEmailMessage, setErrorEmailMessage] = useState("")
+  const [errorFullnameMessage, setErrorFullnameMessage] = useState("")
+  const [errorPasswordMessage, setErrorPasswordMessage] = useState("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -63,11 +67,19 @@ export default function Register() {
           navigate("/feed");
         } else {
           setIsSuccess(false);
+          setErrorUsernameMessage(data.errors.username);
+          setErrorPasswordMessage(data.errors.password);
+          setErrorEmailMessage(data.errors.email);
+          setErrorFullnameMessage(data.errors.full_name);
           setResponseMessage(data.message);
         }
       } catch (err) {
         setIsSuccess(false);
         setResponseMessage("An error occurred. Please try again.");
+        setErrorUsernameMessage(err.errors.username);
+        setErrorPasswordMessage(err.errors.password);
+        setErrorEmailMessage(err.errors.email);
+        setErrorFullnameMessage(err.errors.full_name);
         console.log("Error: ", err);
       }
     }
@@ -85,11 +97,11 @@ export default function Register() {
         >
           <h2 className="text-2xl font-semibold text-center mb-4">Sign Up</h2>
 
-          {responseMessage && !isSuccess && (
+          {/* {responseMessage && !isSuccess && (
             <div className="text-red-500 text-sm py-2 text-center">
               {responseMessage}
             </div>
-          )}
+          )} */}
 
           <div className="mb-4">
             <label
@@ -106,6 +118,9 @@ export default function Register() {
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border border-slate-500 py-2 px-3 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
+            {responseMessage && !isSuccess && errorUsernameMessage &&(
+            <div className="text-red-500 text-sm py-2 text-left">{errorUsernameMessage}</div>
+            )}
           </div>
           <div className="mb-4">
             <label
@@ -122,6 +137,9 @@ export default function Register() {
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border border-slate-500 py-2 px-3 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
+            {responseMessage && !isSuccess && errorEmailMessage &&(
+            <div className="text-red-500 text-sm py-2 text-left">{errorEmailMessage}</div>
+            )}
           </div>
           <div className="mb-4">
             <label
@@ -138,6 +156,9 @@ export default function Register() {
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border border-slate-500 py-2 px-3 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
+            {responseMessage && !isSuccess && errorFullnameMessage &&(
+            <div className="text-red-500 text-sm py-2 text-left">{errorFullnameMessage}</div>
+            )}
           </div>
           <div className="mb-4">
             <label
@@ -154,6 +175,9 @@ export default function Register() {
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border border-slate-500 py-2 px-3 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
+            {responseMessage && !isSuccess && errorPasswordMessage &&(
+            <div className="text-red-500 text-sm py-2 text-left">{errorPasswordMessage}</div>
+            )}
           </div>
           <div className="mb-6">
             <label

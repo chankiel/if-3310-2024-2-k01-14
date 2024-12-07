@@ -17,7 +17,7 @@ const Header: React.FC = () => {
     useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-
+  console.log(profile_photo);
   const handleLogout = async () => {
     try {
       const response = await logout();
@@ -74,7 +74,7 @@ const Header: React.FC = () => {
         <a className="md:w-full h-full" href="/">
           <LinkedInIcon color="#0a66c2" size={50} />
         </a>
-        <nav className={`${isAuthenticated ? "w-full" : "lg:w-1/4 w-1/3"}`}>
+        <nav className={`${isAuthenticated ? "w-full" : "lg:w-1/4 w-2/3"}`}>
           <ul className="flex justify-around gap-2 text-sm text-gray-500 items-center">
             {paths.map((path, index) => (
               <li
@@ -101,7 +101,7 @@ const Header: React.FC = () => {
                 <Popover>
                   <PopoverTrigger>
                     <Avatar className="h-7 w-7">
-                      <AvatarImage src={profile_photo ?? ""} />
+                      <AvatarImage src={profile_photo || "/images/perry-casino.webp"} />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
 

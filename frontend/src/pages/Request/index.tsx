@@ -56,7 +56,7 @@ const Requests = () => {
               alt="no-request"
               className="w-1/2"
             />
-            <h1 className="text-[30px] mt-3">No new requests</h1>
+            <h1 className="text-lg mt-3">No new requests</h1>
           </div>
         )}
       </section>

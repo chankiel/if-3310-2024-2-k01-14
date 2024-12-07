@@ -39,14 +39,17 @@ const UserCard = ({ user, handleRequest, isFirst }: UserCardProps) => {
         !isFirst && "border-t-2"
       } border-linkin-lightgray`}
     >
-      <Avatar className="h-16 w-16">
-        <AvatarImage src={user.profile_photo ?? ""} />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-      <div className="w-full ml-5">
-        <h2 className="text-lg font-bold">{user.username}</h2>
-        {user.name && <h3 className="text-gray-600">{user.name}</h3>}
-      </div>
+      <Link to={`/profile/${user.id}`} className="w-full flex items-center">
+      
+        <Avatar className="h-16 w-16">
+          <AvatarImage src={user.profile_photo ?? ""} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <div className="w-full ml-5">
+          <h2 className="text-lg font-bold"><span className="hover:underline hover:text-linkin-blue">{user.username}</span></h2>
+          {user.name && <h3 className="text-gray-600">{user.name}</h3>}
+        </div>
+      </Link>
       {isAuthenticated && (
         <div className="flex items-center p-4 ">
           {user.is_connected ? (

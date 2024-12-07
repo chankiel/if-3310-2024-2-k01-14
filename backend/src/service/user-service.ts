@@ -13,6 +13,7 @@ import { Validation } from "../validation/validation";
 const bcrypt = require("bcryptjs");
 import multer from 'multer';
 import fs from 'fs';
+import { redis } from "../application/web";
 
 export const prismaUserFormat = {
   id: true,
@@ -62,37 +63,44 @@ export class UserService {
   }
 
   static async register(request: CreateUserRequest): Promise<string> {
-    const registerRequest = Validation.validate(
-      UserValidation.REGISTER,
-      request
-    );
+
+    try {
+      const registerRequest = Validation.validate(
+        UserValidation.REGISTER,
+        request
+      );
+      
+    } catch (error) {
+      console.log(error.flatten())
+      throw new ResponseError(400, "Register Error", error.flatten().fieldErrors)
+    }
 
     const totalUserSameUsername = await prismaClient.user.count({
       where: {
-        username: registerRequest.username,
+        username: request.username,
       },
     });
 
     if (totalUserSameUsername != 0) {
-      throw new ResponseError(400, "Username is already taken");
+      throw new ResponseError(400, "Username is already taken", {username: "Username is already taken"});
     }
 
     const totalUserSameEmail = await prismaClient.user.count({
       where: {
-        email: registerRequest.email,
+        email: request.email,
       },
     });
 
     if (totalUserSameEmail != 0) {
-      throw new ResponseError(400, "Email is already registered");
+      throw new ResponseError(400, "Email is already registered", {email: "Email is already registered"});
     }
 
-    registerRequest.password = await bcrypt.hash(registerRequest.password, 10);
+    request.password = await bcrypt.hash(request.password, 10);
 
-    console.log("Register: ", registerRequest);
+    console.log("Register: ", request);
 
     const user = await prismaClient.user.create({
-      data: registerRequest,
+      data: request,
     });
 
     const payload = {
@@ -113,6 +121,12 @@ export class UserService {
     userId: number = 0,
     query: string = ""
   ): Promise<UserFormat[]> {
+    const cacheKey = "users";
+    const cachedUsers = await redis.get(cacheKey);
+    if(cachedUsers){
+      return JSON.parse(cachedUsers);
+    }
+
     const users = await prismaClient.user.findMany({
       where: {
         username: {
@@ -184,6 +198,8 @@ export class UserService {
       connectionRequestsTo: undefined,
       connectionsTo: undefined,
     }));
+
+    await redis.set(cacheKey, JSON.stringify(formattedUsers),'EX',600);
 
     return formattedUsers;
   }

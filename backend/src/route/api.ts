@@ -113,5 +113,11 @@ apiRouter.delete(
   FeedController.deleteFeed
 );
 
+apiRouter.put( 
+  "/feed/:feed_id(\\d+)",
+  upload.none(),
+  authMiddleware,
+  FeedController.EditFeed);
+
 
 export default apiRouter;

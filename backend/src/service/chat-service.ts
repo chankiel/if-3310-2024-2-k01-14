@@ -73,6 +73,10 @@ export class ChatService {
     console.log(`User with ID: ${socket.id} joined room ${roomId}`);
   }
 
+  static async sendIsTyping(socket: Socket,roomId: string, isTyping: boolean){
+    socket.broadcast.to(roomId).emit("updateTyping", isTyping);
+  }
+
   static leaveRoom(socket: Socket, roomId: string) {
     socket.leave(roomId);
     console.log(`User with ID: ${socket.id} leaved room ${roomId}`);

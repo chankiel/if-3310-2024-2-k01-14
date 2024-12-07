@@ -3,6 +3,12 @@ export type FeedFormat = {
     content: string;
     created_at: Date;
     updated_at: Date;
+    user : {
+        id: number;
+        username: string;
+        full_name: string | null;
+        profile_photo_path: string | null;
+    }
 }
 
 export type CreateFeedRequest = {
