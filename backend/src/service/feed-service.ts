@@ -10,13 +10,13 @@ export const prismaFeedFormat = {
 }
 
 export class FeedService {
-    static async add(id: number, request: CreateFeedRequest): Promise<string> {
+    static async add(id: number, request: CreateFeedRequest): Promise<any> {
         const addRequest = Validation.validate(
             FeedValidation.ADD,
             request
         )
 
-        const newFeed = await prismaClient.feed.create({
+        const addFeed = await prismaClient.feed.create({
             data: {
                 content: request.content,
                 user_id: id,
@@ -24,7 +24,25 @@ export class FeedService {
             },
         });
 
-        return "Feed added successfully.";
+        const newFeedUpdated = await prismaClient.feed.findUnique({
+          where : {id : addFeed.id},
+          include: {
+            user: { // Gabungkan dengan data pengguna
+              select: {
+                id: true,
+                username: true,
+                full_name: true,
+                profile_photo_path:true,
+              },
+            },
+          },
+        })
+
+        console.log(newFeedUpdated)
+
+        
+
+        return newFeedUpdated;
     }
 
     static async getFeed(id: number) {
