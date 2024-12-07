@@ -4,9 +4,10 @@ import { API_URL } from "../../constant";
 interface CreatePostModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onAddFeed: (newFeed: any) => void; 
 }
 
-export default function CreatePostModal({ isOpen, onClose }: CreatePostModalProps) {
+export default function CreatePostModal({ isOpen, onClose, onAddFeed}: CreatePostModalProps) {
     const [postContent, setPostContent] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
     const [responseMessage, setResponseMessage] = useState("");
@@ -35,15 +36,18 @@ export default function CreatePostModal({ isOpen, onClose }: CreatePostModalProp
                     content: postContent,
                 }),
             });
+            // console.log(postContent)
 
             const data = await response.json();
+            console.log(data)
 
             if (response.ok) {
                 setIsSuccess(true);
                 setResponseMessage(data.message);
                 setPostContent("");
+                onAddFeed(data.feeds);
                 onClose();
-                window.location.reload();
+                // window.location.reload();
             } else {
                 setIsSuccess(false);
                 setResponseMessage(data.message);

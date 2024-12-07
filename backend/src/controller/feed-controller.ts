@@ -10,12 +10,12 @@ export class FeedController {
             const userId = req.userId;
             const request: CreateFeedRequest = req.body as CreateFeedRequest;
 
-            const feed = await FeedService.add(userId!, request);
+            const feeds = await FeedService.add(userId!, request);
 
-            console.log(feed)
+            console.log(feeds)
 
             res.status(200).json({
-                feed
+                feeds
             })
         } catch(e) {
             next(e);

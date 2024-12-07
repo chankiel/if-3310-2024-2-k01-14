@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // import { API_URL } from "../../constant";
 import FeedApi from "../../api/feed-api";
 
@@ -8,12 +8,15 @@ interface EditPostModalProps {
     feed_id: number;
     user_id: number;
     username: string;
-    content: string
+    content: string;
+    onUpdate: (feed_id: number, updatedContent: string) => void;
 }
 
-export default function EditPostModal({ isOpen, onClose, feed_id, username, content}: EditPostModalProps) {
+export default function EditPostModal({ isOpen, onClose, feed_id, username, content, onUpdate }: EditPostModalProps) {
     const [postContent, setPostContent] = useState(content);
-    console.log(postContent)
+    console.log("debug")
+    console.log(content)
+    console.log(feed_id)
     const [isSuccess, setIsSuccess] = useState(false);
     const [responseMessage, setResponseMessage] = useState("");
 
@@ -22,6 +25,9 @@ export default function EditPostModal({ isOpen, onClose, feed_id, username, cont
         setResponseMessage("");
         onClose();
     };
+    useEffect(() => {
+        setPostContent(content); // Update postContent whenever content changes
+    }, [content]);
 
     if (!isOpen) return null;
 
@@ -32,15 +38,15 @@ export default function EditPostModal({ isOpen, onClose, feed_id, username, cont
 
         try {
             await FeedApi.updateFeed(feed_id, postContent)
+            onUpdate(feed_id, postContent);
+            onClose();
+            setIsSuccess(true);
         } catch (err) {
             setIsSuccess(false);
             setResponseMessage("An error occurred. Please try again.");
             console.error("Error: ", err);
         }
-        setIsSuccess(true);
-                setPostContent("");
-                onClose();
-                // window.location.reload();
+        // window.location.reload();
     };
 
     return (
