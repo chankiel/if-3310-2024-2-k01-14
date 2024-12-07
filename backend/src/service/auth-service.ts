@@ -6,32 +6,39 @@ import {
 import { createJwt } from "../utils/jwt";
 import { UserValidation } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
+import { errorMiddleware } from "../middleware/error-middleware";
 const bcrypt = require("bcryptjs");
 
 export class AuthService {
   static async login(request: LoginUserRequest): Promise<string> {
-    const loginRequest = Validation.validate(UserValidation.LOGIN, request);
+    // console.log(request)
+    try {
+      const loginRequest = Validation.validate(UserValidation.LOGIN, request);
+    } catch (error) {
+      console.log(error.flatten())
+      throw new ResponseError(400, "Login Error", error.flatten().fieldErrors)
+    }
 
     let user = await prismaClient.user.findFirst({
       where: {
         OR: [
-          { email: loginRequest.identifier },
-          { username: loginRequest.identifier },
+          { email: request.identifier },
+          { username: request.identifier },
         ],
       },
     });
 
     if (!user) {
-      throw new ResponseError(401, "Username or password is wrong");
+      throw new ResponseError(401, "Username is wrong", {identifier: "Username/Email is not Found"});
     }
 
     const isPasswordValid = await bcrypt.compare(
-      loginRequest.password,
+      request.password,
       user.password
     );
 
     if (!isPasswordValid) {
-      throw new ResponseError(401, "Username or password is wrong");
+      throw new ResponseError(401, "Password is wrong", {password: "Password is wrong"});
     }
 
     const payload = {

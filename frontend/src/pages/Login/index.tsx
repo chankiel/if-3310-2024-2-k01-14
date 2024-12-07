@@ -9,6 +9,8 @@ export default function Login() {
   const navigate = useNavigate();
   const [isSuccess, setIsSuccess] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
+  const [errorUsernameMessage, setErrorUsernameMessage] = useState("")
+  const [errorPasswordMessage, setErrorPasswordMessage] = useState("")
   const [formData, setFormData] = useState({
     identifier: "",
     password: "",
@@ -35,14 +37,18 @@ export default function Login() {
           identifier: formData.identifier,
           password: formData.password,
         });
-
+        console.log(res)
+        
         setIsSuccess(true);
         setResponseMessage(res.message);
         navigate("/feed");
       } catch (err) {
         setIsSuccess(false);
         setResponseMessage((err as APIResponse).message);
+        setErrorUsernameMessage(err.errors.identifier);
+        setErrorPasswordMessage(err.errors.password);
         console.log("Error: ", err);
+        
       }
     }
   };
@@ -61,9 +67,9 @@ export default function Login() {
             Login
           </h2>
 
-          {responseMessage && !isSuccess && (
+          {/* {responseMessage && !isSuccess && (
             <div className="text-red-500 text-sm py-2 text-center">{responseMessage}</div>
-          )}
+          )} */}
 
           <div className="mb-4">
             <label
@@ -80,6 +86,10 @@ export default function Login() {
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border border-slate-500 py-2 px-3 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
+            {responseMessage && !isSuccess && errorUsernameMessage &&(
+            <div className="text-red-500 text-sm py-2 text-left">{errorUsernameMessage}</div>
+            )}
+
           </div>
           <div className="mb-6">
             <label
@@ -96,6 +106,9 @@ export default function Login() {
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border border-slate-500 py-2 px-3 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
+            {responseMessage && !isSuccess && errorPasswordMessage &&(
+            <div className="text-red-500 text-sm py-2 text-left">{errorPasswordMessage}</div>
+            )}
           </div>
           <button
             type="submit"
