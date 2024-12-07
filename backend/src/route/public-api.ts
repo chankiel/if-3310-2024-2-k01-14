@@ -12,7 +12,6 @@ const upload = multer()
 /*----------------- Auth -----------------*/
 publicRouter.post("/register", upload.none(), UserController.store);
 publicRouter.post("/login", upload.none(), AuthController.login);
-publicRouter.post("/logout",upload.none(),AuthController.logout)
 
 /*----------------- User / Profile -----------------*/
 publicRouter.get("/profile/",UserController.index)

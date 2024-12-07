@@ -3,10 +3,15 @@ import { AuthRequest, getPayload } from "../middleware/auth-middleware";
 import { CreateUserRequest, LoginUserRequest, UpdateUserRequest, UserFormat } from "../model/user-model";
 import { UserService } from "../service/user-service";
 import { formatResponse } from "../utils/ResponseFormatter";
+import { ResponseError } from "../error/response-error";
 
 export class UserController {
     static async store(req: Request, res: Response, next: NextFunction) {
         try {
+            const payload = getPayload(req);
+            if (payload) {
+                throw new ResponseError(403,"User has already log in")
+            }
             const request: CreateUserRequest = req.body as CreateUserRequest;
             const token = await UserService.register(request);
 

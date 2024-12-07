@@ -6,6 +6,7 @@ import multer from "multer";
 import { ChatController } from "../controller/chat-controller";
 import { PushController } from "../controller/push-controller";
 import { FeedController } from "../controller/feed-controller";
+import { AuthController } from "../controller/auth-controller";
 
 const upload = multer();
 const apiRouter = express.Router();
@@ -117,7 +118,16 @@ apiRouter.put(
   "/feed/:feed_id(\\d+)",
   upload.none(),
   authMiddleware,
-  FeedController.editFeed);
+  FeedController.editFeed
+);
 
+
+/*----------------- Auth -----------------*/
+apiRouter.post(
+  "/logout",
+  upload.none(),
+  authMiddleware,
+  AuthController.logout
+);
 
 export default apiRouter;

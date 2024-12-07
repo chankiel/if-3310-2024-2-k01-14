@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { AuthRequest } from "../middleware/auth-middleware";
+import { AuthRequest, getPayload } from "../middleware/auth-middleware";
 import { LoginUserRequest } from "../model/user-model";
 import { UserService, prismaUserFormat } from "../service/user-service";
 import { formatResponse } from "../utils/ResponseFormatter";
@@ -10,6 +10,11 @@ import { AuthService } from "../service/auth-service";
 export class AuthController{
     static async login(req: Request, res: Response, next: NextFunction) {
         try {
+            const payload = getPayload(req);
+            if (payload) {
+                throw new ResponseError(403,"User has already log in")
+            }
+
             const request: LoginUserRequest = req.body as LoginUserRequest;
             const token = await AuthService.login(request);
 
@@ -53,7 +58,7 @@ export class AuthController{
     }
 
     
-    static async logout(req: Request, res: Response, next: NextFunction){
+    static async logout(req: AuthRequest, res: Response, next: NextFunction){
         try {    
             res.clearCookie("token", {
                 httpOnly: true, 
