@@ -13,6 +13,7 @@ import { Validation } from "../validation/validation";
 const bcrypt = require("bcryptjs");
 import multer from 'multer';
 import fs from 'fs';
+import { redis } from "../application/web";
 
 export const prismaUserFormat = {
   id: true,
@@ -113,6 +114,12 @@ export class UserService {
     userId: number = 0,
     query: string = ""
   ): Promise<UserFormat[]> {
+    const cacheKey = "users";
+    const cachedUsers = await redis.get(cacheKey);
+    if(cachedUsers){
+      return JSON.parse(cachedUsers);
+    }
+
     const users = await prismaClient.user.findMany({
       where: {
         username: {
@@ -184,6 +191,8 @@ export class UserService {
       connectionRequestsTo: undefined,
       connectionsTo: undefined,
     }));
+
+    await redis.set(cacheKey, JSON.stringify(formattedUsers),'EX',600);
 
     return formattedUsers;
   }
