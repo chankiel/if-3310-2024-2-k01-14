@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     Int                 @id @default(autoincrement())
+  username               String              @unique
+  email                  String              @unique
+  password               String
+  created_at             DateTime            @default(now())
+  updated_at             DateTime            @updatedAt
+  full_name              String?
+  profile_photo_path     String?
+  skills                 String?
+  work_history           String?
+  chatsFrom              Chat[]              @relation("UserChatsFrom")
+  chatsTo                Chat[]              @relation("UserChatsTo")
+  connectionsFrom        Connection[]        @relation("UserConnectionsFrom")
+  connectionsTo          Connection[]        @relation("UserConnectionsTo")
+  connectionRequestsFrom ConnectionRequest[] @relation("ConnectionRequestFrom")
+  connectionRequestsTo   ConnectionRequest[] @relation("ConnectionRequestTo")
+  feeds                  Feed[]              @relation("UserFeeds")
+  pushSubscriptions      PushSubscription[]
+
+  rooms_chat_first  RoomChat[] @relation("FirstUserRoom")
+  rooms_chat_second RoomChat[] @relation("SecondUserRoom")
+  last_sender_rooms RoomChat[] @relation("LastSender")
+}
+
+model Feed {
+  id         Int      @id @default(autoincrement())
+  content    String
+  created_at DateTime @default(now())
+  updated_at DateTime
+  user_id    Int
+  user       User     @relation("UserFeeds", fields: [user_id], references: [id])
+
+  @@index([user_id])
+}
+
+model Chat {
+  id        Int      @id @default(autoincrement())
+  timestamp DateTime @default(now())
+  from_id   Int
+  to_id     Int
+  message   String
+  room_id   Int
+  from      User     @relation("UserChatsFrom", fields: [from_id], references: [id])
+  to        User     @relation("UserChatsTo", fields: [to_id], references: [id])
+  room      RoomChat @relation(fields: [room_id], references: [id], onDelete: Cascade)
+
+  @@index([from_id, to_id])
+}
+
+model RoomChat {
+  id             Int   @id @default(autoincrement())
+  first_user_id  Int
+  second_user_id Int
+  last_message   String?  @db.Text
+  last_sender_id Int?
+  updated_at     DateTime @default(now()) @db.Timestamptz
+  first_user     User     @relation("FirstUserRoom", fields: [first_user_id], references: [id], onDelete: Cascade)
+  second_user    User     @relation("SecondUserRoom", fields: [second_user_id], references: [id], onDelete: Cascade)
+  last_sender    User?    @relation("LastSender", fields: [last_sender_id], references: [id], onDelete: Cascade)
+  chats          Chat[]   @relation()
+
+  @@unique([first_user_id, second_user_id])
+}
+
+model ConnectionRequest {
+  from_id    Int
+  to_id      Int
+  created_at DateTime @default(now())
+  from       User     @relation("ConnectionRequestFrom", fields: [from_id], references: [id])
+  to         User     @relation("ConnectionRequestTo", fields: [to_id], references: [id])
+
+  @@id([from_id, to_id])
+}
+
+model Connection {
+  from_id    Int
+  to_id      Int
+  created_at DateTime @default(now())
+  from       User     @relation("UserConnectionsFrom", fields: [from_id], references: [id])
+  to         User     @relation("UserConnectionsTo", fields: [to_id], references: [id])
+
+  @@id([from_id, to_id])
+}
+
+model PushSubscription {
+  endpoint   String   @id
+  user_id    Int?
+  keys       Json
+  created_at DateTime @default(now())
+  user       User?    @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
+}

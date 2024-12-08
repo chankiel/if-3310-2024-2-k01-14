@@ -1,0 +1,76 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: #f4f2ee;
+  color: #333;
+}
+
+main {
+  min-height: 40vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+section {
+  width: 100%;
+  max-width: 750px;
+  background-color: white;
+  border-radius: 10px;
+  border-width: 2px;
+  border-color: #dfdeda;
+}
+
+.button-blue{
+  border-width: 2px;
+  color: #0a66c2;
+  border-color: #0a66c2;
+  border-radius: 20px;
+  background-color: white;
+  font-weight: 700;
+}
+
+.button-white{
+  color: white;
+  background-color: #0a66c2;
+  border-radius: 20px;
+}
+
+.button-white:hover{
+  background-color: #004182;
+}
+
+.button-blue:hover{
+  background-color: #ebf4fd;
+  border-color: #004182;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 40px;
+  aspect-ratio: 4;
+  background: radial-gradient(circle closest-side,#000 90%,#0000) 0/calc(100%/3) 100% space;
+  clip-path: inset(0 100% 0 0);
+  animation: l1 1s steps(4) infinite;
+}
+@keyframes l1 {to{clip-path: inset(0 -34% 0 0)}}
+/* HTML: <div class="loader"></div> */
+/* .loader {
+  width: 15px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  animation: l5 1s infinite linear alternate;
+}
+@keyframes l5 {
+    0%  {box-shadow: 20px 0 #000, -20px 0 #0002;background: #000 }
+    33% {box-shadow: 20px 0 #000, -20px 0 #0002;background: #0002}
+    66% {box-shadow: 20px 0 #0002,-20px 0 #000; background: #0002}
+    100%{box-shadow: 20px 0 #0002,-20px 0 #000; background: #000 }
+} */

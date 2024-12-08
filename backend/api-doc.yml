@@ -1,0 +1,1015 @@
+openapi: 3.0.0
+info:
+  title: LinkedIn-like Application API Documentation
+  version: 1.0.0
+  description: API documentation for a LinkedIn-like application.
+servers:
+  - url: http://localhost:3000/api
+    description: Main server
+paths:
+  /logout:
+    post:
+      summary: Logout user
+      description: Logs out an authenticated user.
+      responses:
+        "200":
+          description: User logged out successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    type: string
+                    example: ""
+                  message:
+                    type: string
+                    example: "User logged out successfully"
+
+  /profile/:
+    get:
+      summary: Retrieve all users
+      description: Retrieves all users based on the query parameter.
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+          description: Search query for users.
+      responses:
+        "200":
+          description: Users retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UserFormat"
+                  message:
+                    type: string
+                    example: "Users retrieved successfully"
+
+  /self:
+    get:
+      summary: Retrieve self data
+      description: Retrieves the authenticated user's data.
+      responses:
+        "200":
+          description: Self data retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    $ref: "#/components/schemas/UserFormat"
+                  message:
+                    type: string
+                    example: "Self data retrieved successfully!"
+        "404":
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "User with the specified id doesn't exist!"
+
+  /profile/{user_id}:
+    get:
+      summary: Retrieve user data
+      description: Retrieves personal data of a specific user.
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user to retrieve data for.
+      responses:
+        "200":
+          description: User data retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    $ref: "#/components/schemas/UserFormat"
+                  message:
+                    type: string
+                    example: "User data retrieved successfully!"
+        "404":
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "User not found."
+
+  /connections/{user_id}:
+    get:
+      summary: Retrieve user connections
+      description: Retrieves the list of connections of a specific user.
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user whose connections are to be retrieved.
+      responses:
+        "200":
+          description: Connections retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ConnectionFormat"
+                  message:
+                    type: string
+                    example: "Connections retrieved successfully."
+
+  /connection-requests:
+    post:
+      summary: Create connection request
+      description: Authenticated users can send a connection request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                from_id:
+                  type: integer
+                  description: ID of the user sending the request.
+                to_id:
+                  type: integer
+                  description: ID of the user receiving the request.
+              required:
+                - from_id
+                - to_id
+      responses:
+        "201":
+          description: Connection request created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    type: object
+                    properties:
+                      from_id:
+                        type: integer
+                      to_id:
+                        type: integer
+                  message:
+                    type: string
+                    example: "Connection Request created successfully!"
+        "403":
+          description: Unauthorized request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "User is unauthorized to make connection request!"
+        "404":
+          description: User not found or connection request doesn't exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "User with id 123 not found"
+        "409":
+          description: Connection request already exists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "Connection request already exists"
+  /connections/{from_id}/{to_id}:
+    delete:
+      summary: Delete connection
+      description: Deletes an existing connection between two users.
+      parameters:
+        - in: path
+          name: from_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user initiating the disconnect.
+        - in: path
+          name: to_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user being disconnected.
+      responses:
+        "200":
+          description: Connection deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    type: string
+                    example: null
+                  message:
+                    type: string
+                    example: "Connection of user Id 1 with user Id 2 disconnected successfully!"
+        "403":
+          description: Unauthorized to delete connection.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "User is unauthorized to perform unconnect operation!"
+        "404":
+          description: Connection does not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "Connection doesnt exist."
+
+  /connection-requests/{user_id}/pending:
+    get:
+      summary: Get pending connection requests
+      description: Retrieves a list of pending connection requests for a user.
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user retrieving pending requests.
+      responses:
+        "200":
+          description: Pending connection requests retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ConnectionFormat"
+                  message:
+                    type: string
+                    example: "Pending Requests retrieved successfully!"
+        "403":
+          description: Unauthorized to retrieve pending requests.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "User is unauthorized to retrieve pending connections!"
+        "404":
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "User with id 123 not found."
+
+  /connection-requests/{from_id}/{to_id}/{action}:
+    put:
+      summary: Respond to connection request
+      description: Allows a user to accept or reject a connection request.
+      parameters:
+        - in: path
+          name: from_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user who sent the connection request.
+        - in: path
+          name: to_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user responding to the request.
+        - in: path
+          name: action
+          required: true
+          schema:
+            type: string
+          description: The action to perform (e.g., accept or reject).
+      responses:
+        "201":
+          description: Connection request responded successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    type: object
+                    properties:
+                      new_connect:
+                        $ref: "#/components/schemas/ConnectionFormat"
+                      room_id:
+                        type: integer
+                        nullable: true
+                        example: null
+                  message:
+                    type: string
+                    example: "Connection request responded successfully!"
+        "403":
+          description: Unauthorized to respond to the connection request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "User is unauthorized to respond the connection request!"
+        "404":
+          description: Connection request does not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "Connection request doesnt exist."
+        "409":
+          description: Connection already exists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "Connection already exists."
+
+  /connection-requests/{from_id}/{to_id}:
+    delete:
+      summary: Delete connection request
+      description: Deletes a connection request between two users.
+      parameters:
+        - in: path
+          name: from_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user who sent the connection request.
+        - in: path
+          name: to_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user who received the request.
+      responses:
+        "200":
+          description: Connection request deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    type: string
+                    example: null
+                  message:
+                    type: string
+                    example: "Connection of user Id 1 with user Id 2 disconnected successfully!"
+        "403":
+          description: Unauthorized to delete the connection request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "User is unauthorized to perform unconnect operation!"
+        "404":
+          description: Connection request does not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "Connection doesnt exist."
+  /room-chats/{room_id}/receiver:
+    get:
+      summary: Get room chat receiver
+      description: Retrieves the details of the receiver in a specific room chat.
+      parameters:
+        - in: path
+          name: room_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the room chat.
+      responses:
+        '200':
+          description: Receiver details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    $ref: '#/components/schemas/UserFormat'
+                  message:
+                    type: string
+                    example: "Receiver retrieved successfully!"
+        '403':
+          description: Unauthorized access to the room chat.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "User unauthorized. User isn't part of the room chat!"
+        '404':
+          description: Room chat not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "Room Chat not found."
+
+  /chats/{room_id}:
+    get:
+      summary: Get chat messages
+      description: Retrieves the messages from a specific room chat.
+      parameters:
+        - in: path
+          name: room_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the room chat.
+      responses:
+        '200':
+          description: Messages retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChatFormat'
+                  message:
+                    type: string
+                    example: "Messages retrieved successfully!"
+        '403':
+          description: Unauthorized access to the room chat.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "User unauthorized. User isn't part of the room chat!"
+        '404':
+          description: Room chat not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "Room Chat not found."
+
+  /chats/{user_id}/inbox:
+    get:
+      summary: Get user inbox
+      description: Retrieves the inbox for a specific user, including the last messages and room IDs.
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user retrieving their inbox.
+      responses:
+        '200':
+          description: Inboxes retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/InboxFormat'
+                  message:
+                    type: string
+                    example: "Inboxes retrieved successfully!"
+        '403':
+          description: Unauthorized access to the inbox.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "User unauthorized!"
+  /feed:
+    post:
+      summary: Create a new feed
+      description: Creates a new feed with the provided content.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFeedRequest'
+      responses:
+        '201':
+          description: Feed created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    $ref: '#/components/schemas/FeedFormat'
+                  message:
+                    type: string
+                    example: "Feed created successfully!"
+        '400':
+          description: Validation error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "Validation error: Content is required."
+
+    get:
+      summary: Get feeds with pagination
+      description: Retrieves a paginated list of feeds.
+      parameters:
+        - in: query
+          name: cursor
+          required: false
+          schema:
+            type: integer
+          description: The cursor for pagination.
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+          description: The number of feeds to retrieve.
+      responses:
+        '200':
+          description: Feeds retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    type: object
+                    properties:
+                      cursor:
+                        type: integer
+                        nullable: true
+                        description: The next cursor for pagination.
+                      feeds:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/FeedFormat'
+                  message:
+                    type: string
+                    example: "Feed list retrieved successfully!"
+
+  /feed/{feed_id}:
+    delete:
+      summary: Delete a feed
+      description: Deletes a specific feed by its ID.
+      parameters:
+        - in: path
+          name: feed_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the feed to delete.
+      responses:
+        '200':
+          description: Feed deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Feed with {feed_id} deleted successfully!"
+        '400':
+          description: Prisma validation error.
+
+    put:
+      summary: Edit a feed
+      description: Updates a specific feed by its ID.
+      parameters:
+        - in: path
+          name: feed_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the feed to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFeedRequest'
+      responses:
+        '200':
+          description: Feed updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Feed with {feed_id} updated successfully!"
+        '400':
+          description: Prisma validation error.
+
+  /subscribe:
+    post:
+      summary: Subscribe for push notifications
+      description: Allows a user to subscribe to push notifications.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                subscription:
+                  type: object
+                  properties:
+                    endpoint:
+                      type: string
+                    keys:
+                      type: object
+                      properties:
+                        p256dh:
+                          type: string
+                        auth:
+                          type: string
+      responses:
+        '201':
+          description: Subscription created successfully.
+
+  /send-chat-notification:
+    post:
+      summary: Send chat notification
+      description: Sends a push notification for a chat message.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                full_name:
+                  type: string
+                message:
+                  type: string
+                room_id:
+                  type: integer
+                to_id:
+                  type: integer
+      responses:
+        '200':
+          description: Chat notification sent successfully.
+
+  /send-new-post-notification:
+    post:
+      summary: Send new post notification
+      description: Sends a push notification when a user creates a new post.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                full_name:
+                  type: string
+                username:
+                  type: string
+                user_id:
+                  type: integer
+                content:
+                  type: string
+      responses:
+        '200':
+          description: New post notification sent successfully.
+
+components:
+  schemas:
+    UserFormat:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        full_name:
+          type: string
+          nullable: true
+        work_history:
+          type: string
+          nullable: true
+        skills:
+          type: string
+          nullable: true
+        profile_photo:
+          type: string
+          nullable: true
+        connection_count:
+          type: integer
+          nullable: true
+        feeds:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              created_at:
+                type: string
+                format: date-time
+              updated_at:
+                type: string
+                format: date-time
+              content:
+                type: string
+        is_connected:
+          type: boolean
+          nullable: true
+        is_requested:
+          type: boolean
+          nullable: true
+        got_request:
+          type: boolean
+          nullable: true
+        room_id:
+          type: integer
+          nullable: true
+    ConnectionFormat:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        full_name:
+          type: string
+          nullable: true
+        profile_photo_path:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    ChatFormat:
+      type: object
+      properties:
+        id:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+        from_id:
+          type: integer
+        to_id:
+          type: integer
+        message:
+          type: string
+        room_id:
+          type: integer
+
+    InboxFormat:
+      type: object
+      properties:
+        username:
+          type: string
+        profile_photo:
+          type: string
+          nullable: true
+        room_id:
+          type: integer
+        last_message:
+          type: string
+          nullable: true
+        last_sender_id:
+          type: integer
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateFeedRequest:
+      type: object
+      properties:
+        content:
+          type: string
+          example: "This is a new post."
+
+    FeedFormat:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+            username:
+              type: string
+            full_name:
+              type: string
+              nullable: true
+            profile_photo_path:
+              type: string
+              nullable: true
