@@ -24,7 +24,7 @@ const BubbleChat: React.FC<BubbleChatProps> = ({
       }`}
       ref={chatRef ?? null}
     >
-      {showProfile ? (
+      {showProfile && text? (
         <Avatar className="h-10 w-10">
           <AvatarImage src={profile_photo ?? ""} />
           <AvatarFallback>CN</AvatarFallback>
@@ -40,7 +40,7 @@ const BubbleChat: React.FC<BubbleChatProps> = ({
         }`}
       >
         <div className="text-md break-words">{text}</div>
-        {!text && <div className="loader "></div>}
+        {!text && <div className="loader my-1"></div>}
       </div>
       <div
         className={`text-xs text-opacity-75 ${

@@ -66,13 +66,14 @@ const Chat = () => {
       });
       socket.on("updateTyping", (isTyping: boolean) => {
         setIsTyping(isTyping);
-        console.log("TYPING: ", isTyping);
       });
     }
 
     return () => {
       if (socket) {
         socket.off("receiveMessage");
+        socket.off("updateTyping");
+        socket.emit("sendTyping", roomId, false);
       }
     };
   }, [socket]);
