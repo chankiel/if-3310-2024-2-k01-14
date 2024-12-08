@@ -13,16 +13,27 @@ export class PushService {
         );
 
         try {
-            const newSubscription = await prismaClient.pushSubscription.create({
-                data: {
-                    endpoint: pushRequest.endpoint,
-                    keys: pushRequest.keys,
-                    user_id: user_id,
+
+            const totalUserSameEndpoint = await prismaClient.pushSubscription.count({
+                where: {
+                    endpoint: request.endpoint,
                 },
             });
 
-            console.log("New Subscription added: ", newSubscription);
-            return newSubscription;
+            console.log("Jumlah", totalUserSameEndpoint)
+
+            if (totalUserSameEndpoint == 0) {
+                const newSubscription = await prismaClient.pushSubscription.create({
+                    data: {
+                        endpoint: pushRequest.endpoint,
+                        keys: pushRequest.keys,
+                        user_id: user_id,
+                    },
+                });
+    
+                console.log("New Subscription added: ", newSubscription);
+                return newSubscription;
+            }
         } catch (error) {
             console.error("Error inserting subscription: ", error);
             throw new Error("Failed to insert subscription");
@@ -52,7 +63,7 @@ export class PushService {
 
     static async removeSubscriptions(invalidSubscriptions: Array<{ endpoint: string; keys: { auth: string; p256dh: string } }>) {
         const endpoints = invalidSubscriptions.map(sub => sub.endpoint);
-        
+
         await prismaClient.pushSubscription.deleteMany({
             where: {
                 endpoint: {

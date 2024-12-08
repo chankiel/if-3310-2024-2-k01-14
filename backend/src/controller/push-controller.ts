@@ -30,8 +30,6 @@ export class PushController {
     static async sendChatNotification(req: AuthRequest, res: Response, next: NextFunction) {
         const { full_name, message, room_id, to_id } = req.body;
 
-        console.log("masuk sini");
-
         const notificationPayload = {
             title: `New message from ${full_name}`,
             body: message,
@@ -67,21 +65,33 @@ export class PushController {
                     await webPush.sendNotification(subscription, JSON.stringify(notificationPayload));
                     validSubscriptions.push(subscription);
                 } catch (error: any) {
-                    if (error.statusCode === 404 || error.statusCode === 410) {
+                    console.log("Error code: ", error)
+                    if (error.statusCode === 404 || error.statusCode === 401) {
+                        console.log("invalid")
                         invalidSubscriptions.push(subscription);
                     }
                 }
             }
+
+            console.log("AW1");
 
             if (invalidSubscriptions.length > 0) {
                 await PushService.removeSubscriptions(invalidSubscriptions);
                 console.log("Removed invalid subscriptions:", invalidSubscriptions);
             }
 
+            console.log("Valid subscriptions to send notifications:", validSubscriptions);
+
             await Promise.all(
-                validSubscriptions.map((subscription) =>
-                    webPush.sendNotification(subscription, JSON.stringify(notificationPayload))
-                )
+                validSubscriptions.map(async (subscription) => {
+                    try {
+                        await webPush.sendNotification(subscription, JSON.stringify(notificationPayload));
+                        console.log("Success: ", subscription)
+                    } catch (error) {
+                        console.log("Error sini")
+                        console.error("Error sending notification to subscription:", subscription.endpoint, error);
+                    }
+                })
             );
 
             console.log("Chat notification sent successfully.");
@@ -140,9 +150,15 @@ export class PushController {
             }
 
             await Promise.all(
-                validSubscriptions.map((subscription) =>
-                    webPush.sendNotification(subscription, JSON.stringify(notificationPayload))
-                )
+                validSubscriptions.map(async (subscription) => {
+                    try {
+                        await webPush.sendNotification(subscription, JSON.stringify(notificationPayload));
+                        console.log("Success: ", subscription)
+                    } catch (error) {
+                        console.log("Error sini")
+                        console.error("Error sending notification to subscription:", subscription.endpoint, error);
+                    }
+                })
             );
 
             console.log("New post notification sent successfully.");
