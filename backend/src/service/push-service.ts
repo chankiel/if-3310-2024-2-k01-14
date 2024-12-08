@@ -30,7 +30,7 @@ export class PushService {
                         user_id: user_id,
                     },
                 });
-    
+
                 console.log("New Subscription added: ", newSubscription);
                 return newSubscription;
             }
@@ -71,6 +71,19 @@ export class PushService {
                 },
             },
         });
+    }
+
+    static async getUrlPhoto(user_id: number) {
+        const urls = await prismaClient.user.findUnique({
+            where: {
+                id: user_id
+            },
+            select: {
+                profile_photo_path: true
+            }
+        });
+
+        return urls;
     }
 
 }

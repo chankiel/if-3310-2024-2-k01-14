@@ -251,14 +251,10 @@ export class UserService {
     if (request.profile_photo) {
       const file = request.profile_photo;
 
-      
-      // Docker :
-      const uploadPath = path.join(__dirname, `../../store/profile_${id}${path.extname(file.originalname)}`);
+      const timestamp = Date.now();
+      const uploadPath = path.join(__dirname, `../../store/images/profile_${id}_${timestamp}_${path.extname(file.originalname)}`);
 
-      // const uploadPath = `../public/profile_${id}${path.extname(file.originalname)}`;
-      
-      // const uploadPath = path.join(__dirname, `../../../frontend/public/profile_${id}${path.extname(file.originalname)}`);
-      urlDB = `profile_${id}${path.extname(file.originalname)}`;
+      urlDB = `profile_${id}_${timestamp}_${path.extname(file.originalname)}`;
       console.log("Current directory:", process.cwd());
       console.log("Upload: ", uploadPath);
       console.log("URL DB: ", urlDB);
@@ -280,7 +276,7 @@ export class UserService {
     if (request.skills) updateData.skills = request.skills;
     if (url_profile_photo) updateData.profile_photo_path = urlDB;
 
-    await prismaClient.user.update({
+    const user = await prismaClient.user.update({
       where: {
         id: id,
       },
@@ -288,6 +284,6 @@ export class UserService {
       select: prismaUserFormat,
     });
 
-    return "User updated successfully";
+    return user;
   }
 }

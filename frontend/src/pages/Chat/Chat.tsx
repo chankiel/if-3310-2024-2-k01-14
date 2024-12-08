@@ -124,7 +124,8 @@ const Chat = () => {
             full_name: name,
             messages,
             room_id: roomId,
-            to_id: receiver?.id
+            to_id: receiver?.id,
+            user_id: currentId
         }),
     });
     }

@@ -4,13 +4,14 @@ import { CreateUserRequest, LoginUserRequest, UpdateUserRequest, UserFormat } fr
 import { UserService } from "../service/user-service";
 import { formatResponse } from "../utils/ResponseFormatter";
 import { ResponseError } from "../error/response-error";
+import path from "path";
 
 export class UserController {
     static async store(req: Request, res: Response, next: NextFunction) {
         try {
             const payload = getPayload(req);
             if (payload) {
-                throw new ResponseError(403,"User has already log in")
+                throw new ResponseError(403, "User has already log in")
             }
             const request: CreateUserRequest = req.body as CreateUserRequest;
             const token = await UserService.register(request);
@@ -21,28 +22,28 @@ export class UserController {
                 maxAge: 3600000,
                 path: "/",
             });
-            
-            const response = formatResponse<string>(true,token,"User Registered Successfully")
+
+            const response = formatResponse<string>(true, token, "User Registered Successfully")
 
             res.status(200).json({
                 response
             })
-        } catch(e) {
+        } catch (e) {
             next(e);
         }
     }
 
     static async index(req: Request, res: Response, next: NextFunction) {
-        try{
+        try {
             const query = typeof req.query.q === 'string' ? req.query.q : "";
 
             const userId = getPayload(req)?.userId
 
-            const users = await UserService.getAll(userId,query)
-            const response = formatResponse<UserFormat[]>(true,users,"Users retrieved successfully")
+            const users = await UserService.getAll(userId, query)
+            const response = formatResponse<UserFormat[]>(true, users, "Users retrieved successfully")
 
             res.status(200).json(response)
-        }catch(e){
+        } catch (e) {
             next(e);
         }
     }
@@ -51,12 +52,12 @@ export class UserController {
         try {
             const userId = Number(req.params.user_id);
             const user = await UserService.get(userId);
-            const response = formatResponse(true,user,"User retrieved successfully!")
+            const response = formatResponse(true, user, "User retrieved successfully!")
 
             console.log(response)
-            
+
             res.status(200).json(response)
-        } catch(e) {
+        } catch (e) {
             next(e);
         }
     }
@@ -73,13 +74,22 @@ export class UserController {
             };
 
             console.log("Request data:", request);
-    
+
             const response = await UserService.update(userId, request);
-            
+
             res.status(200).json({
                 response
             })
-        } catch(e) {
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    static async showImage(req: Request, res: Response, next: NextFunction) {
+        try {
+            const imageUrl = req.params.user_id;
+            res.sendFile(path.join(__dirname, `../../store/images/${imageUrl}`));
+        } catch (e) {
             next(e);
         }
     }

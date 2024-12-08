@@ -75,6 +75,7 @@ export default function Profile() {
   ];
 
   const handleProfileUpdate = (updatedData: ProfileData) => {
+    console.log("Updating profile data:", updatedData);
     setProfileData(updatedData);
   };
 

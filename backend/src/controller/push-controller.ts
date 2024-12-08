@@ -28,18 +28,23 @@ export class PushController {
     }
 
     static async sendChatNotification(req: AuthRequest, res: Response, next: NextFunction) {
-        const { full_name, message, room_id, to_id } = req.body;
-
-        const notificationPayload = {
-            title: `New message from ${full_name}`,
-            body: message,
-            icon: "https://some-image-url.jpg",
-            data: {
-                url: `/chat/${room_id}`,
-            }
-        };
+        const { full_name, message, room_id, to_id, user_id } = req.body;
 
         try {
+
+            const urlPhoto = await PushService.getUrlPhoto(user_id);
+
+            console.log("URL Photo: ", urlPhoto?.profile_photo_path);
+            
+            const notificationPayload = {
+                title: `New message from ${full_name}`,
+                body: message,
+                icon: `http://localhost:3000/api/show-image/perry-casino.webp`,
+                data: {
+                    url: `/chat/${room_id}`,
+                }
+            };
+
             const userSubscriptions = await PushService.getSubscriptionsForUser(to_id);
 
             console.log("Target user: ", userSubscriptions);
@@ -66,7 +71,7 @@ export class PushController {
                     validSubscriptions.push(subscription);
                 } catch (error: any) {
                     console.log("Error code: ", error)
-                    if (error.statusCode === 404 || error.statusCode === 401) {
+                    if (error.statusCode === 404 || error.statusCode === 401 || error.statusCode === 410) {
                         console.log("invalid")
                         invalidSubscriptions.push(subscription);
                     }
@@ -106,16 +111,23 @@ export class PushController {
 
         const { full_name, username, user_id, content } = req.body;
 
-        const notificationPayload = {
-            title: `${full_name}(@${username}) has a new post!`,
-            body: content,
-            icon: "https://some-image-url.jpg",
-            data: {
-                url: `/profile/${user_id}`,
-            }
-        };
-
         try {
+
+            const urlPhoto = await PushService.getUrlPhoto(user_id);
+
+            console.log("URL Photo: ", urlPhoto?.profile_photo_path);
+
+            const notificationPayload = {
+                title: `${full_name}(@${username}) has a new post!`,
+                body: content,
+                icon: `http://localhost:3000/api/show-image/perry-casino.webp`,
+                data: {
+                    url: `/profile/${user_id}`,
+                }
+            };
+
+            console.log("Notif payload: ", notificationPayload)
+
             const connections = await PushService.getConnectionsForUser(user_id);
             const validSubscriptions: Array<{ endpoint: string; keys: { auth: string; p256dh: string } }> = [];
             const invalidSubscriptions: Array<{ endpoint: string; keys: { auth: string; p256dh: string } }> = [];

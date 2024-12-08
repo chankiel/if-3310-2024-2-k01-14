@@ -6,7 +6,7 @@ export default function useNotification() {
     const { currentId, isAuthenticated } = useAuth();
 
     useEffect(() => {
-        if(isAuthenticated) {
+        if (isAuthenticated) {
             const requestNotificationPermission = async () => {
                 const permission = await Notification.requestPermission();
                 console.log("Coba notif");
@@ -19,7 +19,7 @@ export default function useNotification() {
                     console.log("Notification permission dismissed.");
                 }
             };
-    
+
             if (Notification.permission === "default") {
                 requestNotificationPermission();
             } else if (Notification.permission === "denied") {
@@ -37,8 +37,8 @@ export default function useNotification() {
                     const register = await navigator.serviceWorker.register("/sw.js");
                     console.log("Service Worker registered successfully:", register);
 
-                    const VAPID_PUBLIC_KEY = "BD9IqYnVSHYjkAHmdzM0G_JFVsAHiM8BtdkWWlOuyp9wbqW-Uwsa7fk00B4EzHC_iREvY4_BfTbVcWtoyLLR7CM";
-                    //   const VAPID_PUBLIC_KEY = process.env.REACT_APP_VAPID_PUBLIC_KEY as string;
+                    const VAPID_PUBLIC_KEY = "BDRB4CRl5Vi_fjIXQQVuDKhysUQq0Yb8YAcFvKaF4WaYBmKyH89KUnU8bOYPojbJCjhQI8it-8w9nxBCAyb9yy8";
+                    // const VAPID_PUBLIC_KEY = process.env.REACT_APP_VAPID_PUBLIC_KEY as string;
 
                     const subscription = await register.pushManager.subscribe({
                         userVisibleOnly: true,
@@ -74,7 +74,7 @@ export default function useNotification() {
             }
         };
 
-        if(isAuthenticated) handleServiceWorker();
+        if (isAuthenticated) handleServiceWorker();
     }, [currentId, isAuthenticated]);
 
 };

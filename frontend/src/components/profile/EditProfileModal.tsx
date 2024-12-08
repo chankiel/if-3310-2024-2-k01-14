@@ -54,6 +54,8 @@ export default function EditProfileModal({ isOpen, onClose, initialData, user_id
     
             const data = await response.json();
             console.log("Profile updated:", data);
+
+            console.log()
     
             onUpdate({
                 ...initialData,
@@ -61,7 +63,7 @@ export default function EditProfileModal({ isOpen, onClose, initialData, user_id
                 full_name: data.full_name || name,
                 work_history: data.work_history || experiences,
                 skills: data.skills || skills,
-                profile_photo: data.profile_photo_path || initialData.profile_photo,
+                profile_photo: data.profile_photo || initialData.profile_photo,
             });
 
             onClose();

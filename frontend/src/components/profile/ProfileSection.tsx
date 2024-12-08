@@ -2,7 +2,7 @@ import { useState } from "react";
 import EditProfileModal from "./EditProfileModal";
 import { ProfileData } from "../../pages/Profile";
 import { Link } from "react-router-dom";
-import { API_PHOTO, API_URL } from "../../constant";
+import { API_URL } from "../../constant";
 
 interface ProfileDataProps {
     data: ProfileData;
@@ -25,9 +25,6 @@ export default function ProfileSection({ data, isAuthenticated, currentId, user_
         setIsModalOpen(false);
     }
 
-    const imageUrl = data.profile_photo ? `${API_PHOTO}/store/${data.profile_photo}` : "/perry-casino.webp";
-    console.log(imageUrl)
-
     return (
         <>
             <section className="relative flex flex-col rounded-lg mb-4 border bg-white overflow-hidden pb-4" >
@@ -38,7 +35,7 @@ export default function ProfileSection({ data, isAuthenticated, currentId, user_
                         className="w-full h-48 object-cover sticky"
                     />
                     <img
-                        src={imageUrl}
+                        src={`${API_URL}/show-image/${data.profile_photo}`}
                         alt="Profile"
                         className="w-40 h-40 rounded-full border-4 border-white relative left-8"
                         style={{ marginTop: '-110px' }}
