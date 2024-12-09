@@ -281,12 +281,14 @@ export class UserService {
         },
       },
       select: {
+        id: true,
         full_name: true,
         profile_photo_path: true,
       },
     });
 
     const formattedRecommendations = recommendations.map(user => ({
+      id: user.id,
       name: user.full_name!,
       profile_photo: user.profile_photo_path!,
     }));
@@ -303,6 +305,7 @@ export class UserService {
           },
         },
         select: {
+          id: true,
           full_name: true,
           profile_photo_path: true,
         },
@@ -310,6 +313,7 @@ export class UserService {
       });
 
       const formattedAdditionalUsers = additionalUsers.map(user => ({
+        id: user.id,
         name: user.full_name!,
         profile_photo: user.profile_photo_path!,
       }));
