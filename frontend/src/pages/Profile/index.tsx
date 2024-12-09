@@ -35,14 +35,6 @@ export interface RecommendationData {
   recommendations: UserRecommendation[];
 }
 
-interface Connection {
-  id: number;
-  username: string;
-  full_name: string;
-  profile_photo_path: string;
-  created_at: string;
-}
-
 export default function Profile() {
   const { isAuthenticated, currentId } = useAuth();
   const { user_id } = useParams<{ user_id: string }>();
@@ -50,29 +42,6 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isConnected, setIsConnected] = useState(false);
   // const [recommendations, setRecommendations] = useState<RecommendationData | undefined>(undefined);
-
-  const recommendations: UserRecommendation[] = [
-    {
-      name: "Francesco Michael Kusuma",
-      profile_photo: "/perry-casino.webp",
-    },
-    {
-      name: "John Doe",
-      profile_photo: "/perry-casino.webp",
-    },
-    {
-      name: "Jane Smith",
-      profile_photo: "/perry-casino.webp",
-    },
-    {
-      name: "Alice Johnson",
-      profile_photo: "/perry-casino.webp",
-    },
-    {
-      name: "Bob Brown",
-      profile_photo: "/perry-casino.webp",
-    },
-  ];
 
   const handleProfileUpdate = (updatedData: ProfileData) => {
     console.log("Updating profile data:", updatedData);
@@ -143,9 +112,7 @@ export default function Profile() {
           </div>
 
           <div className="max-w-xs">
-            <RecommendationSection
-              recommendations={recommendations}
-            />
+            <RecommendationSection />
           </div>
         </div>
       </main>

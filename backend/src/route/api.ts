@@ -13,6 +13,14 @@ const apiRouter = express.Router();
 
 apiRouter.route("/profile/:user_id(\\d+)").put(upload.single("profile_photo"), UserController.update);
 
+// apiRouter.get(
+//   "/recommendations/:user_id(\\d+)",
+//   upload.none(),
+//   authMiddleware,
+//   UserController.showRecommendations
+// );
+
+
 /*----------------- Connections -----------------*/
 apiRouter.post(
   "/connection-requests",

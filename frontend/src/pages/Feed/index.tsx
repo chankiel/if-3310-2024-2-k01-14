@@ -301,7 +301,7 @@ export default function Feed() {
                 <div ref={loadMoreRef} />
             </section>
             <div className="max-w-sm">
-                <RecommendationSection recommendations={recommendations} />
+                <RecommendationSection/>
             </div>
 
         <CreatePostModal isOpen={isModalOpen} onClose={handleCloseModal} onAddFeed={handleNewPost}/>

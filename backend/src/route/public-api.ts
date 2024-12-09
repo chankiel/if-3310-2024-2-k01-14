@@ -18,6 +18,10 @@ publicRouter.get("/profile/",UserController.index)
 publicRouter.get("/profile/self",authMiddleware,AuthController.self)
 publicRouter.get("/profile/:user_id(\\d+)",UserController.show)
 publicRouter.get("/show-image/:user_id",UserController.showImage)
+publicRouter.get(
+    "/recommendations/:user_id(\\d+)",
+    UserController.showRecommendations
+  );
 
 /*----------------- Connections -----------------*/
 publicRouter.get("/connections/:user_id(\\d+)",ConnectionController.indexConnection)
