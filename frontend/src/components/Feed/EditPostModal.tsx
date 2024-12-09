@@ -1,18 +1,17 @@
 import { useState, useEffect } from "react";
-// import { API_URL } from "../../constant";
+import { useAuth } from "../../contexts/AuthContext";
 import FeedApi from "../../api/feed-api";
 
 interface EditPostModalProps {
     isOpen: boolean;
     onClose: () => void;
     feed_id: number;
-    user_id: number;
-    username: string;
     content: string;
     onUpdate: (feed_id: number, updatedContent: string) => void;
 }
 
-export default function EditPostModal({ isOpen, onClose, feed_id, username, content, onUpdate }: EditPostModalProps) {
+export default function EditPostModal({ isOpen, onClose, feed_id, content, onUpdate }: EditPostModalProps) {
+    const {username, profile_photo } = useAuth();
     const [postContent, setPostContent] = useState(content);
     console.log("debug")
     console.log(content)
@@ -55,7 +54,11 @@ export default function EditPostModal({ isOpen, onClose, feed_id, username, cont
                     <div className="flex items-center w-full mb-4 px-2 py-2 bg-white">
                         <div className="w-1/7">
                             <img
-                                src="/perry-casino.webp"
+                                src={
+                                    profile_photo
+                                        ? profile_photo
+                                        : "/perry-casino.webp"
+                                }
                                 alt="Profile"
                                 className="w-14 h-14 rounded-full"
                             />

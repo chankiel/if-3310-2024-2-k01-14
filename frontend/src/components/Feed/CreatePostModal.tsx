@@ -9,7 +9,7 @@ interface CreatePostModalProps {
 }
 
 export default function CreatePostModal({ isOpen, onClose, onAddFeed}: CreatePostModalProps) {
-    const { name, username, currentId } = useAuth();
+    const { name, username, currentId, profile_photo } = useAuth();
     const [postContent, setPostContent] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
     const [responseMessage, setResponseMessage] = useState("");
@@ -62,7 +62,6 @@ export default function CreatePostModal({ isOpen, onClose, onAddFeed}: CreatePos
                 setPostContent("");
                 onAddFeed(data.feeds);
                 onClose();
-                // window.location.reload();
             } else {
                 setIsSuccess(false);
                 setResponseMessage(data.message);
@@ -81,13 +80,17 @@ export default function CreatePostModal({ isOpen, onClose, onAddFeed}: CreatePos
                     <div className="flex items-center w-full mb-4 px-2 py-2 bg-white">
                         <div className="w-1/7">
                             <img
-                                src="/perry-casino.webp"
+                                src={
+                                    profile_photo
+                                        ? profile_photo
+                                        : "/perry-casino.webp"
+                                }
                                 alt="Profile"
                                 className="w-14 h-14 rounded-full"
                             />
                         </div>
                         <div className="font-semibold text-base ml-4">
-                            Francesco Michael Kusuma
+                            {username}
                         </div>
                     </div>
                     <form onSubmit={handlePost}>

@@ -29,12 +29,11 @@ import {
 
 
 export default function Feed() {
-    const { currentId } = useAuth();
+    const { currentId, profile_photo } = useAuth();
     const { isAuthenticated } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const loadMoreRef = useRef<HTMLDivElement | null>(null);    
     const queryClient = useQueryClient();
-    const {username} = useAuth();
     const [editContent, setEditContent] = useState("")
     const [isModalEdit, setIsModalEdit] = useState(false);
     const [feedIdEdit, setFeedIdEdit] = useState(0);
@@ -188,28 +187,28 @@ export default function Feed() {
         return <Navigate to="/login" replace />;
     }
 
-    const recommendations: UserRecommendation[] = [
-        {
-            name: "Francesco Michael Kusuma",
-            profile_photo: "/perry-casino.webp",
-        },
-        {
-            name: "John Doe",
-            profile_photo: "/perry-casino.webp",
-        },
-        {
-            name: "Jane Smith",
-            profile_photo: "/perry-casino.webp",
-        },
-        {
-            name: "Alice Johnson",
-            profile_photo: "/perry-casino.webp",
-        },
-        {
-            name: "Bob Brown",
-            profile_photo: "/perry-casino.webp",
-        },
-    ];
+    // const recommendations: UserRecommendation[] = [
+    //     {
+    //         name: "Francesco Michael Kusuma",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    //     {
+    //         name: "John Doe",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    //     {
+    //         name: "Jane Smith",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    //     {
+    //         name: "Alice Johnson",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    //     {
+    //         name: "Bob Brown",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    // ];
     console.log(data)
 
     return (
@@ -219,7 +218,11 @@ export default function Feed() {
                 <div className="flex items-center w-full mb-4 border rounded-lg px-8 py-6 bg-white">
                     <div className="w-1/7">
                         <img
-                            src="/perry-casino.webp"
+                            src={
+                                profile_photo
+                                    ? profile_photo
+                                    : "/perry-casino.webp"
+                            }
                             alt="Profile"
                             className="w-14 h-14 rounded-full"
                         />
@@ -329,7 +332,7 @@ export default function Feed() {
             </RightSidebar>
 
         <CreatePostModal isOpen={isModalOpen} onClose={handleCloseModal} onAddFeed={handleNewPost}/>
-        <EditPostModal isOpen={isModalEdit} onClose={handleCloseModalEdit} feed_id={feedIdEdit} user_id={currentId} username={username} content={editContent} onUpdate={handleUpdateFeed} />
+        <EditPostModal isOpen={isModalEdit} onClose={handleCloseModalEdit} feed_id={feedIdEdit} content={editContent} onUpdate={handleUpdateFeed} />
     </>
     );
 }
