@@ -11,10 +11,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useNavigate } from "react-router-dom";
 import { API_PHOTO } from "../../constant";
+import { useState } from "react";
 
 const Header: React.FC = () => {
-  const { isAuthenticated, logout, username, currentId, profile_photo } =
+  const { isAuthenticated, logout, username, currentId, profile_photo, name } =
     useAuth();
+  const [isOpen, setIsOpen] = useState(false); 
   const location = useLocation();
   const navigate = useNavigate();
   const handleLogout = async () => {
@@ -91,8 +93,10 @@ const Header: React.FC = () => {
             ))}
 
             {isAuthenticated ? (
-              <li className="flex flex-col items-center relative">
-                <Popover>
+              <li className="flex flex-col items-center relative md:min-w-20">
+                <Popover open={isOpen} onOpenChange={(open)=>{
+                  setIsOpen(open);
+                }}>
                   <PopoverTrigger>
                     <Avatar className="h-7 w-7">
                       <AvatarImage src={`${API_PHOTO}/${profile_photo}`} alt="profile-photo"/>
@@ -107,18 +111,20 @@ const Header: React.FC = () => {
                     </p>
                   </PopoverTrigger>
                   <PopoverContent align="end" sideOffset={15}>
-                    <div className="flex gap-2 mb-4">
+                    <div className="flex gap-2 mb-4 items-center">
                       <Avatar className="h-20 w-20">
                         <AvatarImage src={`${API_PHOTO}/${profile_photo}`} alt="profile-photo"/>
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
                       <div className="text-left">
-                        <h1 className="font-medium text-lg">{username}</h1>
+                        <h1 className="font-medium text-xl">{name}</h1>
+                        <h1 className="font-medium text-gray-500">{username}</h1>
                       </div>
                     </div>
                     <Link
                       to={`/profile/${currentId}`}
                       className="block mb-3 text-linkin-blue font-semibold border border-linkin-blue rounded-xl px-2 text-center transition-all duration-100 ease-in hover:ring-linkin-dark-blue hover:ring-2 hover:bg-linkin-hoverblue"
+                      onClick={()=> setIsOpen(false)}
                     >
                       View Profile
                     </Link>

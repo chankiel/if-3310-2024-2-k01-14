@@ -4,6 +4,17 @@ import { ProfileData } from "../../pages/Profile";
 import { Link } from "react-router-dom";
 import { API_URL } from "../../constant";
 import { ClockIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 
 interface ProfileDataProps {
   data: ProfileData;
@@ -85,25 +96,50 @@ export default function ProfileSection({
           ) : isAuthenticated && isConnected ? (
             // Authenticated and connected
             <>
-              <button
-                className="border border-[rgb(10,102,194)] rounded-2xl py-1 px-4 font-semibold flex items-center text-[rgb(10, 102, 194)]"
-                onClick={() => handleConnect(user_id, true)}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="24px"
-                  viewBox="0 -960 960 960"
-                  width="24px"
-                  fill="rgb(10, 102, 194)"
-                  className="mr-1"
-                >
-                  <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
-                </svg>
-                <span className="text-[rgb(10, 102, 194)]">Connected</span>
-              </button>
+              <AlertDialog>
+                <AlertDialogTrigger>
+                  <button className="border border-[rgb(10,102,194)] rounded-2xl py-2 px-4 font-semibold flex items-center text-[rgb(10, 102, 194)] hover:bg-gray-200 transition-colors duration-150 ease-in-out">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="24px"
+                      viewBox="0 -960 960 960"
+                      width="24px"
+                      fill="rgb(10, 102, 194)"
+                      className="mr-1"
+                    >
+                      <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
+                    </svg>
+                    <span className="text-[rgb(10, 102, 194)]">Connected</span>
+                  </button>
+                  {/* onClick={() => handleConnect(user_id, true)} */}
+                </AlertDialogTrigger>
+                <AlertDialogContent className="lg:w-1/2 w-3/4 rounded-lg">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-xl font-semibold py-2 border-b-2 border-b-linkin-border">
+                      Delete Connection
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="text-md text-black pb-2 border-b-2 border-b-linkin-border">
+                      Are you sure you want to delete this connection? This
+                      action cannot be undone and will remove the connection
+                      permanently.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="button-blue text-lg">
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => handleConnect(user_id, true)} // Trigger the delete action here
+                      className="button-white bg-white text-lg"
+                    >
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
               <Link
                 to={`/chat/${room_id}`}
-                className="border border-[rgb(10,102,194)] rounded-2xl ml-2 py-1 px-3 font-semibold flex items-center text-[rgb(10, 102, 194)]"
+                className="border border-[rgb(10,102,194)] rounded-2xl ml-2 py-1 px-3 font-semibold flex items-center text-[rgb(10, 102, 194)] hover:bg-gray-200 transition-colors duration-150 ease-in-out"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -123,7 +159,7 @@ export default function ProfileSection({
             // Authenticated but not connected
             <>
               <button
-                className="text-white rounded-2xl py-1 px-4 font-semibold flex items-center"
+                className="text-white rounded-2xl py-1 px-4 font-semibold flex items-center hover:bg-gray-200 transition-colors duration-150 ease-in-out"
                 style={{ backgroundColor: "rgb(10, 102, 194)" }}
                 onClick={() => handleConnect(user_id, hasRequested)}
                 disabled={hasRequested}

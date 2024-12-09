@@ -24,8 +24,8 @@ const Sidebar: React.FC = () => {
         <div className="mt-10 px-5 py-4 w-[230px]">
           {isAuthenticated ? (
             <>
-              <h1 className="max-w-full text-xl font-semibold leading-8 whitespace-nowrap overflow-ellipsis overflow-hidden">{username}</h1>
-              <h2 className="text-md text-linkin-gray">{name}</h2>
+              <h1 className="max-w-full text-xl font-semibold leading-8 whitespace-nowrap overflow-ellipsis overflow-hidden">{name}</h1>
+              <h2 className="text-md text-linkin-gray">{username}</h2>
             </>
           ) : (
             <h1 className="text-xl">Guest</h1>
