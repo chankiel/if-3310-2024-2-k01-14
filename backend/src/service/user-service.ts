@@ -101,13 +101,17 @@ export class UserService {
     if (totalUserSameEmail != 0) {
       throw new ResponseError(400, "Email is already registered", { email: "Email is already registered" });
     }
-
     request.password = await bcrypt.hash(request.password, 10);
+    const requestFormat = {
+      ...request,
+      password_hash: request.password,
+      password: undefined,
+    }
 
     console.log("Register: ", request);
 
     const user = await prismaClient.user.create({
-      data: request,
+      data: requestFormat,
     });
 
     const payload = {

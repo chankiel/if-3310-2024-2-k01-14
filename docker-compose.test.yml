@@ -22,7 +22,7 @@ services:
   db:
     image: nicholasliem/wbd-m2-db-image:latest
     ports:
-      - "5432:5432"
+      - "5433:5433"
     networks:
       - app_network
 
