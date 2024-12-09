@@ -50,11 +50,6 @@ const Header: React.FC = () => {
       name: "Chat",
       icon: <ChatIcon />,
     },
-    {
-      path: "/notifications",
-      name: "Notification",
-      icon: <NotificationIcon />,
-    },
   ];
 
   const publicPaths = [
@@ -102,7 +97,7 @@ const Header: React.FC = () => {
                 <Popover>
                   <PopoverTrigger>
                     <Avatar className="h-7 w-7">
-                      <AvatarImage src={`${API_PHOTO}/${profile_photo}`} />
+                      <AvatarImage src={`${API_PHOTO}/${profile_photo}`} alt="profile-photo"/>
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
 
@@ -116,7 +111,7 @@ const Header: React.FC = () => {
                   <PopoverContent align="end" sideOffset={15}>
                     <div className="flex gap-2 mb-4">
                       <Avatar className="h-20 w-20">
-                        <AvatarImage src={`${API_PHOTO}/${profile_photo}`} />
+                        <AvatarImage src={`${API_PHOTO}/${profile_photo}`} alt="profile-photo"/>
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
                       <div className="text-left">

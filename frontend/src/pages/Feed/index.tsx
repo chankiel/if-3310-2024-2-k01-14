@@ -189,30 +189,6 @@ export default function Feed() {
         return <Navigate to="/login" replace />;
     }
 
-    // const recommendations: UserRecommendation[] = [
-    //     {
-    //         name: "Francesco Michael Kusuma",
-    //         profile_photo: "/perry-casino.webp",
-    //     },
-    //     {
-    //         name: "John Doe",
-    //         profile_photo: "/perry-casino.webp",
-    //     },
-    //     {
-    //         name: "Jane Smith",
-    //         profile_photo: "/perry-casino.webp",
-    //     },
-    //     {
-    //         name: "Alice Johnson",
-    //         profile_photo: "/perry-casino.webp",
-    //     },
-    //     {
-    //         name: "Bob Brown",
-    //         profile_photo: "/perry-casino.webp",
-    //     },
-    // ];
-    console.log(data)
-
     return (
         <>
             <Sidebar />
@@ -220,7 +196,7 @@ export default function Feed() {
                 <div className="flex items-center w-full mb-4 border rounded-lg px-8 py-6 bg-white">
                     <div className="w-1/7">
                         <Avatar>
-                            <AvatarImage src={`${API_PHOTO}/${profile_photo}`} />
+                            <AvatarImage src={`${API_PHOTO}/${profile_photo}`} alt="profile-photo"/>
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                     </div>
@@ -247,7 +223,7 @@ export default function Feed() {
                                     <div className="flex items-center w-full pb-2">
                                         <div className="w-1/7 pl-4">
                                             <Avatar>
-                                                <AvatarImage src={`${API_PHOTO}/${feed.user.profile_photo_path}`} />
+                                                <AvatarImage src={`${API_PHOTO}/${feed.user.profile_photo_path}`} alt="profile-photo"/>
                                                 <AvatarFallback>CN</AvatarFallback>
                                             </Avatar>
                                         </div>

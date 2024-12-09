@@ -22,7 +22,7 @@ export default function UserRecommendations({
       >
         <Link to={`/profile/${user.id}`}>
         <Avatar>
-          <AvatarImage src={`${API_PHOTO}/${user.profile_photo}`}/>
+          <AvatarImage src={`${API_PHOTO}/${user.profile_photo}`} alt="profile-photo"/>
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         </Link>

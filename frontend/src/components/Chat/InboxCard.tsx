@@ -30,7 +30,7 @@ const InboxCard = ({
       } border-linkin-lightgray hover:bg-gray-200 transition-colors duration-150 ease-in-out`}
     >
       <Avatar className="h-16 w-16">
-        <AvatarImage src={`${API_PHOTO}/${profile_photo}`}/>
+        <AvatarImage src={`${API_PHOTO}/${profile_photo}`} alt="profile-photo"/>
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
       <div className="w-full ml-3">

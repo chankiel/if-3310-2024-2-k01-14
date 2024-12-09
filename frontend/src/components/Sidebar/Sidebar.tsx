@@ -17,7 +17,7 @@ const Sidebar: React.FC = () => {
             className="w-full h-full object-cover"
           />
           <Avatar className="h-20 w-20 absolute bottom-[-80%] left-5">
-            <AvatarImage src={`${API_PHOTO}/${profile_photo}`}/>
+            <AvatarImage src={`${API_PHOTO}/${profile_photo}`} alt="profile-photo"/>
             <AvatarFallback>GUEST</AvatarFallback>
           </Avatar>
         </div>

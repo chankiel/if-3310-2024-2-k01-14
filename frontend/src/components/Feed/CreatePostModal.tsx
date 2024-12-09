@@ -82,7 +82,7 @@ export default function CreatePostModal({ isOpen, onClose, onAddFeed }: CreatePo
                     <div className="flex items-center w-full mb-4 px-2 py-2 bg-white">
                         <div className="w-1/7">
                             <Avatar>
-                                <AvatarImage src={`${API_PHOTO}/${profile_photo}`} />
+                                <AvatarImage src={`${API_PHOTO}/${profile_photo}`} alt="profile-photo"/>
                                 <AvatarFallback>CN</AvatarFallback>
                             </Avatar>
                         </div>
