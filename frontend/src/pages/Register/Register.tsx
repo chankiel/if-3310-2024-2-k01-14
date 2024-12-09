@@ -73,7 +73,7 @@ export default function Register() {
           setErrorFullnameMessage(data.errors.full_name);
           setResponseMessage(data.message);
         }
-      } catch (err) {
+      } catch (err: any) {
         setIsSuccess(false);
         setResponseMessage("An error occurred. Please try again.");
         setErrorUsernameMessage(err.errors.username);

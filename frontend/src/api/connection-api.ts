@@ -22,7 +22,7 @@ class ConnectionApi {
     } catch (error) {
       throw (error as any)?.response?.data;
     }
-  }
+}
 
   static async getConnections(user_id: number): Promise<ConnectionFormat[]> {
     try {

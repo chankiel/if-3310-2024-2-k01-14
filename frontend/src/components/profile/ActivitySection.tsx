@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Feed } from "../../pages/Profile";
 import CreatePostModal from "../Feed/CreatePostModal";
+import moment from "moment";
 
 interface ActivitySectionProps {
     username: string;
@@ -12,6 +13,7 @@ interface ActivitySectionProps {
 export default function ActivitySection({ username, activity, currentId, user_id }: ActivitySectionProps) {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [latestActivity, setLatestActivity] = useState<Feed | null>(activity);
 
     const handleAddPostClick = () => {
         setIsModalOpen(true);
@@ -21,6 +23,9 @@ export default function ActivitySection({ username, activity, currentId, user_id
         setIsModalOpen(false);
     }
 
+    const handleNewPost = (newFeed: Feed) => {
+        setLatestActivity(newFeed);
+    }
     return (
         <>
             <section className="bg-white mt-2 p-4 pl-8 rounded-lg border">
@@ -34,18 +39,18 @@ export default function ActivitySection({ username, activity, currentId, user_id
                     }
                 </div>
                 <div className="flex flex-col">
-                    {activity ? (
+                    {latestActivity ? (
                         <>
                             <div className="flex flex-col text-xs text-gray-500 py-2">
                                 <strong>
-                                    <span> {username} posted this • {activity.created_at}</span>
-                                    <span className="block"> {username} updated this • {activity.updated_at}</span>
+                                    <span> {username} posted this • {moment(latestActivity.created_at).fromNow()}</span>
+                                    <span className="block"> {username} updated this • {moment(latestActivity.updated_at).fromNow()}</span>
                                 </strong>
                             </div>
                             <div
-                                className="resize-none rounded"
+                                className="resize-none rounded break-words"
                             >
-                                {activity.content}
+                                {latestActivity.content}
                             </div>
                         </>
                     ) : (
@@ -61,6 +66,7 @@ export default function ActivitySection({ username, activity, currentId, user_id
             <CreatePostModal
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
+                onAddFeed={handleNewPost}
             />
         </>
     );
