@@ -7,7 +7,7 @@ import RecommendationSection from "./RecommendationSection";
 import SkillsSection from "./SkillsSection";
 import UserRecommendations from "./UserRecommendations";
 
-export{
+export {
     ActivitySection,
     ConnectButton,
     EditProfileModal,

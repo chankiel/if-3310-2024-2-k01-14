@@ -2,8 +2,9 @@ import { useState } from "react";
 import EditProfileModal from "./EditProfileModal";
 import { ProfileData } from "../../pages/Profile";
 import { Link } from "react-router-dom";
-import { API_URL } from "../../constant";
+import { API_PHOTO, API_URL } from "../../constant";
 import { ClockIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface ProfileDataProps {
   data: ProfileData;
@@ -38,9 +39,11 @@ export default function ProfileSection({
     setIsModalOpen(false);
   };
 
+  console.log(data.profile_photo)
+
   return (
     <>
-      <section className="relative flex flex-col rounded-lg mb-4 border bg-white overflow-hidden pb-4">
+      <div className="relative flex flex-col rounded-lg mb-4 border bg-white overflow-hidden pb-4 min-w-full">
         <div>
           <img
             src="/bg-image-profile.png"
@@ -48,7 +51,7 @@ export default function ProfileSection({
             className="w-full h-48 object-cover sticky"
           />
           <img
-            src={`${API_URL}/show-image/${data.profile_photo}`}
+            src={data.profile_photo ? `${API_PHOTO}/${data.profile_photo}` : "/perry-casino.webp"}
             alt="Profile"
             className="w-40 h-40 rounded-full border-4 border-white relative left-8"
             style={{ marginTop: "-110px" }}
@@ -70,7 +73,9 @@ export default function ProfileSection({
         <div className="ml-4 p-4">
           <h1 className="text-2xl font-bold">{data.full_name}</h1>
           <h1 className="text-sm font-semibold">{data.username}</h1>
-          <p className="text-gray-500">{data.connection_count} connections</p>
+          <a href={`/connections/${user_id}`} className="text-gray-500 hover:text-blue-500 hover:underline">
+            <p>{data.connection_count} connections</p>
+          </a>
         </div>
         <div className="ml-4 h-12 pt-2 text-base pl-4 flex">
           {currentId === user_id ? (
@@ -152,7 +157,7 @@ export default function ProfileSection({
             </Link>
           )}
         </div>
-      </section>
+      </div>
 
       <EditProfileModal
         isOpen={isModalOpen}

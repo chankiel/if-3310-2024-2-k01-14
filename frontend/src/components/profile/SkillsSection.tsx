@@ -5,7 +5,7 @@ interface SkillsSectionProps {
 export default function SkillsSection({ skills }: SkillsSectionProps) {
     return (
         <>
-            <section className="bg-white mt-2 p-4 pl-8 rounded-lg border">
+            <div className="bg-white mt-2 p-4 pl-8 rounded-lg border">
                 <span className="text-xl font-semibold">Skills</span>
                 <div className="pt-1">
                     {skills ? (
@@ -18,7 +18,7 @@ export default function SkillsSection({ skills }: SkillsSectionProps) {
                         </div>
                     )}
                 </div>
-            </section>
+            </div>
         </>
     );
 }

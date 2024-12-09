@@ -30,19 +30,23 @@ const InboxCard = ({
       } border-linkin-lightgray hover:bg-gray-200 transition-colors duration-150 ease-in-out`}
     >
       <Avatar className="h-16 w-16">
-        <AvatarImage src={`${API_PHOTO}/${profile_photo}`} alt="profile-photo"/>
+        <AvatarImage
+          src={`${API_PHOTO}/${profile_photo}`}
+          alt="profile-photo"
+        />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
-      <div className="w-full ml-3">
+      <div className="w-3/4 ml-3">
         <h2 className="text-lg font-bold">{username}</h2>
-        <p className="text-gray-500">
+        <p className="text-gray-500 break-words truncate w-full">
           {isLastSender && "You: "}
           {last_message}
         </p>
       </div>
-        <p className="font-semibold text-gray-500"> {formatDate(updated_at)}</p>
-
-      <div className="flex items-center p-4 gap-4"></div>
+      <p className="font-semibold text-gray-500">
+        {" "}
+        {formatDate(updated_at)}
+      </p>
     </Link>
   );
 };

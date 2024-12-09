@@ -31,6 +31,12 @@ const Chat = () => {
 
   const observer = useRef<IntersectionObserver | null>(null);
 
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth", block:"start" });
+    }
+  };
+
   useEffect(() => {
     const fetchReceiver = async () => {
       try {
@@ -39,6 +45,7 @@ const Chat = () => {
           const msg = await ChatApi.getMessages(roomId);
           setReceiver(res);
           setMessages(msg);
+          scrollToBottom();
         }
       } catch (error) {
         console.error(error);
@@ -93,6 +100,7 @@ const Chat = () => {
     const currentRef = messagesEndRef.current;
     if (currentRef) observer.current.observe(currentRef);
 
+  
     return () => {
       if (currentRef && observer.current)
         observer.current.unobserve(currentRef);
@@ -114,30 +122,25 @@ const Chat = () => {
       ]);
       setNewMessage("");
       socket.emit("sendTyping", roomId, false);
-      scrollToBottom();
-
+      
       fetch(`${API_URL}/send-chat-notification`, {
         method: "POST",
         credentials: "include",
         headers: {
-            "Content-Type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            full_name: name,
-            messages,
-            room_id: roomId,
-            to_id: receiver?.id,
-            user_id: currentId
+          full_name: name,
+          messages,
+          room_id: roomId,
+          to_id: receiver?.id,
+          user_id: currentId
         }),
-    });
+      });
+      scrollToBottom();
     }
   };
 
-  const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
 
   if (loading) return null;
 
@@ -244,6 +247,12 @@ const Chat = () => {
               setNewMessage(e.target.value);
             }}
             placeholder="Type a message..."
+            onKeyDown={(e)=>{
+              if(e.key === "Enter" && !e.shiftKey){
+                e.preventDefault();
+                handleSendMessage();
+              }
+            }}
           />
           <button
             disabled={!newMessage.trim()}

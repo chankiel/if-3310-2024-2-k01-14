@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Feed } from "../../pages/Profile";
 import CreatePostModal from "../Feed/CreatePostModal";
 import moment from "moment";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface ActivitySectionProps {
     username: string;
@@ -28,7 +29,7 @@ export default function ActivitySection({ username, activity, currentId, user_id
     }
     return (
         <>
-            <section className="bg-white mt-2 p-4 pl-8 rounded-lg border">
+            <div className="bg-white mt-2 p-4 pl-8 rounded-lg border">
                 <div className="flex justify-between items-center">
                     <span className="text-xl font-semibold">Latest Activity</span>
                     {currentId === user_id &&
@@ -61,7 +62,7 @@ export default function ActivitySection({ username, activity, currentId, user_id
                         </div>
                     )}
                 </div>
-            </section>
+            </div>
 
             <CreatePostModal
                 isOpen={isModalOpen}
