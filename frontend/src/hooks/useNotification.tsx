@@ -37,8 +37,8 @@ export default function useNotification() {
                     const register = await navigator.serviceWorker.register("/sw.js");
                     console.log("Service Worker registered successfully:", register);
 
-                    const VAPID_PUBLIC_KEY = "BDRB4CRl5Vi_fjIXQQVuDKhysUQq0Yb8YAcFvKaF4WaYBmKyH89KUnU8bOYPojbJCjhQI8it-8w9nxBCAyb9yy8";
-                    // const VAPID_PUBLIC_KEY = process.env.REACT_APP_VAPID_PUBLIC_KEY as string;
+                    // const VAPID_PUBLIC_KEY = "BDRB4CRl5Vi_fjIXQQVuDKhysUQq0Yb8YAcFvKaF4WaYBmKyH89KUnU8bOYPojbJCjhQI8it-8w9nxBCAyb9yy8";
+                    const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY as string;
 
                     const subscription = await register.pushManager.subscribe({
                         userVisibleOnly: true,

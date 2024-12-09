@@ -4,7 +4,7 @@ export type ConnectionFormat = {
     full_name: string | null;
     profile_photo_path: string | null;
     created_at: Date;
-    room_id?: number;
+    room_id?: number | null;
 };
 
 export type ConnectionReqRequest = {

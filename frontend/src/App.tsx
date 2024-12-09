@@ -16,8 +16,8 @@ export default function App() {
         rtl={false}
         pauseOnFocusLoss
         draggable
-        pauseOnHover
-        hideProgressBar={false}
+        pauseOnHover={false}
+        hideProgressBar={true}
         theme="light"
         bodyClassName={"text-black gap-2 h-20"}
         className={"border-linkin-border"}

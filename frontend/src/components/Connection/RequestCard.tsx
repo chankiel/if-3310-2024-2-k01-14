@@ -1,3 +1,4 @@
+import { API_PHOTO } from "../../constant";
 import { timeAgo } from "../../lib/utils";
 import {
   AlertDialog,
@@ -35,7 +36,7 @@ const RequestCard = ({
   return (
     <div className={`flex p-5 ${!isFirst && "border-t-2"} border-linkin-lightgray`}>
       <Avatar className="h-16 w-16">
-        <AvatarImage src={profile_photo_path ?? ""} />
+        <AvatarImage src={`${API_PHOTO}/${profile_photo_path}`}/>
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
       <div className="w-full flex flex-col sm:flex-row sm:justify-between">

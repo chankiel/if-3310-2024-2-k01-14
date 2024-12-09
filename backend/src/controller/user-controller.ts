@@ -62,6 +62,20 @@ export class UserController {
         }
     }
 
+    static async showRecommendations(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userId = Number(req.params.user_id);
+            const user = await UserService.getRecommendations(userId);
+            const response = formatResponse(true, user, "User recommendations retrieved successfully!")
+
+            console.log(response)
+
+            res.status(200).json(response)
+        } catch (e) {
+            next(e);
+        }
+    }
+
     static async update(req: Request, res: Response, next: NextFunction) {
         try {
             const userId = Number(req.params.user_id);
@@ -75,11 +89,13 @@ export class UserController {
 
             console.log("Request data:", request);
 
-            const response = await UserService.update(userId, request);
+            const updatedUser = await UserService.update(userId, request);
 
-            res.status(200).json({
-                response
-            })
+            const response = formatResponse(true, updatedUser, "User updated successfully!")
+
+            console.log(response)
+
+            res.status(200).json(response)
         } catch (e) {
             next(e);
         }

@@ -50,9 +50,9 @@ export class ConnectionController {
         storeRequest
       );
 
-      const response = formatResponse<ConnectionRequest>(
+      const response = formatResponse(
         true,
-        connection_request,
+        null,
         "Connection Request created successfully!"
       );
 
@@ -205,6 +205,11 @@ export class ConnectionController {
       const connection = await ConnectionService.deleteConnection(
         unconnect_req
       );
+
+      const room = await ChatService.deleteRoomChat({
+        first_id: unconnect_req.from_id,
+        second_id: unconnect_req.to_id,
+      })
 
       const response = formatResponse(
         true,

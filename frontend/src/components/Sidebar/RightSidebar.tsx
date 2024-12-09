@@ -15,7 +15,7 @@ const RightSidebar = ({ children }: { children?: React.ReactNode }) => {
   return (
     <aside className="w-[250px] self-start sticky top-[90px] hidden xl:block">
       {children}
-      <div className="rounded-lg overflow-hidden mb-4 border-linkin-border border-2">
+      <div className="rounded-lg mt-7 overflow-hidden mb-4 border-linkin-border border-2">
         <img
           src="/images/side-photo.png"
           alt="side-photo"

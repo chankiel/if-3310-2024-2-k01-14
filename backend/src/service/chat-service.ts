@@ -1,12 +1,9 @@
 import { Socket } from "socket.io";
-import { io } from "../application/web";
 import { prismaClient } from "../application/database";
 import {
   ChatFormat,
   CreateDeleteRoomRequest,
   InboxFormat,
-  JoinLeaveRoomRequest,
-  MessageData,
 } from "../model/chat-model";
 import { ResponseError } from "../error/response-error";
 
@@ -42,16 +39,22 @@ export class ChatService {
     first_id,
     second_id,
   }: CreateDeleteRoomRequest) {
-    const roomChat = await prismaClient.roomChat.delete({
+    const roomChat = await prismaClient.roomChat.deleteMany({
       where: {
-        first_user_id_second_user_id: {
-          first_user_id: first_id,
-          second_user_id: second_id,
-        },
+        OR: [
+          {
+            first_user_id: first_id,
+            second_user_id: second_id,
+          },
+          {
+            first_user_id: second_id,
+            second_user_id: first_id,
+          }
+        ],
       },
     });
 
-    return roomChat.id;
+    return;
   }
 
   static async getRoomChat(id: string) {
@@ -73,7 +76,7 @@ export class ChatService {
     console.log(`User with ID: ${socket.id} joined room ${roomId}`);
   }
 
-  static async sendIsTyping(socket: Socket,roomId: string, isTyping: boolean){
+  static async sendIsTyping(socket: Socket, roomId: string, isTyping: boolean) {
     socket.broadcast.to(roomId).emit("updateTyping", isTyping);
   }
 

@@ -1,26 +1,40 @@
-import ConnectButton from "./ConnectButton";
+import { Link } from "react-router-dom";
+import { API_PHOTO } from "../../constant";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { UserRecommendation } from "./RecommendationSection";
+import { UserPlusIcon } from "@heroicons/react/24/solid";
+import { Button } from "../ui/button";
 
 interface UserRecommendationsProps {
-    user: UserRecommendation;
+  user: UserRecommendation;
+  handleConnect: (id: string) => Promise<void>;
 }
 
-export default function UserRecommendations({ user }: UserRecommendationsProps) {
-    return (
-        <li className="w-full flex flex-row py-3 px-6 border-b border-gray-300 last:border-b-0">
-            <div className="w-1/4">
-                <img 
-                    src={user.profile_photo} 
-                    alt="Profile" 
-                    className="w-14 h-14 rounded-full border-4 border-white"
-                />
-            </div>
-            <div className="flex-1 w-3/4">
-                <h1 className="text-base font-bold">{user.name}</h1>
-                <div className="h-12 py-2">
-                    <ConnectButton />
-                </div>
-            </div>                   
-        </li>
-    );
+export default function UserRecommendations({
+  user,
+  handleConnect
+}: UserRecommendationsProps) {
+  return (
+    <li className="w-[250px] flex flex-row py-3 px-6 border-b border-gray-300 last:border-b-0">
+      <div
+        className="flex w-full items-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Link to={`/profile/${user.id}`}>
+        <Avatar>
+          <AvatarImage src={`${API_PHOTO}/${user.profile_photo}`}/>
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        </Link>
+        <div className="ml-3">
+          <h1 className="text-lg font-bold">{user.name}</h1>
+          <Button variant={"outline"} className="button-blue px-3 mt-2" onClick={()=>handleConnect(user.id.toString())
+          }>
+            <UserPlusIcon width={27} height={27} />
+            <p className="text-lg">Connect</p>
+          </Button>
+        </div>
+      </div>
+    </li>
+  );
 }

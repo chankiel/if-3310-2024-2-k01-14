@@ -1,8 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
-import { formatDate, timeAgo } from "../../lib/utils";
-import { useState } from "react";
+import { formatDate } from "../../lib/utils";
+import { API_PHOTO } from "../../constant";
 
 type InboxCardProps = {
   username: string;
@@ -31,7 +30,7 @@ const InboxCard = ({
       } border-linkin-lightgray hover:bg-gray-200 transition-colors duration-150 ease-in-out`}
     >
       <Avatar className="h-16 w-16">
-        <AvatarImage src={profile_photo ?? ""} />
+        <AvatarImage src={`${API_PHOTO}/${profile_photo}`}/>
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
       <div className="w-full ml-3">

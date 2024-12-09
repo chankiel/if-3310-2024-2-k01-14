@@ -14,6 +14,7 @@ const bcrypt = require("bcryptjs");
 import multer from 'multer';
 import fs from 'fs';
 import { redis } from "../application/web";
+import { User } from "@prisma/client";
 
 export const prismaUserFormat = {
   id: true,
@@ -69,7 +70,7 @@ export class UserService {
         UserValidation.REGISTER,
         request
       );
-      
+
     } catch (error: any) {
       console.log(error.flatten())
       throw new ResponseError(400, "Register Error", error.flatten().fieldErrors)
@@ -82,7 +83,7 @@ export class UserService {
     });
 
     if (totalUserSameUsername != 0) {
-      throw new ResponseError(400, "Username is already taken", {username: "Username is already taken"});
+      throw new ResponseError(400, "Username is already taken", { username: "Username is already taken" });
     }
 
     const totalUserSameEmail = await prismaClient.user.count({
@@ -92,7 +93,7 @@ export class UserService {
     });
 
     if (totalUserSameEmail != 0) {
-      throw new ResponseError(400, "Email is already registered", {email: "Email is already registered"});
+      throw new ResponseError(400, "Email is already registered", { email: "Email is already registered" });
     }
 
     request.password = await bcrypt.hash(request.password, 10);
@@ -121,12 +122,6 @@ export class UserService {
     userId: number = 0,
     query: string = ""
   ): Promise<UserFormat[]> {
-    const cacheKey = "users";
-    const cachedUsers = await redis.get(cacheKey);
-    if(cachedUsers){
-      return JSON.parse(cachedUsers);
-    }
-
     const users = await prismaClient.user.findMany({
       where: {
         username: {
@@ -187,10 +182,10 @@ export class UserService {
         user.rooms_chat_first.length > 0
           ? user.rooms_chat_first[0].id
           : user.rooms_chat_second.length > 0
-          ? user.rooms_chat_second[0].id
-          : null,
+            ? user.rooms_chat_second[0].id
+            : null,
       profile_photo: user.profile_photo_path,
-      got_request: user.connectionRequestsFrom.length>0,
+      got_request: user.connectionRequestsFrom.length > 0,
 
       rooms_chat_first: undefined,
       rooms_chat_second: undefined,
@@ -198,8 +193,6 @@ export class UserService {
       connectionRequestsTo: undefined,
       connectionsTo: undefined,
     }));
-
-    await redis.set(cacheKey, JSON.stringify(formattedUsers),'EX',600);
 
     return formattedUsers;
   }
@@ -244,7 +237,88 @@ export class UserService {
     return formattedUser;
   }
 
+  static async getRecommendations(id: number): Promise<{ name: string; profile_photo: string }[]> {
+    const directConnections = await prismaClient.connection.findMany({
+      where: {
+        from_id: id,
+      },
+      select: {
+        to_id: true,
+      },
+    });
+
+    const directConnectionIds = directConnections.map(conn => conn.to_id);
+
+    const connectionsOfConnections = await prismaClient.connection.findMany({
+      where: {
+        from_id: {
+          in: directConnectionIds,
+        },
+      },
+      select: {
+        to_id: true,
+      },
+    });
+
+    const recommendedUserIds = connectionsOfConnections.map(conn => conn.to_id);
+
+    const uniqueRecommendedUserIds = [...new Set(recommendedUserIds)].filter(userId =>
+      userId !== id && !directConnectionIds.includes(userId)
+    );
+
+    const recommendations = await prismaClient.user.findMany({
+      where: {
+        id: {
+          in: uniqueRecommendedUserIds,
+        },
+      },
+      select: {
+        id: true,
+        full_name: true,
+        profile_photo_path: true,
+      },
+    });
+
+    const formattedRecommendations = recommendations.map(user => ({
+      id: user.id,
+      name: user.full_name!,
+      profile_photo: user.profile_photo_path!,
+    }));
+
+    const limitedRecommendations = formattedRecommendations.slice(0, 5);
+
+    if (limitedRecommendations.length < 5) {
+      const remainingCount = 5 - limitedRecommendations.length;
+
+      const additionalUsers = await prismaClient.user.findMany({
+        where: {
+          id: {
+            notIn: [...directConnectionIds, id, ...uniqueRecommendedUserIds],
+          },
+        },
+        select: {
+          id: true,
+          full_name: true,
+          profile_photo_path: true,
+        },
+        take: remainingCount,
+      });
+
+      const formattedAdditionalUsers = additionalUsers.map(user => ({
+        id: user.id,
+        name: user.full_name!,
+        profile_photo: user.profile_photo_path!,
+      }));
+
+      return [...limitedRecommendations, ...formattedAdditionalUsers];
+    }
+
+    return limitedRecommendations;
+  }
+
+
   static async update(id: number, request: UpdateUserRequest) {
+
     let url_profile_photo = null;
     let urlDB = "";
 
@@ -276,14 +350,21 @@ export class UserService {
     if (request.skills) updateData.skills = request.skills;
     if (url_profile_photo) updateData.profile_photo_path = urlDB;
 
-    const user = await prismaClient.user.update({
-      where: {
-        id: id,
-      },
-      data: updateData,
-      select: prismaUserFormat,
-    });
+    try {
 
-    return user;
+      const user = await prismaClient.user.update({
+        where: {
+          id: id,
+        },
+        data: updateData,
+        select: prismaUserFormat,
+      });
+
+      const formattedUser = this.formatUserResponse(user);
+
+      return formattedUser;
+    } catch (error) {
+      throw new ResponseError(400, "Username is already taken", { username: "Username is already taken" });
+    }
   }
 }

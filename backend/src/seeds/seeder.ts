@@ -12,7 +12,7 @@ async function seedUser(){
             password: await bcrypt.hash("TubesWBD123", 10),
             work_history: 'Saya sudah bekerja selama '+i+" tahun",
             skills: "Tidur",
-            profile_photo_path: "/images/perry-casino.webp",
+            profile_photo_path: "perry-casino.webp",
         })
     }
 

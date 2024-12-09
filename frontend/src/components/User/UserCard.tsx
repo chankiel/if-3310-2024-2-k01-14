@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
+import { API_PHOTO } from "../../constant";
 
 interface UserCardProps {
   user: UserFormat;
@@ -37,12 +38,11 @@ const UserCard = ({ user, handleRequest, isFirst }: UserCardProps) => {
     <div
       className={`flex p-5 items-center ${
         !isFirst && "border-t-2"
-      } border-linkin-lightgray`}
+      } border-linkin-lightgray hover:bg-gray-200 transition-colors duration-150 ease-in-out`}
     >
       <Link to={`/profile/${user.id}`} className="w-full flex items-center">
-      
         <Avatar className="h-16 w-16">
-          <AvatarImage src={user.profile_photo ?? ""} />
+          <AvatarImage src={`${API_PHOTO}/${user.profile_photo}`} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div className="w-full ml-5">

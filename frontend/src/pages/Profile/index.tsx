@@ -35,47 +35,17 @@ export interface RecommendationData {
   recommendations: UserRecommendation[];
 }
 
-interface Connection {
-  id: number;
-  username: string;
-  full_name: string;
-  profile_photo_path: string;
-  created_at: string;
-}
-
 export default function Profile() {
-  const { isAuthenticated, currentId } = useAuth();
+  const { isAuthenticated, currentId, update ,setUpdate } = useAuth();
   const { user_id } = useParams<{ user_id: string }>();
   const [profileData, setProfileData] = useState<ProfileData | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isConnected, setIsConnected] = useState(false);
   // const [recommendations, setRecommendations] = useState<RecommendationData | undefined>(undefined);
 
-  const recommendations: UserRecommendation[] = [
-    {
-      name: "Francesco Michael Kusuma",
-      profile_photo: "/perry-casino.webp",
-    },
-    {
-      name: "John Doe",
-      profile_photo: "/perry-casino.webp",
-    },
-    {
-      name: "Jane Smith",
-      profile_photo: "/perry-casino.webp",
-    },
-    {
-      name: "Alice Johnson",
-      profile_photo: "/perry-casino.webp",
-    },
-    {
-      name: "Bob Brown",
-      profile_photo: "/perry-casino.webp",
-    },
-  ];
-
   const handleProfileUpdate = (updatedData: ProfileData) => {
     console.log("Updating profile data:", updatedData);
+    setUpdate(!update);
     setProfileData(updatedData);
   };
 
@@ -91,22 +61,23 @@ export default function Profile() {
           throw new Error("Failed to fetch profile data");
         }
         
-        // const connectionsResponse = await fetch(`${API_URL}/connections/${currentId}`, {
-        //   method: "GET",
-        // });
-        // console.log("Di sini")
+        const connectionsResponse = await fetch(`${API_URL}/connections/${currentId}`, {
+          method: "GET",
+        });
+        console.log("Di sini")
         
-        // if (!connectionsResponse.ok) {
-        //   throw new Error("Failed to fetch connections data");
-        // }
+        if (!connectionsResponse.ok) {
+          throw new Error("Failed to fetch connections data");
+        }
         
         const profileData = await profileResponse.json();
         setProfileData(profileData.body);
 
-        // const connectionsData = await connectionsResponse.json();
+        const connectionsData = await connectionsResponse.json();
 
-        // const isUserConnected = connectionsData.body.some((connection: Connection) => connection.id === Number(user_id));
-        const isUserConnected = true;
+        const isUserConnected = connectionsData.body.some((connection: any) => connection.id === Number(user_id));
+        // const isUserConnected = true;
+        console.log(isUserConnected)
         setIsConnected(isUserConnected);
       } catch (error) {
         if (error instanceof Error) {
@@ -143,9 +114,7 @@ export default function Profile() {
           </div>
 
           <div className="max-w-xs">
-            <RecommendationSection
-              recommendations={recommendations}
-            />
+            <RecommendationSection />
           </div>
         </div>
       </main>
