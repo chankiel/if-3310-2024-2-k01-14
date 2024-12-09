@@ -42,6 +42,7 @@ const Chat = () => {
         }
       } catch (error) {
         console.error(error);
+        navigate("/404")
       }
       setLoading(false);
     };

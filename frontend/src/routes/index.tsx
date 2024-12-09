@@ -1,4 +1,4 @@
-import { RouteObject, createBrowserRouter } from "react-router-dom";
+import { Navigate, RouteObject, createBrowserRouter } from "react-router-dom";
 import { UnauthRoute, ProtectedRoute } from "../components";
 import {
   Connection,
@@ -14,7 +14,6 @@ import {
 } from "../pages";
 import ProviderLayout from "./ProviderLayout";
 import Chat from "../pages/Chat/Chat";
-import Notifications from "../pages/Notifications";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient();
 
@@ -33,11 +32,7 @@ const routes: RouteObject[] = [
       },
       {
         path: "/home",
-        element: (
-          <UnauthRoute>
-            <LandingPage />
-          </UnauthRoute>
-        ),
+        element: <Navigate to={"/feed"} replace />,
       },
       {
         path: "/login",
@@ -65,20 +60,32 @@ const routes: RouteObject[] = [
       },
       {
         path: "/mynetworks/connections",
-        element: <Connection />,
+        element: (
+          <ProtectedRoute>
+            <Connection />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/mynetworks/pending",
-        element: <Requests />,
+        element: (
+          <ProtectedRoute>
+            <Requests />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/chat",
-        element: <Inbox/>,
+        element: (
+          <ProtectedRoute>
+            <Inbox />
+          </ProtectedRoute>
+        ),
       },
-      {
-        path: "/notifications",
-        element: <Notifications />,
-      },
+      // {
+      //   path: "/notifications",
+      //   element: <Notifications />,
+      // },
       {
         path: "/connections/:userId",
         element: <Connection />,
@@ -93,11 +100,19 @@ const routes: RouteObject[] = [
       },
       {
         path: "/chat/:roomId",
-        element: <Chat />,
+        element: (
+          <ProtectedRoute>
+            <Chat />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/404",
+        element: <NotFound />,
       },
       {
         path: "*",
-        element: <NotFound />,
+        element: <Navigate to={"/404"} replace />,
       },
     ],
   },
