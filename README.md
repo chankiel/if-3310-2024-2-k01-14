@@ -54,15 +54,26 @@ https://github.com/Labpro-21/if-3310-2024-2-k01-14.git
 cd if-3310-2024-2-k01-14
 ```
 
-3. Copy .env.example and change the name of the new copy to .env
+3. Copy .env.example in root and change the name of the new copy to .env
 
-4. Build and run your docker containers
+4. Copy .env.example in backend and change the name of the new copy to .env
+
+5. get VAPID key from terminal
+```sh
+npm install web-push -g
+
+web-push generate-vapid-keys
+```
+
+6. insert VAPID key in file .env in root and backend
+
+7. Build and run your docker containers
 
 ```sh
 docker compose up --build
 ```
 
-5. Run in your localhost with port 5137
+8. Run in your localhost with port 5137
 
 ```sh
 http://localhost:5137
