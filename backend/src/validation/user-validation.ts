@@ -51,3 +51,13 @@ export async function validateUserExists(user_id: number, isStore: boolean) {
         throw new ResponseError(409, `User with id ${user_id} already exists!`);
     }
 }
+
+export async function validateUsernameFormat(username: string) {
+        // Regex untuk mendeteksi pola email
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        // Validasi: Username tidak boleh berbentuk email
+        console.log("ikan hiu")
+        console.log(!emailPattern.test(username))
+        return !emailPattern.test(username);
+}

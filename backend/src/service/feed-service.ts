@@ -63,7 +63,7 @@ export class FeedService {
       })
 
       if (!isFeedAvailable) {
-        throw ("User with the specified id doesn't exist!")
+        throw ("Feed with the specified id doesn't exist!")
       }
 
       const feed = await prismaClient.feed.delete({
@@ -80,9 +80,9 @@ export class FeedService {
       })
 
       if (!isFeedAvailable) {
-        throw ("User with the specified id doesn't exist!")
+        throw ("Feed with the specified id doesn't exist!")
       }
-      
+
       const feed = await prismaClient.feed.update({
           where: { id },
           data: { 
