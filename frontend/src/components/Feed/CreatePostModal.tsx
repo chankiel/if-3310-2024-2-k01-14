@@ -1,15 +1,17 @@
 import { useState } from "react";
-import { API_URL } from "../../constant";
+import { API_PHOTO, API_URL } from "../../constant";
 import { useAuth } from "../../contexts/AuthContext";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+
 
 interface CreatePostModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onAddFeed: (newFeed: any) => void; 
+    onAddFeed: (newFeed: any) => void;
 }
 
-export default function CreatePostModal({ isOpen, onClose, onAddFeed}: CreatePostModalProps) {
-    const { name, username, currentId } = useAuth();
+export default function CreatePostModal({ isOpen, onClose, onAddFeed }: CreatePostModalProps) {
+    const { name, username, currentId, profile_photo } = useAuth();
     const [postContent, setPostContent] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
     const [responseMessage, setResponseMessage] = useState("");
@@ -22,7 +24,7 @@ export default function CreatePostModal({ isOpen, onClose, onAddFeed}: CreatePos
 
     if (!isOpen) return null;
 
-    const isButtonDisabled = postContent.trim() === "";
+    const isButtonDisabled = postContent.trim() === "" || postContent.length > 280;
 
     const handlePost = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -41,7 +43,7 @@ export default function CreatePostModal({ isOpen, onClose, onAddFeed}: CreatePos
             // console.log(postContent)
 
             const data = await response.json();
-            
+
             fetch(`${API_URL}/send-new-post-notification`, {
                 method: "POST",
                 credentials: "include",
@@ -62,7 +64,6 @@ export default function CreatePostModal({ isOpen, onClose, onAddFeed}: CreatePos
                 setPostContent("");
                 onAddFeed(data.feeds);
                 onClose();
-                // window.location.reload();
             } else {
                 setIsSuccess(false);
                 setResponseMessage(data.message);
@@ -80,14 +81,13 @@ export default function CreatePostModal({ isOpen, onClose, onAddFeed}: CreatePos
                 <div className="bg-white rounded-lg p-8 w-96 md:w-1/2 lg:w-1/2 h-auto max-h-[80vh] overflow-y-auto relative mt-16">
                     <div className="flex items-center w-full mb-4 px-2 py-2 bg-white">
                         <div className="w-1/7">
-                            <img
-                                src="/perry-casino.webp"
-                                alt="Profile"
-                                className="w-14 h-14 rounded-full"
-                            />
+                            <Avatar>
+                                <AvatarImage src={`${API_PHOTO}/${profile_photo}`} />
+                                <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
                         </div>
                         <div className="font-semibold text-base ml-4">
-                            Francesco Michael Kusuma
+                            {username}
                         </div>
                     </div>
                     <form onSubmit={handlePost}>
@@ -96,8 +96,12 @@ export default function CreatePostModal({ isOpen, onClose, onAddFeed}: CreatePos
                             className="w-full h-32 p-2 border rounded-lg focus:outline-none"
                             value={postContent}
                             onChange={(e) => setPostContent(e.target.value)}
+                            maxLength={280}
                         />
                         <div className="flex justify-end items-center mt-4">
+                            <span className={`mr-8 text-base ${postContent.length > 280 ? 'text-red-600' : 'text-gray-500'}`}>
+                                {postContent.length}/280
+                            </span>
                             <button
                                 className={`px-4 py-2 rounded-lg ${isButtonDisabled ? 'bg-gray-400 text-gray-200' : 'bg-blue-500 text-white'}`}
                                 type="submit"

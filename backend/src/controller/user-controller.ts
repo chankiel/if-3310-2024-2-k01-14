@@ -48,7 +48,7 @@ export class UserController {
         }
     }
 
-    static async show(req: AuthRequest, res: Response, next: NextFunction) {
+    static async show(req: Request, res: Response, next: NextFunction) {
         try {
             const userId = Number(req.params.user_id);
             const user = await UserService.get(userId);

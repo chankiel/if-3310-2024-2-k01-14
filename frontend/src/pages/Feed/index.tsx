@@ -8,21 +8,34 @@ import FeedApi from "../../api/feed-api";
 import { Navigate } from "react-router-dom";
 import moment from "moment";
 import EditPostModal from "../../components/Feed/EditPostModal";
-import {TrashIcon, PencilIcon} from "@heroicons/react/24/solid";
+import { TrashIcon, PencilIcon } from "@heroicons/react/24/solid";
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
+import { API_PHOTO } from "../../constant";
 
 export interface UserRecommendation {
     name: string;
     profile_photo: string;
 }
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../components/ui/alert-dialog";
+
 
 export default function Feed() {
-    const { currentId } = useAuth();
+    const { currentId, profile_photo } = useAuth();
     const { isAuthenticated } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const loadMoreRef = useRef<HTMLDivElement | null>(null);    
+    const loadMoreRef = useRef<HTMLDivElement | null>(null);
     const queryClient = useQueryClient();
-    const {username} = useAuth();
     const [editContent, setEditContent] = useState("")
     const [isModalEdit, setIsModalEdit] = useState(false);
     const [feedIdEdit, setFeedIdEdit] = useState(0);
@@ -38,16 +51,16 @@ export default function Feed() {
         isLoading,
         isError,
     } = useInfiniteQuery({
-            queryKey : ["feeds"],
-            queryFn : async ({ pageParam = null }: { pageParam: number | null }) => FeedApi.getFeed(pageParam),
-            getNextPageParam: (lastPage) => {
-                // console.log(lastPage.body.cursor)
-                return lastPage.body.cursor ? lastPage.body.cursor : undefined;
-            },
-            initialPageParam: null, // Nilai awal untuk pageParam
+        queryKey: ["feeds"],
+        queryFn: async ({ pageParam = null }: { pageParam: number | null }) => FeedApi.getFeed(pageParam),
+        getNextPageParam: (lastPage) => {
+            // console.log(lastPage.body.cursor)
+            return lastPage.body.cursor ? lastPage.body.cursor : undefined;
         },
+        initialPageParam: null, // Nilai awal untuk pageParam
+    },
     );
-    
+
 
     const feeds = data?.pages.flatMap((page) => page.body.feeds) || [];
     const hasFeed = feeds.length > 0;
@@ -65,12 +78,12 @@ export default function Feed() {
                 pages: prevData.pages.map((page: any, index: number) =>
                     index === 0
                         ? {
-                              ...page,
-                              body: {
-                                  ...page.body,
-                                  feeds: [newFeed, ...page.body.feeds], // Tambahkan feed baru di awal
-                              },
-                          }
+                            ...page,
+                            body: {
+                                ...page.body,
+                                feeds: [newFeed, ...page.body.feeds], // Tambahkan feed baru di awal
+                            },
+                        }
                         : page
                 ),
             };
@@ -102,7 +115,7 @@ export default function Feed() {
     useEffect(() => {
         console.log(data);
     }, [data]);
-    
+
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
@@ -114,11 +127,15 @@ export default function Feed() {
 
     useEffect(() => {
         const fecthUlang = async () => {
-            queryClient.invalidateQueries(["feeds"]);
+            queryClient.invalidateQueries({
+                queryKey: ["feeds"],
+                exact: true,
+            }
+            );
         };
-        
+
         fecthUlang();
-      }, [update]);    
+    }, [update]);
 
     // Menggunakan efek untuk mendeteksi scroll dan memuat halaman berikutnya
     useEffect(() => {
@@ -140,7 +157,7 @@ export default function Feed() {
     }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
 
-    const handleEdit = async (feed_id: number, content:string) => {
+    const handleEdit = async (feed_id: number, content: string) => {
         setEditContent(content)
         setFeedIdEdit(feed_id)
         setIsModalEdit(true)
@@ -172,28 +189,28 @@ export default function Feed() {
         return <Navigate to="/login" replace />;
     }
 
-    const recommendations: UserRecommendation[] = [
-        {
-            name: "Francesco Michael Kusuma",
-            profile_photo: "/perry-casino.webp",
-        },
-        {
-            name: "John Doe",
-            profile_photo: "/perry-casino.webp",
-        },
-        {
-            name: "Jane Smith",
-            profile_photo: "/perry-casino.webp",
-        },
-        {
-            name: "Alice Johnson",
-            profile_photo: "/perry-casino.webp",
-        },
-        {
-            name: "Bob Brown",
-            profile_photo: "/perry-casino.webp",
-        },
-    ];
+    // const recommendations: UserRecommendation[] = [
+    //     {
+    //         name: "Francesco Michael Kusuma",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    //     {
+    //         name: "John Doe",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    //     {
+    //         name: "Jane Smith",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    //     {
+    //         name: "Alice Johnson",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    //     {
+    //         name: "Bob Brown",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    // ];
     console.log(data)
 
     return (
@@ -202,11 +219,10 @@ export default function Feed() {
             <section className="flex-1 bg-transparent border-0">
                 <div className="flex items-center w-full mb-4 border rounded-lg px-8 py-6 bg-white">
                     <div className="w-1/7">
-                        <img
-                            src="/perry-casino.webp"
-                            alt="Profile"
-                            className="w-14 h-14 rounded-full"
-                        />
+                        <Avatar>
+                            <AvatarImage src={`${API_PHOTO}/${profile_photo}`} />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
                     </div>
                     <button
                         className="flex-1 ml-4 p-4 border border-gray-400 rounded-3xl text-left focus:outline-none hover:bg-gray-100"
@@ -215,11 +231,7 @@ export default function Feed() {
                         Start a post, try writing with AI
                     </button>
                 </div>
-                <h1 className="px-5 text-xl font-semibold mb-3">
-                    {hasFeed
-                        ? ``
-                        : "You don't have a Feed yet."}
-                </h1>
+
                 {isLoading ? (
                     <p>Loading feeds...</p>
                 ) : isError ? (
@@ -228,61 +240,66 @@ export default function Feed() {
                     <ul>
                         {feeds.map((feed, index) => (
                             <li
-                            key={index}
-                            className="relative flex flex-row py-4 px-4 border-b bg-white mb-4 border rounded-lg"
-                        >
-                            <div>
-                                <div className="flex items-center w-full pb-2">
-                                    <div className="w-1/7 pl-4">
-                                        <img
-                                            src={
-                                                feed.user.profile_photo_path
-                                                    ? feed.user.profile_photo_path
-                                                    : "/perry-casino.webp"
-                                            }
-                                            alt="Profile"
-                                            className="w-14 h-14 rounded-full"
-                                        />
-                                    </div>
-                                    <div className="flex-1 w-6/7 px-4">
-                                        <div className="py-2">
-                                            <div className="font-semibold text-base">
-                                                {feed.user.username}
-                                            </div>
-                                            <div className="font-normal text-xs text-gray-500">
-                                                posted {moment(feed.created_at).fromNow()}
-                                            </div>
-                                            <div className="font-normal text-xs text-gray-500">
-                                                updated {moment(feed.updated_at).fromNow()}
+                                key={index}
+                                className="relative flex flex-row py-4 px-4 border-b bg-white mb-4 border rounded-lg"
+                            >
+                                <div>
+                                    <div className="flex items-center w-full pb-2">
+                                        <div className="w-1/7 pl-4">
+                                            <Avatar>
+                                                <AvatarImage src={`${API_PHOTO}/${feed.user.profile_photo_path}`} />
+                                                <AvatarFallback>CN</AvatarFallback>
+                                            </Avatar>
+                                        </div>
+                                        <div className="flex-1 w-6/7 px-4">
+                                            <div className="py-2">
+                                                <div className="font-semibold text-base">
+                                                    {feed.user.username}
+                                                </div>
+                                                <div className="font-normal text-xs text-gray-500">
+                                                    posted {moment(feed.created_at).fromNow()}
+                                                </div>
+                                                <div className="font-normal text-xs text-gray-500">
+                                                    updated {moment(feed.updated_at).fromNow()}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <div className="text-xl ml-4">{feed.content}</div>
                                 </div>
-                                <div className="text-xl ml-4">{feed.content}</div>
-                            </div>
-                        
-                            <div
-                                className={`absolute top-6 right-4 flex gap-2 ${
+
+                                <div className={`absolute top-6 right-4 flex gap-2 ${
                                     currentId === feed.user.id ? "" : "hidden"
-                                }`}
-                            >
+                                }`}>
                                 <button
-                                    onClick={() => handleEdit(feed.id, feed.content)}
                                     className="p-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
-                                    aria-label="Edit"
+                                    onClick={() => handleEdit(feed.id, feed.content)}
                                 >
-                                    <PencilIcon height={20} width={20} />
+                                    <PencilIcon height={15} width={15} />
                                 </button>
-                                <button
-                                    onClick={() => handleDelete(feed.id)}
-                                    className="p-2 text-sm text-white bg-red-500 rounded hover:bg-red-600"
-                                    aria-label="Delete"
-                                >
-                                    <TrashIcon height={20} width={20} />
-                                </button>
-                            </div>
-                        </li>
-                        
+                                <AlertDialog>
+                                    <AlertDialogTrigger className="p-2 text-sm text-white bg-red-500 rounded hover:bg-red-600">
+                                        <TrashIcon height={15} width={15} />
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent className="md:w-1/2 w-2/3">
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle className="text-xl font-semibold py-2 border-b-2 border-b-linkin-border">Delete Feed</AlertDialogTitle>
+                                        <AlertDialogDescription className="text-md text-black pb-2 border-b-2 border-b-linkin-border">
+                                        You are about delete this feed. This action cannot be undone.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel className="button-blue text-lg">Cancel</AlertDialogCancel>
+                                        <AlertDialogAction onClick={() => handleDelete(feed.id)} className="button-white bg-white text-lg">
+                                        Continue
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                                
+                                </div>
+                            </li>
+
                         ))}
                     </ul>
                 ) : (
@@ -292,8 +309,8 @@ export default function Feed() {
                             alt="no-connection"
                             className="w-1/2 min-w-52"
                         />
-                        <h2 className="px-5 text-lg mt-5">
-                            There is no feed Here
+                        <h2 className="px-5 text-lg mt-5 mb-8">
+                            You don't have a Feed yet.
                         </h2>
                     </section>
                 )}
@@ -301,11 +318,11 @@ export default function Feed() {
                 <div ref={loadMoreRef} />
             </section>
             <RightSidebar>
-                <RecommendationSection/>
+                <RecommendationSection />
             </RightSidebar>
 
-        <CreatePostModal isOpen={isModalOpen} onClose={handleCloseModal} onAddFeed={handleNewPost}/>
-        <EditPostModal isOpen={isModalEdit} onClose={handleCloseModalEdit} feed_id={feedIdEdit} user_id={currentId} username={username} content={editContent} onUpdate={handleUpdateFeed} />
-    </>
+            <CreatePostModal isOpen={isModalOpen} onClose={handleCloseModal} onAddFeed={handleNewPost} />
+            <EditPostModal isOpen={isModalEdit} onClose={handleCloseModalEdit} feed_id={feedIdEdit} content={editContent} onUpdate={handleUpdateFeed} />
+        </>
     );
 }

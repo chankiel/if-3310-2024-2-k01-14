@@ -55,3 +55,9 @@ export type UpdateUserRequest = {
   work_history?: string;
   skills?: string;
 };
+
+export type UserRecommendation = {
+    id: number;
+    full_name: string;
+    profile_photo_path: string;
+}

@@ -6,6 +6,7 @@ import {
   UpdateUserRequest,
   UserFormat,
   UserPrismaFormat,
+  UserRecommendation,
 } from "../model/user-model";
 import { createJwt } from "../utils/jwt";
 import { UserValidation } from "../validation/user-validation";
@@ -237,7 +238,8 @@ export class UserService {
     return formattedUser;
   }
 
-  static async getRecommendations(id: number): Promise<{ name: string; profile_photo: string }[]> {
+  static async getRecommendations(id: number): Promise<{ id: number, name: string; profile_photo: string }[]> {
+    // 1st
     const directConnections = await prismaClient.connection.findMany({
       where: {
         from_id: id,
@@ -249,6 +251,7 @@ export class UserService {
 
     const directConnectionIds = directConnections.map(conn => conn.to_id);
 
+    // 2nd
     const connectionsOfConnections = await prismaClient.connection.findMany({
       where: {
         from_id: {
@@ -262,10 +265,12 @@ export class UserService {
 
     const recommendedUserIds = connectionsOfConnections.map(conn => conn.to_id);
 
+    // exclude curId
     const uniqueRecommendedUserIds = [...new Set(recommendedUserIds)].filter(userId =>
-      userId !== id && !directConnectionIds.includes(userId)
+      userId !== id && !directConnectionIds.includes(userId) // Exclude current user and direct connections
     );
 
+    // detail 2nd
     const recommendations = await prismaClient.user.findMany({
       where: {
         id: {
@@ -290,10 +295,27 @@ export class UserService {
     if (limitedRecommendations.length < 5) {
       const remainingCount = 5 - limitedRecommendations.length;
 
+      const sentConnectionRequests = await prismaClient.connectionRequest.findMany({
+        where: {
+          from_id: id,
+        },
+        select: {
+          to_id: true,
+        },
+      });
+
+      const sentRequestUserIds = sentConnectionRequests.map(req => req.to_id);
+
+      // exclude 1st, requested, recommended users
       const additionalUsers = await prismaClient.user.findMany({
         where: {
           id: {
-            notIn: [...directConnectionIds, id, ...uniqueRecommendedUserIds],
+            notIn: [
+              ...directConnectionIds,
+              id,
+              ...uniqueRecommendedUserIds,
+              ...sentRequestUserIds,
+            ],
           },
         },
         select: {
@@ -310,12 +332,42 @@ export class UserService {
         profile_photo: user.profile_photo_path!,
       }));
 
-      return [...limitedRecommendations, ...formattedAdditionalUsers];
+      limitedRecommendations.push(...formattedAdditionalUsers);
+
+      if (limitedRecommendations.length < 5) {
+        const additionalRemainingCount = 5 - limitedRecommendations.length;
+
+        const additionalUsersNotConnected = await prismaClient.user.findMany({
+          where: {
+            id: {
+              notIn: [
+                ...limitedRecommendations.map(user => user.id),
+                ...directConnectionIds,
+                ...sentRequestUserIds,
+                id,
+              ],
+            },
+          },
+          select: {
+            id: true,
+            full_name: true,
+            profile_photo_path: true,
+          },
+          take: additionalRemainingCount,
+        });
+
+        const formattedFinalUsers = additionalUsersNotConnected.map(user => ({
+          id: user.id,
+          name: user.full_name!,
+          profile_photo: user.profile_photo_path!,
+        }));
+
+        limitedRecommendations.push(...formattedFinalUsers);
+      }
     }
 
-    return limitedRecommendations;
+    return limitedRecommendations.slice(0, 5);
   }
-
 
   static async update(id: number, request: UpdateUserRequest) {
 

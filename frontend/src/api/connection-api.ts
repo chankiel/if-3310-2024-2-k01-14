@@ -22,7 +22,7 @@ class ConnectionApi {
     } catch (error) {
       throw (error as any)?.response?.data;
     }
-  }
+}
 
   static async checkRequested(from_id: number, to_id: number){
     try {

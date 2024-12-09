@@ -42,7 +42,7 @@ export default function Login() {
         setIsSuccess(true);
         setResponseMessage(res.message);
         navigate("/feed");
-      } catch (err) {
+      } catch (err : any) {
         setIsSuccess(false);
         setResponseMessage((err as APIResponse).message);
         setErrorUsernameMessage(err.errors.identifier);
