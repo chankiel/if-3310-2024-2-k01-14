@@ -30,6 +30,8 @@ model User {
   rooms_chat_first  RoomChat[] @relation("FirstUserRoom")
   rooms_chat_second RoomChat[] @relation("SecondUserRoom")
   last_sender_rooms RoomChat[] @relation("LastSender")
+
+  @@map("users")
 }
 
 model Feed {
@@ -41,6 +43,7 @@ model Feed {
   user       User     @relation("UserFeeds", fields: [user_id], references: [id])
 
   @@index([user_id])
+  @@map("feed")
 }
 
 model Chat {
@@ -55,6 +58,7 @@ model Chat {
   room      RoomChat @relation(fields: [room_id], references: [id], onDelete: Cascade)
 
   @@index([from_id, to_id])
+  @@map("chat")
 }
 
 model RoomChat {
@@ -70,6 +74,7 @@ model RoomChat {
   chats          Chat[]   @relation()
 
   @@unique([first_user_id, second_user_id])
+  @@map("room_chat")
 }
 
 model ConnectionRequest {
@@ -80,6 +85,7 @@ model ConnectionRequest {
   to         User     @relation("ConnectionRequestTo", fields: [to_id], references: [id])
 
   @@id([from_id, to_id])
+  @@map("connection_request")
 }
 
 model Connection {
@@ -90,6 +96,7 @@ model Connection {
   to         User     @relation("UserConnectionsTo", fields: [to_id], references: [id])
 
   @@id([from_id, to_id])
+  @@map("connection")
 }
 
 model PushSubscription {
@@ -100,4 +107,5 @@ model PushSubscription {
   user       User?    @relation(fields: [user_id], references: [id])
 
   @@index([user_id])
+  @@map("push_subscriptions")
 }

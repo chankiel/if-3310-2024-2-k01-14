@@ -9,7 +9,7 @@ import {
   UserRecommendation,
 } from "../model/user-model";
 import { createJwt } from "../utils/jwt";
-import { UserValidation } from "../validation/user-validation";
+import { UserValidation, validateUsernameFormat } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
 const bcrypt = require("bcryptjs");
 import multer from 'multer';
@@ -59,6 +59,7 @@ export class UserService {
       profile_photo: user.profile_photo_path,
       full_name: user.full_name,
       connection_count: user._count.connectionsFrom,
+      name: user.full_name
     };
 
     return formattedUser;
@@ -75,6 +76,10 @@ export class UserService {
     } catch (error: any) {
       console.log(error.flatten())
       throw new ResponseError(400, "Register Error", error.flatten().fieldErrors)
+    }
+    const isUsernameFormat = await validateUsernameFormat(request.username)
+    if (isUsernameFormat === false){
+      throw new ResponseError(400, "Username format is not valid", { username: "Username format is not valid" });
     }
 
     const totalUserSameUsername = await prismaClient.user.count({

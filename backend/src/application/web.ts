@@ -12,6 +12,7 @@ import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs'
 
 const swaggerDocument = yaml.load('./api-doc.yml');
+import { TestController } from "../controller/test-controller";
 
 const web = express();
 web.use(cors({ origin: "http://localhost:5173", credentials: true }));
@@ -19,6 +20,9 @@ web.use(express.json());
 web.use(cookieParser());
 
 web.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+web.get("/health", TestController.health)
+
 
 web.use("/api", apiRouter);
 web.use("/api", publicRouter);
