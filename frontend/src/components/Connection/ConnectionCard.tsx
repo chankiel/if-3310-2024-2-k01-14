@@ -26,7 +26,7 @@ import {
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
-import { API_PHOTO, API_URL } from "../../constant";
+import { API_PHOTO } from "../../constant";
 
 type ConnectionCardProps = {
   id: string;

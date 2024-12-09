@@ -50,9 +50,9 @@ export class ConnectionController {
         storeRequest
       );
 
-      const response = formatResponse<ConnectionRequest>(
+      const response = formatResponse(
         true,
-        connection_request,
+        null,
         "Connection Request created successfully!"
       );
 

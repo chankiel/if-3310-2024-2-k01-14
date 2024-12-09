@@ -36,7 +36,7 @@ export interface RecommendationData {
 }
 
 export default function Profile() {
-  const { isAuthenticated, currentId } = useAuth();
+  const { isAuthenticated, currentId, update ,setUpdate } = useAuth();
   const { user_id } = useParams<{ user_id: string }>();
   const [profileData, setProfileData] = useState<ProfileData | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -45,6 +45,7 @@ export default function Profile() {
 
   const handleProfileUpdate = (updatedData: ProfileData) => {
     console.log("Updating profile data:", updatedData);
+    setUpdate(!update);
     setProfileData(updatedData);
   };
 

@@ -1,4 +1,4 @@
-import { API_PHOTO, API_URL } from "../../constant";
+import { API_PHOTO } from "../../constant";
 import { timeAgo } from "../../lib/utils";
 import {
   AlertDialog,

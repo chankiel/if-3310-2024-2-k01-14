@@ -24,15 +24,53 @@ function flattenFrom(data: { from: ConnectionFormat }) {
 
 export class ConnectionService {
   static async storeRequest(request: ConnectionReqRequest) {
-    const connection_request_result =
-      await prismaClient.connectionRequest.create({
-        data: {
+    return await prismaClient.$transaction(async (prisma) => {
+      const existingConnectionReq = await prisma.connectionRequest.findFirst({
+        where: {
           from_id: request.from_id,
           to_id: request.to_id,
         },
       });
 
-    return connection_request_result;
+      if (existingConnectionReq) {
+        await prisma.connectionRequest.delete({
+          where: {
+            from_id_to_id: {
+              from_id: existingConnectionReq.from_id,
+              to_id: existingConnectionReq.to_id,
+            },
+          },
+        });
+
+        await prisma.connection.create({
+          data: {
+            from_id: request.from_id,
+            to_id: request.to_id,
+          },
+        });
+
+        await prisma.connection.create({
+          data: {
+            from_id: request.to_id,
+            to_id: request.from_id,
+          },
+        });
+
+        return {
+          status:
+            "Your target user already requested a friend request. Connection created.",
+        };
+      } else {
+        const connectionRequestResult = await prisma.connectionRequest.create({
+          data: {
+            from_id: request.from_id,
+            to_id: request.to_id,
+          },
+        });
+
+        return { status: "Connection request created successfully." };
+      }
+    });
   }
 
   static async indexPending(user_id: number): Promise<ConnectionFormat[]> {

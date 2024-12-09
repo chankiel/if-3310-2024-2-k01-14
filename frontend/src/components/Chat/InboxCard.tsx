@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Link } from "react-router-dom";
 import { formatDate } from "../../lib/utils";
-import { API_PHOTO, API_URL } from "../../constant";
+import { API_PHOTO } from "../../constant";
 
 type InboxCardProps = {
   username: string;

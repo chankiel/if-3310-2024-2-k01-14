@@ -15,7 +15,6 @@ publicRouter.post("/login", upload.none(), AuthController.login);
 
 /*----------------- User / Profile -----------------*/
 publicRouter.get("/profile/",UserController.index)
-publicRouter.get("/profile/self",authMiddleware,AuthController.self)
 publicRouter.get("/profile/:user_id(\\d+)",UserController.show)
 publicRouter.get("/show-image/:user_id",UserController.showImage)
 publicRouter.get(

@@ -11,7 +11,9 @@ import { AuthController } from "../controller/auth-controller";
 const upload = multer();
 const apiRouter = express.Router();
 
-apiRouter.route("/profile/:user_id(\\d+)").put(upload.single("profile_photo"), UserController.update);
+apiRouter
+  .route("/profile/:user_id(\\d+)")
+  .put(upload.single("profile_photo"), UserController.update);
 
 // apiRouter.get(
 //   "/recommendations/:user_id(\\d+)",
@@ -19,7 +21,6 @@ apiRouter.route("/profile/:user_id(\\d+)").put(upload.single("profile_photo"), U
 //   authMiddleware,
 //   UserController.showRecommendations
 // );
-
 
 /*----------------- Connections -----------------*/
 apiRouter.post(
@@ -70,41 +71,39 @@ apiRouter.get(
   "/chats/:room_id(\\d+)",
   upload.none(),
   authMiddleware,
-  ChatController.getMessages,
+  ChatController.getMessages
 );
 
 apiRouter.get(
   "/chats/:user_id(\\d+)/inbox",
   upload.none(),
   authMiddleware,
-  ChatController.getInbox,
+  ChatController.getInbox
 );
 
 /*----------------- Connections -----------------*/
-apiRouter.post(
-  "/feed",
-  upload.none(),
-  authMiddleware,
-  FeedController.store
-);
+apiRouter.post("/feed", upload.none(), authMiddleware, FeedController.store);
 
 /*----------------- Push Notifications -----------------*/
 apiRouter.post(
   "/subscribe",
   upload.none(),
-  PushController.subscribe,
+  authMiddleware,
+  PushController.subscribe
 );
 
 apiRouter.post(
   "/send-chat-notification",
   upload.none(),
-  PushController.sendChatNotification,
+  authMiddleware,
+  PushController.sendChatNotification
 );
 
 apiRouter.post(
   "/send-new-post-notification",
   upload.none(),
-  PushController.sendNewPostNotification,
+  authMiddleware,
+  PushController.sendNewPostNotification
 );
 
 /*----------------- Feeds -----------------*/
@@ -122,20 +121,16 @@ apiRouter.delete(
   FeedController.deleteFeed
 );
 
-apiRouter.put( 
+apiRouter.put(
   "/feed/:feed_id(\\d+)",
   upload.none(),
   authMiddleware,
   FeedController.editFeed
 );
 
-
 /*----------------- Auth -----------------*/
-apiRouter.post(
-  "/logout",
-  upload.none(),
-  authMiddleware,
-  AuthController.logout
-);
+apiRouter.post("/logout", upload.none(), authMiddleware, AuthController.logout);
+
+apiRouter.get("/profile/self", authMiddleware, AuthController.self);
 
 export default apiRouter;
