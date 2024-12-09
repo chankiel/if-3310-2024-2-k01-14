@@ -42,7 +42,8 @@ const UserCard = ({ user, handleRequest, isFirst }: UserCardProps) => {
     >
       <Link to={`/profile/${user.id}`} className="w-full flex items-center">
         <Avatar className="h-16 w-16">
-          <AvatarImage src={`${API_PHOTO}/${user.profile_photo}`} />
+        <AvatarImage src={user.profile_photo ? `${API_PHOTO}/${user.profile_photo}`: "/perry-casino.webp"}/>
+          {/* <AvatarImage src={`${API_PHOTO}/${user.profile_photo}`} /> */}
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div className="w-full ml-5">

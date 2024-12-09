@@ -39,7 +39,8 @@ const RequestCard = ({
       className={`flex p-5 ${!isFirst && "border-t-2"} border-linkin-lightgray hover:bg-gray-200 transition-colors duration-150 ease-in-out`}
     >
       <Avatar className="h-16 w-16">
-        <AvatarImage src={`${API_PHOTO}/${profile_photo_path}`} />
+      <AvatarImage src={profile_photo_path ? `${API_PHOTO}/${profile_photo_path}`: "/perry-casino.webp"}/>
+        {/* <AvatarImage src={`${API_PHOTO}/${profile_photo_path}`} /> */}
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
       <div className="w-full flex flex-col sm:flex-row sm:justify-between">

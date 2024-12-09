@@ -150,7 +150,8 @@ const Chat = () => {
             <ArrowLeft />
           </button>
           <Avatar className="h-12 w-12 md:h-16 md:w-16">
-            <AvatarImage src={`${API_PHOTO}/${receiver?.profile_photo}`} />
+          <AvatarImage src={receiver?.profile_photo ? `${API_PHOTO}/${receiver?.profile_photo}`: "/perry-casino.webp"}/>
+            {/* <AvatarImage src={`${API_PHOTO}/${receiver?.profile_photo}`} /> */}
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <h1 className="text-xl font-semibold ml-2">{receiver?.username}</h1>

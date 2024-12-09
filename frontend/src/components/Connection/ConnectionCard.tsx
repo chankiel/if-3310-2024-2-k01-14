@@ -61,7 +61,8 @@ const ConnectionCard = ({
     >
       <Link to={`/profile/${id}`} className="w-full flex items-center">
         <Avatar className="h-16 w-16">
-          <AvatarImage src={`${API_PHOTO}/${profile_photo}`}/>
+        <AvatarImage src={profile_photo ? `${API_PHOTO}/${profile_photo}`: "/perry-casino.webp"}/>
+          {/* <AvatarImage src={`${API_PHOTO}/${profile_photo}`}/> */}
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div className="w-full ml-3">

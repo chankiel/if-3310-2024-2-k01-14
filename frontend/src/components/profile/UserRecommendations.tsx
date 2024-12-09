@@ -22,7 +22,8 @@ export default function UserRecommendations({
       >
         <Link to={`/profile/${user.id}`}>
         <Avatar>
-          <AvatarImage src={`${API_PHOTO}/${user.profile_photo}`}/>
+        <AvatarImage src={user.profile_photo ? `${API_PHOTO}/${user.profile_photo}`: "/perry-casino.webp"}/>
+          {/* <AvatarImage src={`${API_PHOTO}/${user.profile_photo}`}/> */}
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         </Link>

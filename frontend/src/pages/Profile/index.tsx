@@ -13,6 +13,7 @@ import ChatApi from "../../api/chat-api";
 import ConnectionApi from "../../api/connection-api";
 import { toast } from "react-toastify";
 import { APIResponse } from "../../types";
+import { RightSidebar } from "../../components";
 
 export interface Feed {
   content: string;
@@ -41,7 +42,7 @@ export interface RecommendationData {
 }
 
 export default function Profile() {
-  const { isAuthenticated, currentId, update ,setUpdate } = useAuth();
+  const { isAuthenticated, currentId, update, setUpdate } = useAuth();
   const { user_id } = useParams<{ user_id: string }>();
   const [profileData, setProfileData] = useState<ProfileData | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -55,23 +56,23 @@ export default function Profile() {
   };
 
   const handleConnect = async (user_id: number, isConnected: boolean) => {
-    try{
-      const res = isConnected ? await ConnectionApi.deleteConnection(currentId,user_id):
-      await ConnectionApi.createRequest({
-        from_id: currentId,
-        to_id: user_id,
-      })
+    try {
+      const res = isConnected ? await ConnectionApi.deleteConnection(currentId, user_id) :
+        await ConnectionApi.createRequest({
+          from_id: currentId,
+          to_id: user_id,
+        })
       toast.success(res.message);
-      if(isConnected){
+      if (isConnected) {
         setIsConnected(false)
       }
       setHasRequested(!isConnected);
-    }catch(error){
+    } catch (error) {
       console.log(error)
       toast.error((error as APIResponse).message)
     }
   }
-  
+
   useEffect(() => {
     const fetchProfileDataAndConnections = async () => {
       try {
@@ -82,29 +83,29 @@ export default function Profile() {
         if (!profileResponse.ok) {
           throw new Error("Failed to fetch profile data");
         }
-        
-        const connectionsResponse = await fetch(`${API_URL}/connections/${currentId}`, {
-          method: "GET",
-        });
-        
-        if (!connectionsResponse.ok) {
-          throw new Error("Failed to fetch connections data");
-        }
-        
         const profileData = await profileResponse.json();
-        
-        const connectionsData = await connectionsResponse.json();
-        const isUserConnected = connectionsData.body.some((connection: any) => connection.id === Number(user_id));
-        setIsConnected(isUserConnected);
-        if(isUserConnected){
-          const room_id = await ChatApi.getRoomId(currentId, Number(user_id));
-          profileData.body = {
-            ...profileData.body,
-            room_id: room_id,
+
+        if (isAuthenticated) {
+
+          const connectionsResponse = await fetch(`${API_URL}/connections/${currentId}`, {
+            method: "GET",
+          });
+
+          if (!connectionsResponse.ok) {
+            throw new Error("Failed to fetch connections data");
+          }
+          const connectionsData = await connectionsResponse.json();
+          const isUserConnected = connectionsData.body.some((connection: any) => connection.id === Number(user_id));
+          setIsConnected(isUserConnected);
+          if (isUserConnected) {
+            const room_id = await ChatApi.getRoomId(currentId, Number(user_id));
+            profileData.body = {
+              ...profileData.body,
+              room_id: room_id,
+            }
           }
         }
 
-        
         setProfileData(profileData.body);
 
         await ConnectionApi.checkRequested(currentId, Number(user_id))
@@ -135,20 +136,19 @@ export default function Profile() {
 
   return (
     <>
-      <main className="bg-custom-bg-color min-h-screen">
+      <section className="bg-custom-bg-color min-h-screen bg-linkin-subtleyellow border-none min-w-full">
         <div className="flex flex-col md:flex-row justify-center gap-x-6">
           <div className="ml-2 max-w-3xl">
-            <ProfileSection data={profileData} isAuthenticated={isAuthenticated} currentId={currentId} user_id={Number(user_id)} isConnected={isConnected} onUpdate={handleProfileUpdate} room_id={profileData.room_id ?? -1} handleConnect={handleConnect} hasRequested={hasRequested}/>
-            <ActivitySection username={profileData.username} activity={profileData.feeds?.[0] || null} currentId={currentId} user_id={Number(user_id)}/>
+            <ProfileSection data={profileData} isAuthenticated={isAuthenticated} currentId={currentId} user_id={Number(user_id)} isConnected={isConnected} onUpdate={handleProfileUpdate} room_id={profileData.room_id ?? -1} handleConnect={handleConnect} hasRequested={hasRequested} />
+            {isAuthenticated && <ActivitySection username={profileData.username} activity={profileData.feeds?.[0] || null} currentId={currentId} user_id={Number(user_id)} />}
             <ExperienceSection experiences={profileData.work_history || null} />
             <SkillsSection skills={profileData.skills || null} />
           </div>
-
-          <div className="max-w-xs">
-            <RecommendationSection />
-          </div>
+          <RightSidebar>
+            {isAuthenticated && <RecommendationSection />}
+          </RightSidebar>
         </div>
-      </main>
+      </section>
     </>
   );
 }

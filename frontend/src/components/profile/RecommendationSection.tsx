@@ -62,7 +62,7 @@ export default function RecommendationSection() {
   };
 
   return (
-    <section className="bg-white border rounded-lg pt-2">
+    <section className="bg-white border rounded-lg pt-2 mb-7">
       <h1 className="font-semibold px-6 pt-3">People you might know</h1>
       {error && <p className="text-red-500 px-6">{error}</p>}
       <ul>

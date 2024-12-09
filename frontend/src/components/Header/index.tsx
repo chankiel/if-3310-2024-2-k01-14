@@ -102,7 +102,8 @@ const Header: React.FC = () => {
                 <Popover>
                   <PopoverTrigger>
                     <Avatar className="h-7 w-7">
-                      <AvatarImage src={`${API_PHOTO}/${profile_photo}`} />
+                    <AvatarImage src={profile_photo ? `${API_PHOTO}/${profile_photo}`: "/perry-casino.webp"}/>
+                      {/* <AvatarImage src={`${API_PHOTO}/${profile_photo}`} /> */}
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
 
@@ -116,7 +117,8 @@ const Header: React.FC = () => {
                   <PopoverContent align="end" sideOffset={15}>
                     <div className="flex gap-2 mb-4">
                       <Avatar className="h-20 w-20">
-                        <AvatarImage src={`${API_PHOTO}/${profile_photo}`} />
+                      <AvatarImage src={profile_photo ? `${API_PHOTO}/${profile_photo}`: "/perry-casino.webp"}/>
+                        {/* <AvatarImage src={`${API_PHOTO}/${profile_photo}`} /> */}
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
                       <div className="text-left">

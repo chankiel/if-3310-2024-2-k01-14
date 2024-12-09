@@ -220,6 +220,7 @@ export default function Feed() {
                 <div className="flex items-center w-full mb-4 border rounded-lg px-8 py-6 bg-white">
                     <div className="w-1/7">
                         <Avatar>
+                        <AvatarImage src={profile_photo ? `${API_PHOTO}/${profile_photo}`: "/perry-casino.webp"}/>
                             <AvatarImage src={`${API_PHOTO}/${profile_photo}`} />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
@@ -247,7 +248,8 @@ export default function Feed() {
                                     <div className="flex items-center w-full pb-2">
                                         <div className="w-1/7 pl-4">
                                             <Avatar>
-                                                <AvatarImage src={`${API_PHOTO}/${feed.user.profile_photo_path}`} />
+                                            <AvatarImage src={feed.user.profile_photo_path ? `${API_PHOTO}/${feed.user.profile_photo_path}`: "/perry-casino.webp"}/>
+                                                {/* <AvatarImage src={`${API_PHOTO}/${feed.user.profile_photo_path}`} /> */}
                                                 <AvatarFallback>CN</AvatarFallback>
                                             </Avatar>
                                         </div>

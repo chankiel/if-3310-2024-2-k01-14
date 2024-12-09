@@ -27,7 +27,8 @@ const BubbleChat: React.FC<BubbleChatProps> = ({
     >
       {showProfile && text? (
         <Avatar className="h-10 w-10">
-          <AvatarImage src={`${API_PHOTO}/${profile_photo}`}/>
+          <AvatarImage src={profile_photo ? `${API_PHOTO}/${profile_photo}`: "/perry-casino.webp"}/>
+          {/* <AvatarImage src={`${API_PHOTO}/${profile_photo}`}/> */}
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       ) : (
