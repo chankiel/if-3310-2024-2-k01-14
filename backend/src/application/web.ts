@@ -19,7 +19,7 @@ web.use("/api", publicRouter);
 
 web.use(errorMiddleware);
 
-web.use('/store', express.static(path.join(__dirname, '../store')));
+web.use("/store", express.static(path.join(__dirname, "../store")));
 
 const redis = new Redis({
   host: "redis",

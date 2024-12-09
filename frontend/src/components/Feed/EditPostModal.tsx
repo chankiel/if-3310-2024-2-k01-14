@@ -26,7 +26,7 @@ export default function EditPostModal({ isOpen, onClose, feed_id, username, cont
         onClose();
     };
     useEffect(() => {
-        setPostContent(content); // Update postContent whenever content changes
+        setPostContent(content);
     }, [content]);
 
     if (!isOpen) return null;
@@ -46,7 +46,6 @@ export default function EditPostModal({ isOpen, onClose, feed_id, username, cont
             setResponseMessage("An error occurred. Please try again.");
             console.error("Error: ", err);
         }
-        // window.location.reload();
     };
 
     return (
