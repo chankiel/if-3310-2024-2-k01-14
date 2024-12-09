@@ -5,6 +5,7 @@ import multer from "multer";
 import { AuthController } from "../controller/auth-controller";
 import { authMiddleware } from "../middleware/auth-middleware";
 import { FeedController } from "../controller/feed-controller";
+import { TestController } from "../controller/test-controller";
 
 const publicRouter = express.Router();
 const upload = multer()
@@ -24,6 +25,5 @@ publicRouter.get(
 
 /*----------------- Connections -----------------*/
 publicRouter.get("/connections/:user_id(\\d+)",ConnectionController.indexConnection)
-
 
 export default publicRouter

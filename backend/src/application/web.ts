@@ -8,11 +8,15 @@ import cookieParser from "cookie-parser";
 import http from "http"
 import { Server } from "socket.io";
 import path from "path";
+import { TestController } from "../controller/test-controller";
 
 const web = express();
 web.use(cors({ origin: "http://localhost:5173", credentials: true }));
 web.use(express.json());
 web.use(cookieParser());
+
+web.get("/health", TestController.health)
+
 
 web.use("/api", apiRouter);
 web.use("/api", publicRouter);

@@ -59,6 +59,7 @@ export class UserService {
       profile_photo: user.profile_photo_path,
       full_name: user.full_name,
       connection_count: user._count.connectionsFrom,
+      name: user.full_name
     };
 
     return formattedUser;
