@@ -15,6 +15,18 @@ export interface UserRecommendation {
     profile_photo: string;
 }
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from "../../components/ui/alert-dialog";
+
 
 export default function Feed() {
     const { currentId } = useAuth();
@@ -114,7 +126,11 @@ export default function Feed() {
 
     useEffect(() => {
         const fecthUlang = async () => {
-            queryClient.invalidateQueries(["feeds"]);
+            queryClient.invalidateQueries({
+                queryKey: ["feeds"], 
+                exact: true,        
+            }
+            );
         };
         
         fecthUlang();
@@ -215,11 +231,7 @@ export default function Feed() {
                         Start a post, try writing with AI
                     </button>
                 </div>
-                <h1 className="px-5 text-xl font-semibold mb-3">
-                    {hasFeed
-                        ? ``
-                        : "You don't have a Feed yet."}
-                </h1>
+
                 {isLoading ? (
                     <p>Loading feeds...</p>
                 ) : isError ? (
@@ -258,28 +270,40 @@ export default function Feed() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="text-xl ml-4">{feed.content}</div>
+                                <div className="text-xl ml-2 break-words overflow-hidden w-full">{feed.content}</div>
                             </div>
-                        
-                            <div
-                                className={`absolute top-6 right-4 flex gap-2 ${
+
+                            <div className={`absolute top-6 right-4 flex gap-2 ${
                                     currentId === feed.user.id ? "" : "hidden"
-                                }`}
-                            >
+                                }`}>
                                 <button
-                                    onClick={() => handleEdit(feed.id, feed.content)}
-                                    className="p-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
-                                    aria-label="Edit"
+                                className="p-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+                                onClick={() => handleEdit(feed.id, feed.content)}
                                 >
-                                    <PencilIcon height={20} width={20} />
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(feed.id)}
-                                    className="p-2 text-sm text-white bg-red-500 rounded hover:bg-red-600"
-                                    aria-label="Delete"
-                                >
-                                    <TrashIcon height={20} width={20} />
-                                </button>
+                                <PencilIcon height={15} width={15} />
+                            </button>
+
+                            <AlertDialog>
+                                <AlertDialogTrigger className="p-2 text-sm text-white bg-red-500 rounded hover:bg-red-600">
+                                    <TrashIcon height={15} width={15} />
+                                </AlertDialogTrigger>
+                                <AlertDialogContent className="md:w-1/2 w-2/3">
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle className="text-xl font-semibold py-2 border-b-2 border-b-linkin-border">Delete Feed</AlertDialogTitle>
+                                    <AlertDialogDescription className="text-md text-black pb-2 border-b-2 border-b-linkin-border">
+                                    You are about delete this feed. This action cannot be undone.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel className="button-blue text-lg">Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => handleDelete(feed.id)} className="button-white bg-white text-lg">
+                                    Continue
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+
+                            
                             </div>
                         </li>
                         
@@ -292,15 +316,15 @@ export default function Feed() {
                             alt="no-connection"
                             className="w-1/2 min-w-52"
                         />
-                        <h2 className="px-5 text-lg mt-5">
-                            There is no feed Here
+                        <h2 className="px-5 text-lg mt-5 mb-8">
+                        You don't have a Feed yet.
                         </h2>
                     </section>
                 )}
                 {hasNextPage && (isFetchingNextPage && <div>Loading more...</div>)}
                 <div ref={loadMoreRef} />
             </section>
-            <div className="max-w-sm">
+            <div className="w-[250px] self-start sticky top-[90px] hidden xl:block">
                 <RecommendationSection recommendations={recommendations} />
             </div>
 
