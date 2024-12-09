@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import { Sidebar } from "../../components";
+import { RightSidebar, Sidebar } from "../../components";
 import { RecommendationSection } from "../../components/profile";
 import CreatePostModal from "../../components/Feed/CreatePostModal";
 import { useAuth } from "../../contexts/AuthContext";
@@ -300,10 +300,10 @@ export default function Feed() {
                 {hasNextPage && (isFetchingNextPage && <div>Loading more...</div>)}
                 <div ref={loadMoreRef} />
             </section>
-            <div className="max-w-sm">
+            {/* <div className="max-w-sm">
                 <RecommendationSection recommendations={recommendations} />
-            </div>
-
+            </div> */}
+        <RightSidebar/>
         <CreatePostModal isOpen={isModalOpen} onClose={handleCloseModal} onAddFeed={handleNewPost}/>
         <EditPostModal isOpen={isModalEdit} onClose={handleCloseModalEdit} feed_id={feedIdEdit} user_id={currentId} username={username} content={editContent} onUpdate={handleUpdateFeed} />
     </>
