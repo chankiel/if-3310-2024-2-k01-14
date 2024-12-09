@@ -3,19 +3,15 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../contexts/AuthContext";
 
-const UnauthRoute = ({children}: {children: React.ReactNode}) => {
-  const {isAuthenticated} = useAuth();
+const UnauthRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(isAuthenticated){
-        if(window.history.length > 1){
-            navigate(-1)
-        }else{
-            navigate("/")
-        }
+    if (isAuthenticated) {
+      navigate("/feed");
     }
-  }, [isAuthenticated,navigate]);
+  }, [isAuthenticated, navigate]);
 
   return children;
 };
