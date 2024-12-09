@@ -107,7 +107,7 @@ export default function CreatePostModal({ isOpen, onClose, onAddFeed }: CreatePo
                                 type="submit"
                                 disabled={isButtonDisabled}
                             >
-                                Post
+                                Save
                             </button>
                         </div>
                     </form>

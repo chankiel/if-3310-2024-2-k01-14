@@ -30,7 +30,7 @@ export default function EditPostModal({ isOpen, onClose, feed_id, content, onUpd
 
     if (!isOpen) return null;
 
-    const isButtonDisabled = postContent.trim() === "";
+    const isButtonDisabled = postContent.trim() === "" || postContent.length > 280;
 
     const handlePost = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -73,14 +73,18 @@ export default function EditPostModal({ isOpen, onClose, feed_id, content, onUpd
                             className="w-full h-32 p-2 border rounded-lg focus:outline-none"
                             value={postContent}
                             onChange={(e) => setPostContent(e.target.value)}
+                            maxLength={280}
                         />
                         <div className="flex justify-end items-center mt-4">
+                            <span className={`mr-8 text-base ${postContent.length > 280 ? 'text-red-600' : 'text-gray-500'}`}>
+                                {postContent.length}/280
+                            </span>
                             <button
                                 className={`px-4 py-2 rounded-lg ${isButtonDisabled ? 'bg-gray-400 text-gray-200' : 'bg-blue-500 text-white'}`}
                                 type="submit"
                                 disabled={isButtonDisabled}
                             >
-                                Save
+                                Post
                             </button>
                         </div>
                     </form>
