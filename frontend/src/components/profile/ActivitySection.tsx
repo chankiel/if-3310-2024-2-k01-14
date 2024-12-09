@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Feed } from "../../pages/Profile";
 import CreatePostModal from "../Feed/CreatePostModal";
 import moment from "moment";
-import { useAuth } from "../../contexts/AuthContext";
 
 interface ActivitySectionProps {
     username: string;

@@ -39,7 +39,7 @@ export default function LandingPage() {
             New to LinkedIn?{" "}
             <a
               href="/register"
-              className="text-linkin-blue hover:text-linkin-dark-blue hover:underline"
+              className="text-linkin-dark-blue hover:text-linkin-lightgray hover:underline"
             >
               Join now
             </a>
@@ -49,6 +49,7 @@ export default function LandingPage() {
       <img
         src="/images/landing-page-image.svg"
         className="lg:m-5 lg:w-[800px] lg:h-[800px] w-[300px] h-[300px] md:w-[450px] md:h-[450px]"
+        alt="landing-page-image"
       />
     </div>
   );

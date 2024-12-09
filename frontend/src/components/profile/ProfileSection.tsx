@@ -2,7 +2,7 @@ import { useState } from "react";
 import EditProfileModal from "./EditProfileModal";
 import { ProfileData } from "../../pages/Profile";
 import { Link } from "react-router-dom";
-import { API_PHOTO, API_URL } from "../../constant";
+import { API_PHOTO } from "../../constant";
 import { ClockIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import {
   AlertDialog,
@@ -15,7 +15,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import { useAuth } from "../../contexts/AuthContext";
 
 interface ProfileDataProps {
   data: ProfileData;
