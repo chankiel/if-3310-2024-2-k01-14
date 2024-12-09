@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { API_URL } from "../../constant";
+import { API_PHOTO, API_URL } from "../../constant";
 import { useAuth } from "../../contexts/AuthContext";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+
 
 interface CreatePostModalProps {
     isOpen: boolean;
@@ -9,7 +11,7 @@ interface CreatePostModalProps {
 }
 
 export default function CreatePostModal({ isOpen, onClose, onAddFeed }: CreatePostModalProps) {
-    const { name, username, currentId } = useAuth();
+    const { name, username, currentId, profile_photo } = useAuth();
     const [postContent, setPostContent] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
     const [responseMessage, setResponseMessage] = useState("");
@@ -62,7 +64,6 @@ export default function CreatePostModal({ isOpen, onClose, onAddFeed }: CreatePo
                 setPostContent("");
                 onAddFeed(data.feeds);
                 onClose();
-                // window.location.reload();
             } else {
                 setIsSuccess(false);
                 setResponseMessage(data.message);
@@ -80,14 +81,13 @@ export default function CreatePostModal({ isOpen, onClose, onAddFeed }: CreatePo
                 <div className="bg-white rounded-lg p-8 w-96 md:w-1/2 lg:w-1/2 h-auto max-h-[80vh] overflow-y-auto relative mt-16">
                     <div className="flex items-center w-full mb-4 px-2 py-2 bg-white">
                         <div className="w-1/7">
-                            <img
-                                src="/perry-casino.webp"
-                                alt="Profile"
-                                className="w-14 h-14 rounded-full"
-                            />
+                            <Avatar>
+                                <AvatarImage src={`${API_PHOTO}/${profile_photo}`} />
+                                <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
                         </div>
                         <div className="font-semibold text-base ml-4">
-                            Francesco Michael Kusuma
+                            {username}
                         </div>
                     </div>
                     <form onSubmit={handlePost}>

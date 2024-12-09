@@ -14,7 +14,7 @@ export class AuthService {
     // console.log(request)
     try {
       const loginRequest = Validation.validate(UserValidation.LOGIN, request);
-    } catch (error) {
+    } catch (error : any) {
       console.log(error.flatten())
       throw new ResponseError(400, "Login Error", error.flatten().fieldErrors)
     }

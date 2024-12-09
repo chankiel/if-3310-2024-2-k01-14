@@ -17,9 +17,21 @@ export interface UserRecommendation {
     profile_photo: string;
 }
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../components/ui/alert-dialog";
+
 
 export default function Feed() {
-    const { currentId } = useAuth();
+    const { currentId, profile_photo } = useAuth();
     const { isAuthenticated } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -116,7 +128,11 @@ export default function Feed() {
 
     useEffect(() => {
         const fecthUlang = async () => {
-            queryClient.invalidateQueries(["feeds"]);
+            queryClient.invalidateQueries({
+                queryKey: ["feeds"],
+                exact: true,
+            }
+            );
         };
 
         fecthUlang();
@@ -174,6 +190,28 @@ export default function Feed() {
         return <Navigate to="/login" replace />;
     }
 
+    // const recommendations: UserRecommendation[] = [
+    //     {
+    //         name: "Francesco Michael Kusuma",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    //     {
+    //         name: "John Doe",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    //     {
+    //         name: "Jane Smith",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    //     {
+    //         name: "Alice Johnson",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    //     {
+    //         name: "Bob Brown",
+    //         profile_photo: "/perry-casino.webp",
+    //     },
+    // ];
     console.log(data)
 
     return (
@@ -182,11 +220,10 @@ export default function Feed() {
             <section className="flex-1 bg-transparent border-0">
                 <div className="flex items-center w-full mb-4 border rounded-lg px-8 py-6 bg-white">
                     <div className="w-1/7">
-                        <img
-                            src="/perry-casino.webp"
-                            alt="Profile"
-                            className="w-14 h-14 rounded-full"
-                        />
+                        <Avatar>
+                            <AvatarImage src={`${API_PHOTO}/${profile_photo}`} />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
                     </div>
                     <button
                         className="flex-1 ml-4 p-4 border border-gray-400 rounded-3xl text-left focus:outline-none hover:bg-gray-100"
@@ -195,11 +232,7 @@ export default function Feed() {
                         Start a post, try writing with AI
                     </button>
                 </div>
-                <h1 className="px-5 text-xl font-semibold mb-3">
-                    {hasFeed
-                        ? ``
-                        : "You don't have a Feed yet."}
-                </h1>
+
                 {isLoading ? (
                     <p>Loading feeds...</p>
                 ) : isError ? (
@@ -266,8 +299,8 @@ export default function Feed() {
                             alt="no-connection"
                             className="w-1/2 min-w-52"
                         />
-                        <h2 className="px-5 text-lg mt-5">
-                            There is no feed Here
+                        <h2 className="px-5 text-lg mt-5 mb-8">
+                            You don't have a Feed yet.
                         </h2>
                     </section>
                 )}
@@ -279,7 +312,7 @@ export default function Feed() {
             </RightSidebar>
 
             <CreatePostModal isOpen={isModalOpen} onClose={handleCloseModal} onAddFeed={handleNewPost} />
-            <EditPostModal isOpen={isModalEdit} onClose={handleCloseModalEdit} feed_id={feedIdEdit} user_id={currentId} username={username} content={editContent} onUpdate={handleUpdateFeed} />
+            <EditPostModal isOpen={isModalEdit} onClose={handleCloseModalEdit} feed_id={feedIdEdit} content={editContent} onUpdate={handleUpdateFeed} />
         </>
     );
 }
