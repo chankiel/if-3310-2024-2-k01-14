@@ -50,14 +50,16 @@ const Requests = () => {
         {requests && requests.length > 0 ? (
           requests.map((req, index) => <RequestCard key={index} {...req} handleRespond={handleRespond} isFirst={index==0}/>)
         ) : (
-          <div className="w-5/6 mx-auto flex flex-col items-center mt-10">
-            <img
-              src="/images/no-request.png"
-              alt="no-request"
-              className="w-1/2"
-            />
-            <h1 className="text-lg mt-3">No new requests</h1>
-          </div>
+          <div className="flex flex-col items-center">
+          <img
+            src="/images/no-request.png"
+            alt="no-connection"
+            className="w-1/2 min-w-52"
+          />
+          <h2 className="px-5 text-xl mt-5">
+            No new requests
+          </h2>
+        </div>
         )}
       </section>
     </>
