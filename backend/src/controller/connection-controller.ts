@@ -206,6 +206,11 @@ export class ConnectionController {
         unconnect_req
       );
 
+      const room = await ChatService.deleteRoomChat({
+        first_id: unconnect_req.from_id,
+        second_id: unconnect_req.to_id,
+      })
+
       const response = formatResponse(
         true,
         null,

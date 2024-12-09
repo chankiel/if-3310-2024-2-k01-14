@@ -5,20 +5,30 @@ import { ConnectionFormat } from "../../types";
 import ConnectionApi from "../../api/connection-api";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import { toast } from "react-toastify";
+import UserApi from "../../api/user-api";
 
 const Connection = () => {
   const { currentId } = useAuth();
   const [connections, setConnections] = useState<ConnectionFormat[]>([]);
   const { userId } = useParams();
   const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState<string>("");
   const hasConnection = connections && connections.length > 0;
   const user_id_valid = userId ?? currentId;
 
+  const isSelf = currentId == Number(user_id_valid);
+
+  console.log(connections);
   useEffect(() => {
     const fetchConnections = async () => {
       try {
         const data = await ConnectionApi.getConnections(Number(user_id_valid!));
         setConnections(data);
+        if(!isSelf){
+          const user = await UserApi.getUser(userId!);
+          setUsername(user.username);
+        }
       } catch (error) {
         console.log(error);
       } finally{
@@ -32,7 +42,8 @@ const Connection = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await ConnectionApi.deleteConnection(currentId, Number(id));
+      const res = await ConnectionApi.deleteConnection(currentId, Number(id));
+      toast.success("Connection deleted successfully!")
       setConnections((prev) =>
         prev.filter((connection) => connection.id !== id)
       );
@@ -47,8 +58,8 @@ const Connection = () => {
       <section className="py-5">
         <h1 className="px-5 text-xl font-semibold mb-3">
           {hasConnection
-            ? `Ignatius • ${connections.length} Connections`
-            : "You don't have a connection yet."}
+            ? `${isSelf ? "My connections":`${username}`} • ${connections.length} Connections`
+            : `${isSelf ? "You don't":`${username} doesn't`} have any connections yet.`}
         </h1>
         {hasConnection ? (
           connections.map((con,index) => (
@@ -62,6 +73,7 @@ const Connection = () => {
               username={con.username}
               isSelf={currentId == user_id_valid}
               isFirst={index==0}
+              room_id={con.room_id}
             />
           ))
         ) : (
