@@ -36,7 +36,6 @@ export default function Feed() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
     const queryClient = useQueryClient();
-    const { username } = useAuth();
     const [editContent, setEditContent] = useState("")
     const [isModalEdit, setIsModalEdit] = useState(false);
     const [feedIdEdit, setFeedIdEdit] = useState(0);
@@ -269,24 +268,35 @@ export default function Feed() {
                                     <div className="text-xl ml-4">{feed.content}</div>
                                 </div>
 
-                                <div
-                                    className={`absolute top-6 right-4 flex gap-2 ${currentId === feed.user.id ? "" : "hidden"
-                                        }`}
+                                <div className={`absolute top-6 right-4 flex gap-2 ${
+                                    currentId === feed.user.id ? "" : "hidden"
+                                }`}>
+                                <button
+                                    className="p-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+                                    onClick={() => handleEdit(feed.id, feed.content)}
                                 >
-                                    <button
-                                        onClick={() => handleEdit(feed.id, feed.content)}
-                                        className="p-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
-                                        aria-label="Edit"
-                                    >
-                                        <PencilIcon height={20} width={20} />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(feed.id)}
-                                        className="p-2 text-sm text-white bg-red-500 rounded hover:bg-red-600"
-                                        aria-label="Delete"
-                                    >
-                                        <TrashIcon height={20} width={20} />
-                                    </button>
+                                    <PencilIcon height={15} width={15} />
+                                </button>
+                                <AlertDialog>
+                                    <AlertDialogTrigger className="p-2 text-sm text-white bg-red-500 rounded hover:bg-red-600">
+                                        <TrashIcon height={15} width={15} />
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent className="md:w-1/2 w-2/3">
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle className="text-xl font-semibold py-2 border-b-2 border-b-linkin-border">Delete Feed</AlertDialogTitle>
+                                        <AlertDialogDescription className="text-md text-black pb-2 border-b-2 border-b-linkin-border">
+                                        You are about delete this feed. This action cannot be undone.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel className="button-blue text-lg">Cancel</AlertDialogCancel>
+                                        <AlertDialogAction onClick={() => handleDelete(feed.id)} className="button-white bg-white text-lg">
+                                        Continue
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                                
                                 </div>
                             </li>
 
