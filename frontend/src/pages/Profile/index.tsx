@@ -9,6 +9,10 @@ import {
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { API_URL } from "../../constant";
+import ChatApi from "../../api/chat-api";
+import ConnectionApi from "../../api/connection-api";
+import { toast } from "react-toastify";
+import { APIResponse } from "../../types";
 
 export interface Feed {
   content: string;
@@ -24,6 +28,7 @@ export interface ProfileData {
   full_name: string;
   connection_count: number;
   feeds?: Feed[] | null;
+  room_id?: number | null;
 }
 
 export interface UserRecommendation {
@@ -40,8 +45,8 @@ export default function Profile() {
   const { user_id } = useParams<{ user_id: string }>();
   const [profileData, setProfileData] = useState<ProfileData | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [hasRequested, setHasRequested] = useState<boolean>(false);
   const [isConnected, setIsConnected] = useState(false);
-  // const [recommendations, setRecommendations] = useState<RecommendationData | undefined>(undefined);
 
   const handleProfileUpdate = (updatedData: ProfileData) => {
     console.log("Updating profile data:", updatedData);
@@ -49,14 +54,29 @@ export default function Profile() {
     setProfileData(updatedData);
   };
 
+  const handleConnect = async (user_id: number, isConnected: boolean) => {
+    try{
+      const res = isConnected ? await ConnectionApi.deleteConnection(currentId,user_id):
+      await ConnectionApi.createRequest({
+        from_id: currentId,
+        to_id: user_id,
+      })
+      toast.success(res.message)
+      setIsConnected(!isConnected)
+    }catch(error){
+      console.log(error)
+      toast.error((error as APIResponse).message)
+    }
+  }
+  
+
   useEffect(() => {
-    const fetchProfileDataAndConnecetions = async () => {
+    const fetchProfileDataAndConnections = async () => {
       try {
         const profileResponse = await fetch(`${API_URL}/profile/${user_id}`, {
           method: "GET",
         });
 
-        
         if (!profileResponse.ok) {
           throw new Error("Failed to fetch profile data");
         }
@@ -64,21 +84,29 @@ export default function Profile() {
         const connectionsResponse = await fetch(`${API_URL}/connections/${currentId}`, {
           method: "GET",
         });
-        console.log("Di sini")
         
         if (!connectionsResponse.ok) {
           throw new Error("Failed to fetch connections data");
         }
         
         const profileData = await profileResponse.json();
+        
+        const connectionsData = await connectionsResponse.json();
+        const isUserConnected = connectionsData.body.some((connection: any) => connection.id === Number(user_id));
+        setIsConnected(isUserConnected);
+        if(isUserConnected){
+          const room_id = await ChatApi.getRoomId(currentId, Number(user_id));
+          profileData.body = {
+            ...profileData.body,
+            room_id: room_id,
+          }
+        }
+
+        
         setProfileData(profileData.body);
 
-        const connectionsData = await connectionsResponse.json();
-
-        const isUserConnected = connectionsData.body.some((connection: any) => connection.id === Number(user_id));
-        // const isUserConnected = true;
-        console.log(isUserConnected)
-        setIsConnected(isUserConnected);
+        await ConnectionApi.checkRequested(currentId, Number(user_id))
+        setHasRequested(true);
       } catch (error) {
         if (error instanceof Error) {
           console.log("Error fetch profile data and connections: ");
@@ -91,7 +119,7 @@ export default function Profile() {
       }
     };
 
-    fetchProfileDataAndConnecetions();
+    fetchProfileDataAndConnections();
   }, [user_id]);
 
   if (isLoading) {
@@ -102,12 +130,13 @@ export default function Profile() {
     return <div>No profile found.</div>;
   }
 
+
   return (
     <>
       <main className="bg-custom-bg-color min-h-screen">
         <div className="flex flex-col md:flex-row justify-center gap-x-6">
           <div className="ml-2 max-w-3xl">
-            <ProfileSection data={profileData} isAuthenticated={isAuthenticated} currentId={currentId} user_id={Number(user_id)} isConnected={isConnected} onUpdate={handleProfileUpdate}/>
+            <ProfileSection data={profileData} isAuthenticated={isAuthenticated} currentId={currentId} user_id={Number(user_id)} isConnected={isConnected} onUpdate={handleProfileUpdate} room_id={profileData.room_id ?? -1} handleConnect={handleConnect} hasRequested={hasRequested}/>
             <ActivitySection username={profileData.username} activity={profileData.feeds?.[0] || null} currentId={currentId} user_id={Number(user_id)}/>
             <ExperienceSection experiences={profileData.work_history || null} />
             <SkillsSection skills={profileData.skills || null} />

@@ -71,6 +71,32 @@ export class ChatService {
     return roomChat;
   }
 
+  static async getRoomByUsers(first_id: number, second_id: number) {
+    const roomChat = await prismaClient.roomChat.findFirst({
+      where: {
+        OR:[
+          {
+            first_user_id: first_id,
+            second_user_id: second_id,
+          },
+          {
+            first_user_id: second_id,
+            second_user_id: first_id,
+          }
+        ]
+      },
+      select:{
+        id: true,
+      }
+    });
+
+    if (!roomChat) {
+      throw new ResponseError(404, "Room Chat not found");
+    }
+
+    return roomChat;
+  }
+
   static async joinRoom(socket: Socket, roomId: string) {
     socket.join(roomId);
     console.log(`User with ID: ${socket.id} joined room ${roomId}`);

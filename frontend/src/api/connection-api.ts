@@ -24,6 +24,17 @@ class ConnectionApi {
     }
   }
 
+  static async checkRequested(from_id: number, to_id: number){
+    try {
+      const response = await this.axios.get<APIResponse>(
+        `/connection-requests/${from_id}/${to_id}`
+      );
+      return response.data;
+    } catch (error) {
+      throw (error as any)?.response?.data;
+    }
+  }
+
   static async getConnections(user_id: number): Promise<ConnectionFormat[]> {
     try {
       const response = await this.axios.get<APIResponse>(

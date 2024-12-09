@@ -45,6 +45,19 @@ class ChatApi {
       throw (error as any)?.response?.data
     }
   }
+
+  static async getRoomId(first_id: number, second_id: number){
+    try{
+      const response = await this.axios.get<APIResponse>(
+        `/room-chats/${first_id}/${second_id}`,  
+      )
+      return (response.data.body as {
+        room_id: number
+      }).room_id
+    }catch(error){
+      throw (error as any)?.response?.data
+    }
+  }
 }
 
 export default ChatApi;

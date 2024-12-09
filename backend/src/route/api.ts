@@ -23,12 +23,7 @@ apiRouter
 // );
 
 /*----------------- Connections -----------------*/
-apiRouter.post(
-  "/connection-requests",
-  upload.none(),
-  authMiddleware,
-  ConnectionController.storeConnectionRequest
-);
+
 apiRouter.delete(
   "/connections/:from_id(\\d+)/:to_id(\\d+)",
   upload.none(),
@@ -37,11 +32,25 @@ apiRouter.delete(
 );
 
 /*----------------- Connection-Requests -----------------*/
+apiRouter.post(
+  "/connection-requests",
+  upload.none(),
+  authMiddleware,
+  ConnectionController.storeConnectionRequest
+);
+
 apiRouter.get(
   "/connection-requests/:user_id(\\d+)/pending",
   upload.none(),
   authMiddleware,
   ConnectionController.indexPendingConnectionRequest
+);
+
+apiRouter.get(
+  "/connection-requests/:from_id(\\d+)/:to_id(\\d+)",
+  upload.none(),
+  authMiddleware,
+  ConnectionController.checkRequested
 );
 
 apiRouter.put(
@@ -64,6 +73,13 @@ apiRouter.get(
   upload.none(),
   authMiddleware,
   ChatController.getReceiver
+);
+
+apiRouter.get(
+  "/room-chats/:first_id(\\d+)/:second_id(\\d+)",
+  upload.none(),
+  authMiddleware,
+  ChatController.getRoomId
 );
 
 /*----------------- Chat -----------------*/

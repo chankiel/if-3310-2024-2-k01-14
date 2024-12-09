@@ -17,12 +17,9 @@ export class ChatController {
         ChatService.joinRoom(socket, roomId);
       });
 
-      socket.on(
-        "sendTyping",
-        (roomId: string, isTyping: boolean) => {
-          ChatService.sendIsTyping(socket,roomId,isTyping);
-        }
-      );
+      socket.on("sendTyping", (roomId: string, isTyping: boolean) => {
+        ChatService.sendIsTyping(socket, roomId, isTyping);
+      });
 
       socket.on(
         "sendMessage",
@@ -136,6 +133,30 @@ export class ChatController {
         true,
         inboxes,
         "Inboxes retrieved successfully!"
+      );
+
+      res.status(200).json(response);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  static async getRoomId(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const first_id = Number(req.params.first_id);
+      const second_id = Number(req.params.second_id);
+      const userId = Number(req.userId);
+
+      if (userId !== first_id && userId != second_id) {
+        throw new ResponseError(403, `User unauthorized!`);
+      }
+
+      const room_id = await ChatService.getRoomByUsers(first_id, second_id);
+
+      const response = formatResponse(
+        true,
+        { room_id: room_id.id },
+        "Room id retrieved successfully!"
       );
 
       res.status(200).json(response);

@@ -53,7 +53,7 @@ export class ConnectionController {
       const response = formatResponse(
         true,
         null,
-        "Connection Request created successfully!"
+        connection_request.status,
       );
 
       res.status(201).json(response);
@@ -111,6 +111,42 @@ export class ConnectionController {
       );
 
       res.status(200).json(response);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  static async checkRequested(
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const respond_req = {
+        from_id: Number(req.params.from_id),
+        to_id: Number(req.params.to_id),
+      };
+
+      if (req.userId != respond_req.from_id) {
+        throw new ResponseError(
+          403,
+          `User is unauthorized to check connection request!`
+        );
+      }
+
+      await validateConnectionRequestExists(
+        respond_req.from_id,
+        respond_req.to_id,
+        false
+      );
+
+      const response = formatResponse(
+        true,
+        {hasRequested: true},
+        `User has sent the connection request!`
+      );
+
+      res.status(201).json(response);
     } catch (e) {
       next(e);
     }
