@@ -2,6 +2,7 @@ import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Link } from "react-router";
+import { API_PHOTO } from "../../constant";
 
 const Sidebar: React.FC = () => {
   const { username, currentId, name, isAuthenticated, profile_photo } = useAuth();
@@ -16,9 +17,7 @@ const Sidebar: React.FC = () => {
             className="w-full h-full object-cover"
           />
           <Avatar className="h-20 w-20 absolute bottom-[-80%] left-5">
-            <AvatarImage src={
-              profile_photo
-                ? profile_photo : "/images/perry-casino.webp"}/>
+            <AvatarImage src={`${API_PHOTO}/${profile_photo}`}/>
             <AvatarFallback>GUEST</AvatarFallback>
           </Avatar>
         </div>

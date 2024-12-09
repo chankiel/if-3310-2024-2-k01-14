@@ -42,7 +42,7 @@ const Connection = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await ConnectionApi.deleteConnection(currentId, Number(id));
+      ConnectionApi.deleteConnection(currentId, Number(id));
       toast.success("Connection deleted successfully!")
       setConnections((prev) =>
         prev.filter((connection) => connection.id !== id)

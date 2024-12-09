@@ -11,6 +11,7 @@ import { ClockIcon, UserGroupIcon } from "@heroicons/react/24/solid";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useNavigate } from "react-router-dom";
+import { API_PHOTO, API_URL } from "../../constant";
 
 const Header: React.FC = () => {
   const { isAuthenticated, logout, username, currentId, profile_photo } =
@@ -101,7 +102,7 @@ const Header: React.FC = () => {
                 <Popover>
                   <PopoverTrigger>
                     <Avatar className="h-7 w-7">
-                      <AvatarImage src={profile_photo || "/images/perry-casino.webp"} />
+                      <AvatarImage src={`${API_PHOTO}/${profile_photo}`} />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
 
@@ -115,7 +116,7 @@ const Header: React.FC = () => {
                   <PopoverContent align="end" sideOffset={15}>
                     <div className="flex gap-2 mb-4">
                       <Avatar className="h-20 w-20">
-                        <AvatarImage src="/images/perry-casino.webp" />
+                        <AvatarImage src={`${API_PHOTO}/${profile_photo}`} />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
                       <div className="text-left">

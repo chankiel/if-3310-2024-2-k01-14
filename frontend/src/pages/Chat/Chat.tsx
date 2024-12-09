@@ -13,7 +13,7 @@ import { ArrowLeft } from "lucide-react";
 import { Sidebar } from "../../components";
 import BubbleChat from "../../components/Chat/BubbleChat";
 import { PaperAirplaneIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
-import { API_URL } from "../../constant";
+import { API_PHOTO, API_URL } from "../../constant";
 
 const Chat = () => {
   const { roomId } = useParams();
@@ -150,7 +150,7 @@ const Chat = () => {
             <ArrowLeft />
           </button>
           <Avatar className="h-12 w-12 md:h-16 md:w-16">
-            <AvatarImage src={receiver?.profile_photo ?? ""} />
+            <AvatarImage src={`${API_PHOTO}/${receiver?.profile_photo}`} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <h1 className="text-xl font-semibold ml-2">{receiver?.username}</h1>

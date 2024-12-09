@@ -1,3 +1,4 @@
+import { API_PHOTO } from "../../constant";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface BubbleChatProps {
@@ -26,7 +27,7 @@ const BubbleChat: React.FC<BubbleChatProps> = ({
     >
       {showProfile && text? (
         <Avatar className="h-10 w-10">
-          <AvatarImage src={profile_photo ?? ""} />
+          <AvatarImage src={`${API_PHOTO}/${profile_photo}`}/>
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       ) : (

@@ -21,6 +21,7 @@ import {
 } from "../../components/ui/avatar";
 import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
+import { API_PHOTO } from "../../constant";
 
 const Inbox = () => {
   const { currentId } = useAuth();
@@ -73,7 +74,7 @@ const Inbox = () => {
                     className="flex items-center"
                   >
                     <Avatar className="h-16 w-16">
-                      <AvatarImage src={con.profile_photo_path ?? ""} />
+                      <AvatarImage src={`${API_PHOTO}/${con.profile_photo_path}`} />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="w-full ml-3">
