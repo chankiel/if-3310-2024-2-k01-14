@@ -39,7 +39,7 @@ export class FeedController {
         const response = formatResponse(
           true,
           null,
-          `Feed with ${feed_id} deleted successfully!`
+          `Feed with id ${feed_id} deleted successfully!`
         );
   
         res.status(200).json(response);
@@ -67,7 +67,7 @@ export class FeedController {
         const response = formatResponse(
           true,
           null,
-          `Feed with ${feed_id} updated successfully!`
+          `Feed with id ${feed_id} updated successfully!`
         );
   
         res.status(200).json(response);
