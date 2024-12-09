@@ -71,7 +71,7 @@ async function seedFeeds() {
         password_hash: await bcrypt.hash("123456", 10),
         work_history: "Saya sudah bekerja selama tahun",
         skills: "Tidur",
-        profile_photo_path: "/images/perry-casino.webp",
+        profile_photo_path: "perry-casino.webp",
     })
     await prismaClient.user.createMany({
         data: user
