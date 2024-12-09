@@ -7,4 +7,6 @@ ChatController.setupSocket()
 
 server.listen(PORT, () => {
     console.log(`Server listening at port ${PORT}`);
+    console.log(`Swagger Docs available at http://localhost:${PORT}/api-docs`);
+
 })

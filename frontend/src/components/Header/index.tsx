@@ -11,7 +11,7 @@ import { ClockIcon, UserGroupIcon } from "@heroicons/react/24/solid";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useNavigate } from "react-router-dom";
-import { API_PHOTO, API_URL } from "../../constant";
+import { API_PHOTO } from "../../constant";
 
 const Header: React.FC = () => {
   const { isAuthenticated, logout, username, currentId, profile_photo } =

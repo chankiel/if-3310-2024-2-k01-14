@@ -4,11 +4,25 @@ info:
   version: 1.0.0
   description: API documentation for a LinkedIn-like application.
 servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/KIELCHANYEOL/LinkinPurry/1.0.0
   - url: http://localhost:3000/api
     description: Main server
+tags: 
+  - name: Profile
+  - name: Authentication
+  - name: Connections
+  - name: Connection Requests
+  - name: Room Chat
+  - name: Chat
+  - name: Feed
+  - name: Notifications
 paths:
   /logout:
     post:
+      tags:
+        - Authentication
       summary: Logout user
       description: Logs out an authenticated user.
       responses:
@@ -31,6 +45,8 @@ paths:
 
   /profile/:
     get:
+      tags: 
+        - Profile
       summary: Retrieve all users
       description: Retrieves all users based on the query parameter.
       parameters:
@@ -60,6 +76,8 @@ paths:
 
   /self:
     get:
+      tags: 
+        - Authentication
       summary: Retrieve self data
       description: Retrieves the authenticated user's data.
       responses:
@@ -94,6 +112,8 @@ paths:
 
   /profile/{user_id}:
     get:
+      tags: 
+        - Profile
       summary: Retrieve user data
       description: Retrieves personal data of a specific user.
       parameters:
@@ -135,6 +155,8 @@ paths:
 
   /connections/{user_id}:
     get:
+      tags: 
+        - Connections
       summary: Retrieve user connections
       description: Retrieves the list of connections of a specific user.
       parameters:
@@ -165,6 +187,8 @@ paths:
 
   /connection-requests:
     post:
+      tags: 
+        - Connection Requests
       summary: Create connection request
       description: Authenticated users can send a connection request.
       requestBody:
@@ -245,6 +269,8 @@ paths:
                     example: "Connection request already exists"
   /connections/{from_id}/{to_id}:
     delete:
+      tags: 
+        - Connections
       summary: Delete connection
       description: Deletes an existing connection between two users.
       parameters:
@@ -306,6 +332,8 @@ paths:
 
   /connection-requests/{user_id}/pending:
     get:
+      tags: 
+        - Connection Requests
       summary: Get pending connection requests
       description: Retrieves a list of pending connection requests for a user.
       parameters:
@@ -362,6 +390,8 @@ paths:
 
   /connection-requests/{from_id}/{to_id}/{action}:
     put:
+      tags: 
+        - Connection Requests
       summary: Respond to connection request
       description: Allows a user to accept or reject a connection request.
       parameters:
@@ -447,7 +477,73 @@ paths:
                     example: "Connection already exists."
 
   /connection-requests/{from_id}/{to_id}:
+    get:
+      tags: 
+        - Connection Requests
+      summary: Check if a connection request has been sent
+      description: Checks if a connection request has been sent from one user to another.
+      parameters:
+        - in: path
+          name: from_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user who is sending the connection request.
+        - in: path
+          name: to_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user to whom the connection request is being sent.
+      responses:
+        '200':
+          description: Connection request exists and has been sent.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    type: object
+                    properties:
+                      hasRequested:
+                        type: boolean
+                        example: true
+                  message:
+                    type: string
+                    example: "User has sent the connection request!"
+        '403':
+          description: User is unauthorized to check connection request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "User is unauthorized to check connection request!"
+        '404':
+          description: Connection request does not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Connection request doesn't exist."
     delete:
+      tags: 
+        - Connection Requests
       summary: Delete connection request
       description: Deletes a connection request between two users.
       parameters:
@@ -508,6 +604,8 @@ paths:
                     example: "Connection doesnt exist."
   /room-chats/{room_id}/receiver:
     get:
+      tags: 
+        - Room Chat
       summary: Get room chat receiver
       description: Retrieves the details of the receiver in a specific room chat.
       parameters:
@@ -562,6 +660,8 @@ paths:
 
   /chats/{room_id}:
     get:
+      tags: 
+        - Chat
       summary: Get chat messages
       description: Retrieves the messages from a specific room chat.
       parameters:
@@ -618,6 +718,8 @@ paths:
 
   /chats/{user_id}/inbox:
     get:
+      tags: 
+        - Chat
       summary: Get user inbox
       description: Retrieves the inbox for a specific user, including the last messages and room IDs.
       parameters:
@@ -660,6 +762,8 @@ paths:
                     example: "User unauthorized!"
   /feed:
     post:
+      tags: 
+        - Feed
       summary: Create a new feed
       description: Creates a new feed with the provided content.
       requestBody:
@@ -699,6 +803,8 @@ paths:
                     example: "Validation error: Content is required."
 
     get:
+      tags: 
+        - Feed
       summary: Get feeds with pagination
       description: Retrieves a paginated list of feeds.
       parameters:
@@ -742,6 +848,8 @@ paths:
 
   /feed/{feed_id}:
     delete:
+      tags: 
+        - Feed
       summary: Delete a feed
       description: Deletes a specific feed by its ID.
       parameters:
@@ -769,6 +877,8 @@ paths:
           description: Prisma validation error.
 
     put:
+      tags:
+        - Feed
       summary: Edit a feed
       description: Updates a specific feed by its ID.
       parameters:
@@ -803,6 +913,8 @@ paths:
 
   /subscribe:
     post:
+      tags:
+        - Notifications
       summary: Subscribe for push notifications
       description: Allows a user to subscribe to push notifications.
       requestBody:
@@ -832,6 +944,8 @@ paths:
 
   /send-chat-notification:
     post:
+      tags:
+        - Notifications
       summary: Send chat notification
       description: Sends a push notification for a chat message.
       requestBody:
@@ -855,6 +969,8 @@ paths:
 
   /send-new-post-notification:
     post:
+      tags:
+        - Notifications
       summary: Send new post notification
       description: Sends a push notification when a user creates a new post.
       requestBody:
@@ -875,6 +991,72 @@ paths:
       responses:
         '200':
           description: New post notification sent successfully.
+  /room-chats/{first_id}/{second_id}:
+    get:
+      tags: 
+        - Room Chat
+      summary: Get the room ID for a chat between two users
+      description: Retrieves the room ID for the chat between two users if the user is authorized.
+      parameters:
+        - in: path
+          name: first_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the first user.
+        - in: path
+          name: second_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the second user.
+      responses:
+        '200':
+          description: Room ID retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  body:
+                    type: object
+                    properties:
+                      room_id:
+                        type: integer
+                        example: 123
+                  message:
+                    type: string
+                    example: "Room id retrieved successfully!"
+        '403':
+          description: User is unauthorized to retrieve the room ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "User unauthorized!"
+        '404':
+          description: Room chat not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Room Chat not found."
+  
 
 components:
   schemas:
