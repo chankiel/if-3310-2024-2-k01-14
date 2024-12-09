@@ -93,6 +93,7 @@ const Inbox = () => {
             onClick={() => {
               setOpen(true);
             }}
+            aria-label="New Chat"
           >
             <PencilSquareIcon width={30} height={30} />
           </button>
