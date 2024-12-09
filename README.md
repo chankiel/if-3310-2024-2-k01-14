@@ -78,22 +78,24 @@ Dokum
 1. <strong>Load Test: Feed</strong>![lt-feed](./frontend/public/images/load_test_feed.png)<br/><br/><br/>
 
 ## **Screenshots of Application with Lighthouse**
-1. <strong>Halaman Login</strong>![login](./img/login.png)<br/><br/><br/>
-2. <strong>Halaman Register</strong>![register](./img/register.png)<br/><br/><br/>
-3. <strong>Halaman Profil</strong>![Profil](./img/jobseeker_home.png)<br/><br/><br/>
-4. <strong>Halaman Feed</strong>![Feed](./img/company_home.png)<br/><br/><br/>
-5. <strong>Halaman Daftar Pengguna</strong>![Daftar Pengguna](./img/company_tambah_lowongan.png)<br/><br/><br/>
-6. <strong>Halaman Permintaan Koneksi</strong>![Permintaan Koneksi](./img/company_detail_lowongan.png)<br/><br/><br/>
-7. <strong>Halaman daftar koneksi</strong>![daftar koneksi](./img/company_detail_lamaran.png)<br/><br/><br/>
-8. <strong>Halaman chat</strong>![chat](./img/company_edit_lowongan.png)<br/><br/><br/>
+1. <strong>Halaman Login</strong>![login](./images/login.png)<br/><br/><br/>
+2. <strong>Halaman Register</strong>![register](./images/register.png)<br/><br/><br/>
+3. <strong>Halaman Profil</strong>![Profil](./images/profile.png)<br/><br/><br/>
+4. <strong>Halaman Feed</strong>![Feed](./images/feed.png)<br/><br/><br/>
+5. <strong>Halaman Daftar Pengguna</strong>![Daftar Pengguna](./images/users.png)<br/><br/><br/>
+6. <strong>Halaman Permintaan Koneksi</strong>![Permintaan Koneksi](./images/requests.png)<br/><br/><br/>
+7. <strong>Halaman Daftar Koneksi</strong>![daftar koneksi](./images/connections.png)<br/><br/><br/>
+8. <strong>Halaman Chat</strong>![chat](./images/chat.png)<br/><br/><br/>
+9. <strong>Halaman Landing</strong>![chat](./images/landing-page.png)<br/><br/><br/>
+10. <strong>Halaman Not Found</strong>![chat](./images/not-found.png)<br/><br/><br/>
+11. <strong>Halaman Inbox</strong>![chat](./images/inbox.png)<br/><br/><br/>
 
 ## **Bonus yang dikerjakan**
 
 1. UI/UX seperti LinkedIn
-2. Caching
-3. Connection recommendation
-4. Typing Indicator
-5. Google Lighthouse
+2. Connection recommendation
+3. Typing Indicator
+4. Google Lighthouse
 
 ## **Pembagian Kerja - Workload Breakdown**
 
