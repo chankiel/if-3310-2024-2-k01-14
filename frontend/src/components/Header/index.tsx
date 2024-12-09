@@ -70,7 +70,7 @@ const Header: React.FC = () => {
         <a className="md:w-full h-full" href="/">
           <LinkedInIcon color="#0a66c2" size={50} />
         </a>
-        <nav className={`${isAuthenticated ? "w-full" : "lg:w-1/4 w-2/3"}`}>
+        <nav className={`${isAuthenticated ? "w-full" : "lg:w-1/3 w-2/3"}`}>
           <ul className="flex justify-around gap-2 text-sm text-gray-500 items-center">
             {paths.map((path, index) => (
               <li
