@@ -5,7 +5,6 @@ import {
   GroupIcon,
   HomeIcon,
   LinkedInIcon,
-  NotificationIcon,
 } from "../Icons";
 import { ClockIcon, UserGroupIcon } from "@heroicons/react/24/solid";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -18,7 +17,6 @@ const Header: React.FC = () => {
     useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  console.log(profile_photo);
   const handleLogout = async () => {
     try {
       const response = await logout();
@@ -50,11 +48,6 @@ const Header: React.FC = () => {
       name: "Chat",
       icon: <ChatIcon />,
     },
-    {
-      path: "/notifications",
-      name: "Notification",
-      icon: <NotificationIcon />,
-    },
   ];
 
   const publicPaths = [
@@ -79,7 +72,7 @@ const Header: React.FC = () => {
           <ul className="flex justify-around gap-2 text-sm text-gray-500 items-center">
             {paths.map((path, index) => (
               <li
-                className={`hover:text-black relative flex items-center justify-center md:min-w-14 ${
+                className={`hover:text-black relative flex items-center justify-center md:min-w-20 ${
                   path.path === location.pathname ? "text-black" : ""
                 }`}
                 key={index}
@@ -102,8 +95,7 @@ const Header: React.FC = () => {
                 <Popover>
                   <PopoverTrigger>
                     <Avatar className="h-7 w-7">
-                    <AvatarImage src={profile_photo ? `${API_PHOTO}/${profile_photo}`: "/perry-casino.webp"}/>
-                      {/* <AvatarImage src={`${API_PHOTO}/${profile_photo}`} /> */}
+                      <AvatarImage src={`${API_PHOTO}/${profile_photo}`} alt="profile-photo"/>
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
 
@@ -117,8 +109,7 @@ const Header: React.FC = () => {
                   <PopoverContent align="end" sideOffset={15}>
                     <div className="flex gap-2 mb-4">
                       <Avatar className="h-20 w-20">
-                      <AvatarImage src={profile_photo ? `${API_PHOTO}/${profile_photo}`: "/perry-casino.webp"}/>
-                        {/* <AvatarImage src={`${API_PHOTO}/${profile_photo}`} /> */}
+                        <AvatarImage src={`${API_PHOTO}/${profile_photo}`} alt="profile-photo"/>
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
                       <div className="text-left">

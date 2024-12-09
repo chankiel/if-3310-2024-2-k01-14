@@ -74,8 +74,7 @@ const Inbox = () => {
                     className="flex items-center"
                   >
                     <Avatar className="h-16 w-16">
-                    <AvatarImage src={con.profile_photo_path ? `${API_PHOTO}/${con.profile_photo_path}`: "/perry-casino.webp"}/>
-                      {/* <AvatarImage src={`${API_PHOTO}/${con.profile_photo_path}`} /> */}
+                      <AvatarImage src={`${API_PHOTO}/${con.profile_photo_path}`} alt="profile-photo"/>
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="w-full ml-3">

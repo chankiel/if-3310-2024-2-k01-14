@@ -20,15 +20,14 @@ const BubbleChat: React.FC<BubbleChatProps> = ({
 }) => {
   return (
     <div
-      className={`flex items-end gap-2 my-2 ${
+      className={`flex items-start gap-2 my-4 ${
         variant === "sent" ? "flex-row-reverse" : ""
       }`}
       ref={chatRef ?? null}
     >
-      {showProfile && text? (
+      {showProfile ? (
         <Avatar className="h-10 w-10">
-          <AvatarImage src={profile_photo ? `${API_PHOTO}/${profile_photo}`: "/perry-casino.webp"}/>
-          {/* <AvatarImage src={`${API_PHOTO}/${profile_photo}`}/> */}
+          <AvatarImage src={`${API_PHOTO}/${profile_photo}`} alt="profile-photo"/>
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       ) : (
@@ -45,7 +44,7 @@ const BubbleChat: React.FC<BubbleChatProps> = ({
         {!text && <div className="loader my-1"></div>}
       </div>
       <div
-        className={`text-xs text-opacity-75 ${
+        className={`text-xs text-opacity-75 items-stretch self-end ${
           variant === "sent" ? "text-right" : "text-left"
         }`}
       >

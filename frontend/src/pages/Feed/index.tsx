@@ -81,7 +81,7 @@ export default function Feed() {
                             ...page,
                             body: {
                                 ...page.body,
-                                feeds: [newFeed, ...page.body.feeds], // Tambahkan feed baru di awal
+                                feeds: [newFeed, ...page.body.feeds],
                             },
                         }
                         : page
@@ -189,30 +189,6 @@ export default function Feed() {
         return <Navigate to="/login" replace />;
     }
 
-    // const recommendations: UserRecommendation[] = [
-    //     {
-    //         name: "Francesco Michael Kusuma",
-    //         profile_photo: "/perry-casino.webp",
-    //     },
-    //     {
-    //         name: "John Doe",
-    //         profile_photo: "/perry-casino.webp",
-    //     },
-    //     {
-    //         name: "Jane Smith",
-    //         profile_photo: "/perry-casino.webp",
-    //     },
-    //     {
-    //         name: "Alice Johnson",
-    //         profile_photo: "/perry-casino.webp",
-    //     },
-    //     {
-    //         name: "Bob Brown",
-    //         profile_photo: "/perry-casino.webp",
-    //     },
-    // ];
-    console.log(data)
-
     return (
         <>
             <Sidebar />
@@ -220,8 +196,7 @@ export default function Feed() {
                 <div className="flex items-center w-full mb-4 border rounded-lg px-8 py-6 bg-white">
                     <div className="w-1/7">
                         <Avatar>
-                        <AvatarImage src={profile_photo ? `${API_PHOTO}/${profile_photo}`: "/perry-casino.webp"}/>
-                            <AvatarImage src={`${API_PHOTO}/${profile_photo}`} />
+                            <AvatarImage src={`${API_PHOTO}/${profile_photo}`} alt="profile-photo"/>
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                     </div>
@@ -248,8 +223,7 @@ export default function Feed() {
                                     <div className="flex items-center w-full pb-2">
                                         <div className="w-1/7 pl-4">
                                             <Avatar>
-                                            <AvatarImage src={feed.user.profile_photo_path ? `${API_PHOTO}/${feed.user.profile_photo_path}`: "/perry-casino.webp"}/>
-                                                {/* <AvatarImage src={`${API_PHOTO}/${feed.user.profile_photo_path}`} /> */}
+                                                <AvatarImage src={`${API_PHOTO}/${feed.user.profile_photo_path}`} alt="profile-photo"/>
                                                 <AvatarFallback>CN</AvatarFallback>
                                             </Avatar>
                                         </div>
@@ -267,7 +241,9 @@ export default function Feed() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="text-xl ml-4">{feed.content}</div>
+                                    <div className="text-xl ml-4 max-w-xs sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-2xl break-words overflow-hidden">
+                                        {feed.content}
+                                    </div>
                                 </div>
 
                                 <div className={`absolute top-6 right-4 flex gap-2 ${
@@ -287,13 +263,13 @@ export default function Feed() {
                                     <AlertDialogHeader>
                                         <AlertDialogTitle className="text-xl font-semibold py-2 border-b-2 border-b-linkin-border">Delete Feed</AlertDialogTitle>
                                         <AlertDialogDescription className="text-md text-black pb-2 border-b-2 border-b-linkin-border">
-                                        You are about delete this feed. This action cannot be undone.
+                                            You are about delete this feed. This action cannot be undone.
                                         </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
                                         <AlertDialogCancel className="button-blue text-lg">Cancel</AlertDialogCancel>
                                         <AlertDialogAction onClick={() => handleDelete(feed.id)} className="button-white bg-white text-lg">
-                                        Continue
+                                            Continue
                                         </AlertDialogAction>
                                     </AlertDialogFooter>
                                     </AlertDialogContent>
