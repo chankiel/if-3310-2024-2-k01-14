@@ -3,9 +3,6 @@ import { UserController } from "../controller/user-controller";
 import { ConnectionController } from "../controller/connection-controller";
 import multer from "multer";
 import { AuthController } from "../controller/auth-controller";
-import { authMiddleware } from "../middleware/auth-middleware";
-import { FeedController } from "../controller/feed-controller";
-import { TestController } from "../controller/test-controller";
 
 const publicRouter = express.Router();
 const upload = multer()

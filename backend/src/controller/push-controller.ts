@@ -34,7 +34,7 @@ export class PushController {
 
             const urlPhoto = await PushService.getUrlPhoto(user_id);
 
-            console.log("URL Photo: ", urlPhoto?.profile_photo_path);
+            // console.log("URL Photo: ", urlPhoto?.profile_photo_path);
             
             const notificationPayload = {
                 title: `New message from ${full_name}`,
@@ -47,7 +47,7 @@ export class PushController {
 
             const userSubscriptions = await PushService.getSubscriptionsForUser(to_id);
 
-            console.log("Target user: ", userSubscriptions);
+            // console.log("Target user: ", userSubscriptions);
 
             const formattedSubscriptions = userSubscriptions.map((target) => {
                 const keys = target.keys as { auth: string; p256dh: string };
@@ -60,7 +60,7 @@ export class PushController {
                 };
             });
 
-            console.log("Format: ", formattedSubscriptions);
+            // console.log("Format: ", formattedSubscriptions);
 
             const validSubscriptions: Array<{ endpoint: string; keys: { auth: string; p256dh: string } }> = [];
             const invalidSubscriptions: Array<{ endpoint: string; keys: { auth: string; p256dh: string } }> = [];
@@ -78,14 +78,14 @@ export class PushController {
                 }
             }
 
-            console.log("AW1");
+            // console.log("AW1");
 
             if (invalidSubscriptions.length > 0) {
                 await PushService.removeSubscriptions(invalidSubscriptions);
                 console.log("Removed invalid subscriptions:", invalidSubscriptions);
             }
 
-            console.log("Valid subscriptions to send notifications:", validSubscriptions);
+            // console.log("Valid subscriptions to send notifications:", validSubscriptions);
 
             await Promise.all(
                 validSubscriptions.map(async (subscription) => {
@@ -99,7 +99,7 @@ export class PushController {
                 })
             );
 
-            console.log("Chat notification sent successfully.");
+            // console.log("Chat notification sent successfully.");
             res.status(200).json({ message: "Chat notification sent successfully." });
         } catch (err) {
             console.error("Error sending chat notification", err);

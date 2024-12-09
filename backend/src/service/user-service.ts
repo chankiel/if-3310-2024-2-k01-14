@@ -390,9 +390,9 @@ export class UserService {
       const uploadPath = path.join(__dirname, `../../store/images/profile_${id}_${timestamp}_${path.extname(file.originalname)}`);
 
       urlDB = `profile_${id}_${timestamp}_${path.extname(file.originalname)}`;
-      console.log("Current directory:", process.cwd());
-      console.log("Upload: ", uploadPath);
-      console.log("URL DB: ", urlDB);
+      // console.log("Current directory:", process.cwd());
+      // console.log("Upload: ", uploadPath);
+      // console.log("URL DB: ", urlDB);
 
       const dir = path.dirname(uploadPath);
       if (!fs.existsSync(dir)) {
