@@ -79,9 +79,10 @@ docker compose up --build
 http://localhost:5137
 ```
 
-## Dokumentasi API
+## Dokumentasi API  
+After Backend Server has started, visit this link for our API documentation.
 ```sh
-Dokum
+http://localhost:3000/api-docs
 ```
 
 ## Hasil Load Test
