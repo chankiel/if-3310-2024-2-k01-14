@@ -90,7 +90,7 @@ Dokum
 ## **Bonus yang dikerjakan**
 
 1. UI/UX seperti LinkedIn
-2. Data Export
+2. Caching
 3. Connection recommendation
 4. Typing Indicator
 5. Google Lighthouse
