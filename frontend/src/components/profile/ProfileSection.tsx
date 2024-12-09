@@ -140,20 +140,6 @@ export default function ProfileSection({
                   </>
                 )}
               </button>
-              <button className="border border-[rgb(10,102,194)] rounded-2xl ml-2 py-1 px-3 font-semibold flex items-center text-[rgb(10, 102, 194)]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="24px"
-                  viewBox="0 -960 960 960"
-                  width="24px"
-                  fill="rgb(10, 102, 194)"
-                  className="mr-1"
-                  style={{ transform: "rotate(-45deg)" }}
-                >
-                  <path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z" />
-                </svg>
-                <span className="text-[rgb(10, 102, 194)]">Message</span>
-              </button>
             </>
           ) : (
             // Not authenticated

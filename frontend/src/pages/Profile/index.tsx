@@ -61,15 +61,17 @@ export default function Profile() {
         from_id: currentId,
         to_id: user_id,
       })
-      toast.success(res.message)
-      setIsConnected(!isConnected)
+      toast.success(res.message);
+      if(isConnected){
+        setIsConnected(false)
+      }
+      setHasRequested(!isConnected);
     }catch(error){
       console.log(error)
       toast.error((error as APIResponse).message)
     }
   }
   
-
   useEffect(() => {
     const fetchProfileDataAndConnections = async () => {
       try {
