@@ -2,6 +2,7 @@ import { useState } from "react";
 import { API_PHOTO, API_URL } from "../../constant";
 import { useAuth } from "../../contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { toast } from "react-toastify";
 
 
 interface CreatePostModalProps {
@@ -63,10 +64,12 @@ export default function CreatePostModal({ isOpen, onClose, onAddFeed }: CreatePo
                 setResponseMessage(data.message);
                 setPostContent("");
                 onAddFeed(data.feeds);
+                toast.success("Feed Created Successfully")
                 onClose();
             } else {
                 setIsSuccess(false);
                 setResponseMessage(data.message);
+                toast.success("Failed to create feed")
             }
         } catch (err) {
             setIsSuccess(false);

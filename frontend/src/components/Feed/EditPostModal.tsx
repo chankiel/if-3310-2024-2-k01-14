@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import FeedApi from "../../api/feed-api";
+import { toast } from "react-toastify";
 
 interface EditPostModalProps {
     isOpen: boolean;
@@ -40,9 +41,11 @@ export default function EditPostModal({ isOpen, onClose, feed_id, content, onUpd
             onUpdate(feed_id, postContent);
             onClose();
             setIsSuccess(true);
+            toast.success("Update Feed Successfully")
         } catch (err) {
             setIsSuccess(false);
             setResponseMessage("An error occurred. Please try again.");
+            toast.error("Failed to update feed")
             console.error("Error: ", err);
         }
     };
@@ -84,7 +87,7 @@ export default function EditPostModal({ isOpen, onClose, feed_id, content, onUpd
                                 type="submit"
                                 disabled={isButtonDisabled}
                             >
-                                Post
+                                Save
                             </button>
                         </div>
                     </form>

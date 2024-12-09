@@ -78,7 +78,7 @@ export default function EditProfileModal({ isOpen, onClose, initialData, user_id
     return (
         <>
             <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-                <div className="bg-white rounded-lg p-8 w-48 md:w-1/2 lg:w-1/2 h-auto max-h-[80vh] overflow-y-auto relative">
+                <div className="bg-white rounded-lg p-8 w-full max-w-md md:max-w-1/2 lg:max-w-1/2 h-auto max-h-[80vh] overflow-y-auto relative">
                     <svg
                         className="absolute top-8 right-8 cursor-pointer h-8 w-8"
                         xmlns="http://www.w3.org/2000/svg"

@@ -11,6 +11,7 @@ import EditPostModal from "../../components/Feed/EditPostModal";
 import { TrashIcon, PencilIcon } from "@heroicons/react/24/solid";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 import { API_PHOTO } from "../../constant";
+import { toast } from "react-toastify";
 
 export interface UserRecommendation {
     name: string;
@@ -174,6 +175,7 @@ export default function Feed() {
         try {
             await FeedApi.deleteFeed(feed_id);
             setUpdate(!update)
+            toast.success("Delete feed Successfully")
             console.log(data)
             // Optimistically update the UI
             data?.pages.forEach((page) =>
@@ -181,6 +183,7 @@ export default function Feed() {
                 )
             );
         } catch (error) {
+            toast.error("Failed to delete feed")
             console.error("Failed to delete feed", error);
         }
     };
