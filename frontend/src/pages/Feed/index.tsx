@@ -81,7 +81,7 @@ export default function Feed() {
                             ...page,
                             body: {
                                 ...page.body,
-                                feeds: [newFeed, ...page.body.feeds], // Tambahkan feed baru di awal
+                                feeds: [newFeed, ...page.body.feeds],
                             },
                         }
                         : page
@@ -241,7 +241,9 @@ export default function Feed() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="text-xl ml-4">{feed.content}</div>
+                                    <div className="text-xl ml-4 max-w-xs sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-2xl break-words overflow-hidden">
+                                        {feed.content}
+                                    </div>
                                 </div>
 
                                 <div className={`absolute top-6 right-4 flex gap-2 ${
@@ -261,13 +263,13 @@ export default function Feed() {
                                     <AlertDialogHeader>
                                         <AlertDialogTitle className="text-xl font-semibold py-2 border-b-2 border-b-linkin-border">Delete Feed</AlertDialogTitle>
                                         <AlertDialogDescription className="text-md text-black pb-2 border-b-2 border-b-linkin-border">
-                                        You are about delete this feed. This action cannot be undone.
+                                            You are about delete this feed. This action cannot be undone.
                                         </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
                                         <AlertDialogCancel className="button-blue text-lg">Cancel</AlertDialogCancel>
                                         <AlertDialogAction onClick={() => handleDelete(feed.id)} className="button-white bg-white text-lg">
-                                        Continue
+                                            Continue
                                         </AlertDialogAction>
                                     </AlertDialogFooter>
                                     </AlertDialogContent>
